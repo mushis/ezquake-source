@@ -1072,6 +1072,7 @@ void R_DrawFlat (model_t *model) {
 	vec3_t n;
 	byte w[3], f[3];
 	qbool draw_caustics = underwatertexture && gl_caustics.value;
+	float shade = min(max(r_drawflat_shade.value, 0), 1);
 
 	memcpy(w, r_wallcolor.color, 3);
 	memcpy(f, r_floorcolor.color, 3);
@@ -1118,7 +1119,21 @@ void R_DrawFlat (model_t *model) {
 				{
 					if (r_drawflat.integer == 2 || r_drawflat.integer == 1)
 					{
-						glColor3ubv(f);
+						if (shade)
+						{
+							float colors[3] = { f[0] / 256.0f, f[1] / 256.0f, f[2] / 256.0f };
+							float mult = (1 - shade) + (fabs(n[2]) - 0.5) * 2 * shade;
+
+							colors[0] = colors[0] * mult;
+							colors[1] = colors[1] * mult;
+							colors[2] = colors[2] * mult;
+
+							glColor3fv(colors);
+						}
+						else
+						{
+							glColor3ubv(f);
+						}
 					}
 					else
 					{
@@ -1129,7 +1144,21 @@ void R_DrawFlat (model_t *model) {
 				{
 					if (r_drawflat.integer == 3 || r_drawflat.integer == 1)
 					{
-						glColor3ubv(w);
+						if (shade)
+						{
+							float colors[3] = { w[0] / 256.0f, w[1] / 256.0f, w[2] / 256.0f };
+							float mult = (1 - shade) + fabs(n[0]) * shade;
+
+							colors[0] = colors[0] * mult;
+							colors[1] = colors[1] * mult;
+							colors[2] = colors[2] * mult;
+
+							glColor3fv(colors);
+						}
+						else
+						{
+							glColor3ubv(w);
+						}
 					}
 					else
 					{
