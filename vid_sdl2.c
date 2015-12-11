@@ -492,9 +492,27 @@ static void HandleEvents()
 				old_x = event.motion.x;
 				old_y = event.motion.y;
 				SDL_WarpMouseInWindow(sdl_window, glConfig.vidWidth / 2, glConfig.vidHeight / 2);
-			} else {
-				cursor_x = event.motion.x * ((double)vid.width / glConfig.vidWidth);
-				cursor_y = event.motion.y * ((double)vid.height / glConfig.vidHeight);
+			}
+			else {
+				int new_x = event.motion.x;
+				int new_y = event.motion.y;
+
+				float ratio_x = (double)vid.width  / glConfig.vidWidth;
+				float ratio_y = (double)vid.height / glConfig.vidHeight;
+
+				if (! mouse_active)
+				{
+					// mx/my won't be set by SDL, so calculate & scale here
+					mx = floor((new_x - old_x) * ratio_x + 0.5);
+					my = floor((new_y - old_y) * ratio_y + 0.5);
+
+					// adjust for rounding errors
+					old_x += floor(mx / ratio_x + 0.5);
+					old_y += floor(my / ratio_y + 0.5);
+				}
+
+				cursor_x = new_x * ratio_x;
+				cursor_y = new_y * ratio_y;
 			}
 			break;
 		case SDL_MOUSEBUTTONDOWN:
