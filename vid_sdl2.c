@@ -192,6 +192,12 @@ void IN_DeactivateMouse(void)
 	GrabMouse(false, in_raw.integer);
 }
 
+qbool IN_MouseCursorRequired(void)
+{
+	return (r_fullscreen.value && (key_dest == key_menu || key_dest == key_hudeditor || key_dest == key_demo_controls)) ||
+		   (!r_fullscreen.value && key_dest != key_game);
+}
+
 void IN_Frame(void)
 {
 	if (!sdl_window)
@@ -199,7 +205,7 @@ void IN_Frame(void)
 
 	HandleEvents();
 
-	if (!ActiveApp || Minimized || (key_dest != key_game || cls.state != ca_active)) {
+	if (!ActiveApp || Minimized || IN_MouseCursorRequired() || cls.state != ca_active) {
 		IN_DeactivateMouse();
 		return;
 	} else {
@@ -493,7 +499,7 @@ static void HandleEvents()
 				old_y = event.motion.y;
 				SDL_WarpMouseInWindow(sdl_window, glConfig.vidWidth / 2, glConfig.vidHeight / 2);
 			}
-			else {
+			else if (IN_MouseCursorRequired()) {
 				int new_x = event.motion.x;
 				int new_y = event.motion.y;
 

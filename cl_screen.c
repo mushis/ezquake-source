@@ -3160,7 +3160,7 @@ static double SCR_GetCursorScale(void)
 static void SCR_DrawCursor(void) 
 {
 	// from in_*.c
-	extern float mouse_x, mouse_y;
+	extern qbool IN_MouseCursorRequired(void);
 	extern cvar_t r_fullscreen;
 	double scale = SCR_GetCursorScale();
 
@@ -3168,11 +3168,8 @@ static void SCR_DrawCursor(void)
 	scr_pointer_state.x = cursor_x;
 	scr_pointer_state.y = cursor_y;
 
-	// Disable the cursor in all but following client parts.
-	if (key_dest != key_hudeditor && key_dest != key_menu && key_dest != key_demo_controls)
-	{
+	if (! IN_MouseCursorRequired())
 		return;
-	}
 
 	// Always draw the cursor if fullscreen
 	if (r_fullscreen.integer)
