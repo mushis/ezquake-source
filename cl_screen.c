@@ -3160,7 +3160,9 @@ static double SCR_GetCursorScale(void)
 static void SCR_DrawCursor(void) 
 {
 	// from in_*.c
-	extern qbool IN_MouseCursorRequired(void);
+	extern qbool IN_QuakeMouseCursorRequired(void);
+	extern qbool IN_MouseTrackingRequired(void);
+
 	extern cvar_t r_fullscreen;
 	double scale = SCR_GetCursorScale();
 
@@ -3168,11 +3170,8 @@ static void SCR_DrawCursor(void)
 	scr_pointer_state.x = cursor_x;
 	scr_pointer_state.y = cursor_y;
 
-	if (! IN_MouseCursorRequired())
-		return;
-
 	// Always draw the cursor if fullscreen
-	if (r_fullscreen.integer)
+	if (IN_QuakeMouseCursorRequired())
 	{
 		if (scr_cursor && scr_cursor->texnum)
 		{
@@ -3188,13 +3187,12 @@ static void SCR_DrawCursor(void)
 			color_t c = RGBA_TO_COLOR(0, 255, 0, 255);
 			Draw_AlphaLineRGB(cursor_x + (10 * scale), cursor_y + (10 * scale), cursor_x + (40 * scale), cursor_y + (40 * scale), 10 * scale, c);
 			Draw_AlphaLineRGB(cursor_x, cursor_y, cursor_x + (20 * scale), cursor_y, 10 * scale, c);
-			Draw_AlphaLineRGB(cursor_x, cursor_y, cursor_x, cursor_y + 20*scale, 10 * scale, c);
+			Draw_AlphaLineRGB(cursor_x, cursor_y, cursor_x, cursor_y + 20 * scale, 10 * scale, c);
 			Draw_AlphaLineRGB(cursor_x + (20 * scale), cursor_y, cursor_x, cursor_y + (20 * scale), 10 * scale, c);
 		}
 	}
 
-	if (scr_pointer_state.x != scr_pointer_state.x_old || scr_pointer_state.y != scr_pointer_state.y_old)
-	{
+	if (IN_MouseTrackingRequired() && (scr_pointer_state.x != scr_pointer_state.x_old || scr_pointer_state.y != scr_pointer_state.y_old)) {
 		Mouse_MoveEvent();
 	}
 

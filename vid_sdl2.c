@@ -121,6 +121,25 @@ cvar_t gl_multisamples        = {"gl_multisamples",       "0",   CVAR_LATCH }; /
 // function declaration
 //
 
+// True if we're in a mode where we need to keep track of mouse movement
+qbool IN_MouseTrackingRequired(void)
+{
+	return (key_dest == key_menu || key_dest == key_hudeditor || key_dest == key_demo_controls);
+}
+
+// True if we need to display the internal Quake cursor to track the mouse
+qbool IN_QuakeMouseCursorRequired(void)
+{
+	return mouse_active && (r_fullscreen.value || in_grab_windowed_mouse.value) && IN_MouseTrackingRequired();
+}
+
+// True if we need to release the mouse and let the OS show cursor again
+static qbool IN_OSMouseCursorRequired(void)
+{
+	// Windowed & (not-grabbing mouse | at_console | not_connected)
+	return (!r_fullscreen.value && (!in_grab_windowed_mouse.value || key_dest == key_console || cls.state != ca_active));
+}
+
 static void in_raw_callback(cvar_t *var, char *value, qbool *cancel)
 {
 	if (var == &in_raw)
@@ -192,12 +211,6 @@ void IN_DeactivateMouse(void)
 	GrabMouse(false, in_raw.integer);
 }
 
-qbool IN_MouseCursorRequired(void)
-{
-	return (r_fullscreen.value && (key_dest == key_menu || key_dest == key_hudeditor || key_dest == key_demo_controls)) ||
-		   (!r_fullscreen.value && key_dest != key_game);
-}
-
 void IN_Frame(void)
 {
 	if (!sdl_window)
@@ -205,7 +218,7 @@ void IN_Frame(void)
 
 	HandleEvents();
 
-	if (!ActiveApp || Minimized || IN_MouseCursorRequired() || cls.state != ca_active) {
+	if (!ActiveApp || Minimized || IN_OSMouseCursorRequired()) {
 		IN_DeactivateMouse();
 		return;
 	} else {
@@ -219,7 +232,6 @@ void IN_Frame(void)
 		SDL_GetRelativeMouseState(&mx, &my);
 #endif
 	}
-	
 }
 
 void Sys_SendKeyEvents(void)
@@ -497,28 +509,17 @@ static void HandleEvents()
 				my = old_y - event.motion.y;
 				old_x = event.motion.x;
 				old_y = event.motion.y;
+				cursor_x += event.motion.x - glConfig.vidWidth / 2;
+				cursor_y += event.motion.y - glConfig.vidHeight / 2;
 				SDL_WarpMouseInWindow(sdl_window, glConfig.vidWidth / 2, glConfig.vidHeight / 2);
 			}
-			else if (IN_MouseCursorRequired()) {
-				int new_x = event.motion.x;
-				int new_y = event.motion.y;
-
-				float ratio_x = (double)vid.width  / glConfig.vidWidth;
-				float ratio_y = (double)vid.height / glConfig.vidHeight;
-
-				if (! mouse_active)
-				{
-					// mx/my won't be set by SDL, so calculate & scale here
-					mx = floor((new_x - old_x) * ratio_x + 0.5);
-					my = floor((new_y - old_y) * ratio_y + 0.5);
-
-					// adjust for rounding errors
-					old_x += floor(mx / ratio_x + 0.5);
-					old_y += floor(my / ratio_y + 0.5);
-				}
-
-				cursor_x = new_x * ratio_x;
-				cursor_y = new_y * ratio_y;
+			else if (mouse_active) {
+				cursor_x = event.motion.x;
+				cursor_y = event.motion.y;
+			}
+			else {
+				cursor_x = event.motion.x * ((double)vid.width / glConfig.vidWidth);
+				cursor_y = event.motion.y * ((double)vid.height / glConfig.vidHeight);
 			}
 			break;
 		case SDL_MOUSEBUTTONDOWN:
