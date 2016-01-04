@@ -1643,8 +1643,6 @@ qbool pb_ensure(void)
 	return false;
 }
 
-static float prevtime = 0; // TODO: Put in a demo struct.
-
 //
 // Peeks the demo time.
 //
@@ -1664,7 +1662,7 @@ static float CL_PeekDemoTime(void)
 		// Calculate the demo time.
 		// (The time in an MVD is saved as a byte with number of miliseconds since the last cmd
 		// so we need to multiply it by 0.001 to get it in seconds like normal quake time).
-		demotime = prevtime + (mvd_time * 0.001);
+		demotime = cls.demopackettime + (mvd_time * 0.001);
 
 		if ((cls.demotime - nextdemotime) > 0.0001 && (nextdemotime != demotime))
 		{
@@ -1736,7 +1734,7 @@ static void CL_DemoReadDemCmd(void)
 
 	// Set the time time this cmd was sent and increase
 	// how many net messages have been sent.
-	cl.frames[i].senttime = prevtime;
+	cl.frames[i].senttime = cls.demopackettime;
 	cl.frames[i].receivedtime = -1;		// We haven't gotten a reply yet.
 	cls.netchan.outgoing_sequence++;
 
@@ -1966,8 +1964,8 @@ qbool CL_GetDemoMessage (void)
 	if (cls.mvdplayback)
 	{
 		// Reset the previous time.
-		if (prevtime < nextdemotime)
-			prevtime = nextdemotime;
+		if (cls.demopackettime < nextdemotime)
+			cls.demopackettime = nextdemotime;
 
 		// Always be within one second from the next demo time.
 		if (cls.demotime + 1.0 < nextdemotime)
@@ -1986,8 +1984,8 @@ qbool CL_GetDemoMessage (void)
 		demotime = CL_PeekDemoTime();
 
 		// Keep gameclock up-to-date if we are seeking
-		if (cls.demoseeking && demotime > prevtime)
-			cl.gametime += demotime - prevtime;
+		if (cls.demoseeking && demotime > cls.demopackettime)
+			cl.gametime += demotime - cls.demopackettime;
 
 		// Keep MVD features such as itemsclock up-to-date during seeking
 		if (cls.demoseeking && cls.mvdplayback) {
@@ -2032,7 +2030,7 @@ qbool CL_GetDemoMessage (void)
 		// it is needed to calculate the demotime since in mvd's the time is
 		// saved as the number of miliseconds since last frame message.
 		// This is also used when seeking in qwds to keep the gameclock in time.
-		prevtime = demotime;
+		cls.demopackettime = demotime;
 
 		// Get the msg type.
 		CL_Demo_Read(&c, sizeof(c), false);
@@ -4503,8 +4501,8 @@ void CL_Demo_Check_For_Rewind(float nextdemotime)
 		// Restart the demo from scratch.
 		CL_DemoPlaybackInit();
 
-		prevtime			= 0.0;
-		cls.demorewinding	= true;			
+		cls.demopackettime  = 0.0;
+		cls.demorewinding   = true;			
 	}
 	
 	if (cls.demorewinding)
