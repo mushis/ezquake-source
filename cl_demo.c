@@ -1736,7 +1736,7 @@ static void CL_DemoReadDemCmd(void)
 
 	// Set the time time this cmd was sent and increase
 	// how many net messages have been sent.
-	cl.frames[i].senttime = cls.realtime;
+	cl.frames[i].senttime = prevtime;
 	cl.frames[i].receivedtime = -1;		// We haven't gotten a reply yet.
 	cls.netchan.outgoing_sequence++;
 
@@ -1990,7 +1990,7 @@ qbool CL_GetDemoMessage (void)
 			cl.gametime += demotime - prevtime;
 
 		// Keep MVD features such as itemsclock up-to-date during seeking
-		if (cls.demoseeking) {
+		if (cls.demoseeking && cls.mvdplayback) {
 			double tmp = cls.demotime;
 			cls.demotime = demotime;
 			MVD_Interpolate();
