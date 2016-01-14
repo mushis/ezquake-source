@@ -1943,12 +1943,18 @@ void CL_ParseClientdata (void)
 	parsecountmod = (cl.parsecount & UPDATE_MASK);
 	frame = &cl.frames[parsecountmod];
 
-	if (cls.mvdplayback)
+	if (cls.mvdplayback) {
 		frame->senttime = cls.realtime - cls.frametime;
+		frame->receivedtime = cls.realtime;
+	}
+	else if (cls.demoplayback) {
+		frame->receivedtime = cls.demopackettime;
+	}
+	else {
+		frame->receivedtime = cls.realtime;
+	}
 
 	parsecounttime = cl.frames[parsecountmod].senttime;
-
-	frame->receivedtime = cls.realtime;
 
 	frame->seq_when_received = cls.netchan.outgoing_sequence;
 

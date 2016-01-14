@@ -1586,6 +1586,7 @@ void CL_LinkPlayers (void)
 	int j, msec, i, flicker, oldphysent;
 	float *org;
 	vec3_t	tmp;
+	double current_time = (cls.demoplayback && !cls.mvdplayback) ? cls.demotime : cls.realtime;
 	double playertime;
 	player_info_t *info;
 	player_state_t *state, exact;
@@ -1594,9 +1595,7 @@ void CL_LinkPlayers (void)
 	frame_t *frame;
 	customlight_t cst_lt = {0};
 
-	playertime = cls.realtime - cls.latency + 0.02;
-	if (playertime > cls.realtime)
-		playertime = cls.realtime;
+	playertime = min(current_time - cls.latency + 0.02, current_time);
 
 	frame = &cl.frames[cl.parsecount & UPDATE_MASK];
 	memset (&ent, 0, sizeof(entity_t));
@@ -1887,14 +1886,13 @@ void CL_SetUpPlayerPrediction(qbool dopred)
 	double playertime;
 	frame_t *frame;
 	struct predicted_player *pplayer;
+	double current_time = (cls.demoplayback && !cls.mvdplayback) ? cls.demotime : cls.realtime;
 
 #ifdef EXPERIMENTAL_SHOW_ACCELERATION
 	extern qbool flag_player_pmove;
 #endif
 
-	playertime = cls.realtime - cls.latency + 0.02;
-	if (playertime > cls.realtime)
-		playertime = cls.realtime;
+	playertime = min(current_time, current_time - cls.latency + 0.02);
 
 	frame = &cl.frames[cl.parsecount & UPDATE_MASK];
 

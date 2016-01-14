@@ -1715,6 +1715,8 @@ static void CL_ConsumeDemoTime(void)
 //
 static void CL_DemoReadDemCmd(void)
 {			
+	extern int cmdtime_msec;
+
 	// User cmd read.
 
 	// Get which frame we should read the cmd into from the demo.
@@ -1731,6 +1733,7 @@ static void CL_DemoReadDemCmd(void)
 	pcmd->forwardmove = LittleShort(pcmd->forwardmove);
 	pcmd->sidemove = LittleShort(pcmd->sidemove);
 	pcmd->upmove = LittleShort(pcmd->upmove);
+	cmdtime_msec += pcmd->msec;
 
 	// Set the time time this cmd was sent and increase
 	// how many net messages have been sent.
