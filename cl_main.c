@@ -2313,6 +2313,8 @@ void CL_Frame (double time)
 
 	if (cls.demoplayback) 
 	{
+		Demo_AdjustSpeed();
+
 		if (cl.paused & PAUSED_DEMO)
 			cls.frametime = 0;
 		else if (!cls.timedemo)

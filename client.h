@@ -710,6 +710,7 @@ void CL_Demo_Jump_Status_Check (void);
 void CL_Demo_Check_For_Rewind(float nextdemotime);
 void CL_Demo_Stop_Rewinding(void);
 double Demo_GetSpeed(void);
+void Demo_AdjustSpeed(void);
 qbool CL_IsDemoExtension(const char *filename);
 
 void CL_AutoRecord_StopMatch(void);
