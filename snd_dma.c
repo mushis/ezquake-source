@@ -94,7 +94,7 @@ cvar_t s_swapstereo = {"s_swapstereo", "0"};
 cvar_t s_linearresample = {"s_linearresample", "0", CVAR_LATCH};
 cvar_t s_linearresample_stream = {"s_linearresample_stream", "0"};
 cvar_t s_khz = {"s_khz", "11", CVAR_NONE, OnChange_s_khz}; // If > 11, default sounds are noticeably different.
-
+cvar_t s_desiredsamples = {"s_desiredsamples", "0"};
 
 SDL_mutex *smutex;
 soundhw_t *shw;
@@ -198,6 +198,15 @@ static qbool S_SDL_Init(void)
 
 	desired.format = AUDIO_S16LSB;
 	desired.channels = 2;
+	if (s_desiredsamples.integer) {
+		int desired_samples = 1;
+
+		// make sure it's a power of 2
+		while (desired_samples < s_desiredsamples.integer)
+			desired_samples <<= 1;
+
+		desired.samples = desired_samples;
+	}
 	desired.callback = S_SDL_callback;
 	ret = SDL_OpenAudio(&desired, &obtained);
 	if (ret == -1) {
@@ -333,6 +342,7 @@ static void S_Register_RegularCvarsAndCommands(void)
 	Cvar_Register(&s_show);
 	Cvar_Register(&s_swapstereo);
 	Cvar_Register(&s_linearresample_stream);
+	Cvar_Register(&s_desiredsamples);
 
 	Cvar_ResetCurrentGroup();
 
