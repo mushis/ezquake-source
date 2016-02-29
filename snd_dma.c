@@ -125,6 +125,14 @@ static void S_SoundInfo_f (void)
 
 static void S_SDL_callback(void *userdata, Uint8 *stream, int len)
 {
+#ifdef _WIN32
+	// Mixer is run in main thread when creating .avi, play silence instead
+	if (Movie_IsCapturingAVI()) {
+		SDL_memset(stream, 0, len);
+		return;
+	}
+#endif
+
 	S_LockMixer();
 	shw->buffer = stream;
 	shw->samples = len / shw->numchannels;
@@ -620,8 +628,6 @@ void S_StopSound (int entnum, int entchannel)
 
 void S_StopAllSounds(void)
 {
-	int i;
-
 	if (!shw)
 		return;
 
@@ -630,6 +636,8 @@ void S_StopAllSounds(void)
 	S_LockMixer();
 
 	memset(channels, 0, MAX_CHANNELS * sizeof(channel_t));
+
+	shw->numwraps = shw->oldsamplepos = shw->paintedtime = shw->samplepos = shw->snd_sent = 0;
 
 	S_UnlockMixer();
 }
@@ -808,6 +816,17 @@ void S_Update (vec3_t origin, vec3_t forward, vec3_t right, vec3_t up)
 		}
 	}
 
+#ifdef _WIN32
+	if (Movie_IsCapturingAVI())
+	{
+		// Mix enough sound for this frame of video
+		Movie_PrepareSound();
+		do {
+			S_Update_();
+		} while (! Movie_TransferSound());
+	}
+#endif
+
 	S_UnlockMixer();
 }
 
@@ -828,17 +847,18 @@ static void GetSoundtime(void)
 
 	shw->oldsamplepos = shw->samplepos;
 
-#ifdef _WIN32
-	/* FIXME */
-	//joe: capturing audio
-	if (Movie_GetSoundtime())
-		return;
-#endif
+	if (Movie_IsCapturingAVI()) {
+		float demospeed = Demo_GetSpeed();
+		int views = min(cl_multiview.integer ? cl_multiview.integer : 1, 1);
 
-	soundtime = shw->numwraps * (shw->samples / shw->numchannels) + shw->samplepos / shw->numchannels;
+		soundtime += (int)(0.5 + cls.frametime * shw->khz * views * (1.0 / demospeed)); //joe: fix for slowmo/fast forward
+	}
+	else {
+		soundtime = shw->numwraps * (shw->samples / shw->numchannels) + shw->samplepos / shw->numchannels;
+	}
 }
 
-static void S_Update_(void)
+static void S_Update_()
 {
 	unsigned int endtime;
 	int samps;

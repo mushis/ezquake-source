@@ -70,9 +70,6 @@ static void S_TransferStereo16 (int endtime)
 {
 	int lpaintedtime, lpos, clientVolume;
 	DWORD *pbuf;
-#ifdef _WIN32
-	short* movieBuffer;
-#endif
 
 	clientVolume = snd_vol = (s_volume.value * voicevolumemod) * 256;
 
@@ -80,7 +77,6 @@ static void S_TransferStereo16 (int endtime)
 	lpaintedtime = shw->paintedtime;
 
 	pbuf = (DWORD *)shw->buffer;
-
 	while (lpaintedtime < endtime) {
 
 		// handle recirculating buffer issues
@@ -100,21 +96,6 @@ static void S_TransferStereo16 (int endtime)
 		snd_linear_count <<= 1;
 
 		// write a linear blast of samples
-#ifdef _WIN32
-		movieBuffer = Movie_SoundBuffer();	
-		if (movieBuffer != NULL) 
-		{
-			if (s_swapstereo.value)	// keeping it consistent, but why would we store it like this in the video?
-				Snd_WriteLinearBlastStereo16_SwapStereo (snd_p, movieBuffer, snd_vol);
-			else
-				Snd_WriteLinearBlastStereo16 (snd_p, movieBuffer, snd_vol);
-			Movie_TransferStereo16();
-
-			if (movie_quietcapture.value)
-				clientVolume = 0;
-		}
-#endif
-
 		if (s_swapstereo.value)
 			Snd_WriteLinearBlastStereo16_SwapStereo (snd_p, snd_out, clientVolume);
 		else
