@@ -847,13 +847,17 @@ static void GetSoundtime(void)
 
 	shw->oldsamplepos = shw->samplepos;
 
-	if (Movie_IsCapturingAVI()) {
+#ifdef _WIN32
+	if (Movie_IsCapturingAVI())
+	{
 		float demospeed = Demo_GetSpeed();
 		int views = min(cl_multiview.integer ? cl_multiview.integer : 1, 1);
 
 		soundtime += (int)(0.5 + cls.frametime * shw->khz * views * (1.0 / demospeed)); //joe: fix for slowmo/fast forward
 	}
-	else {
+	else
+#endif
+	{
 		soundtime = shw->numwraps * (shw->samples / shw->numchannels) + shw->samplepos / shw->numchannels;
 	}
 }
