@@ -4938,7 +4938,7 @@ void CL_Demo_Jump(double seconds, int relative, demoseekingtype_t seeking)
 	cls.demoseeking = seeking;
 }
 
-double Demo_GetSpeed()
+double Demo_GetSpeed(void)
 {
 	if (cls.mvdplayback == QTV_PLAYBACK) {
 		return qtv_demospeed;
@@ -4947,7 +4947,7 @@ double Demo_GetSpeed()
 	return bound(0, cl_demospeed.value, 20);
 }
 
-void Demo_AdjustSpeed()
+void Demo_AdjustSpeed(void)
 {
 	if (cls.mvdplayback == QTV_PLAYBACK)
 	{
