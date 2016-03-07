@@ -2226,6 +2226,7 @@ void Cl_Reset_Min_fps_f(void)
 }
 
 void CL_QTVPoll (void);
+void SB_ExecuteQueuedTriggers (void);
 
 qbool physframe;
 double physframetime;
@@ -2593,6 +2594,8 @@ void CL_Frame (double time)
 #ifdef WITH_IRC
 	IRC_Update();
 #endif
+
+	SB_ExecuteQueuedTriggers();
 
 	CL_UpdateCaption(false);
 }

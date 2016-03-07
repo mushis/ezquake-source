@@ -159,6 +159,7 @@ typedef struct source_data_s
 
     server_data **servers;              // servers list
     int serversn;                       // servers no
+	int servers_allocated;              // allocated size of servers array
 
     int checked;                        // 1 if use this source
     int unique;                         // order in file (for sorting)
@@ -202,6 +203,7 @@ extern int source_unique;
 
 // servers
 server_data * Create_Server(char *ip);
+server_data * Clone_Server(server_data* source);
 server_data * Create_Server2(netadr_t n);
 void Reset_Server(server_data *s);
 void Delete_Server(server_data *s);
@@ -222,7 +224,6 @@ void DumpSource(source_data *s);
 void RemoveFromFileSource(source_data *source, server_data *serv);
 void AddToFileSource(source_data *source, server_data *serv);
 int IsInSource(source_data *source, server_data *serv);
-void Precache_Source(source_data *s);
 
 char * next_space(char *s);
 char * next_nonspace(char *s);
@@ -296,5 +297,9 @@ void SB_Proxy_QueryForPingList(const netadr_t *address, proxy_ping_report_callba
 void SB_PingTree_ConnectBestPath(const netadr_t *addr);
 int SB_PingTree_GetPathLen(const netadr_t *addr);
 void SB_Proxylist_Unserialize_f(void);
+
+#define SB_TRIGGER_REFRESHDONE    1
+#define SB_TRIGGER_SOURCESUPDATED 2
+extern int sb_queuedtriggers;
 
 #endif  // __EX_BROWSER__H__
