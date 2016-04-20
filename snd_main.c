@@ -864,13 +864,8 @@ void S_Update (vec3_t origin, vec3_t forward, vec3_t right, vec3_t up)
 	}
 
 #ifdef _WIN32
-	if (Movie_IsCapturingAVI())
-	{
-		// Mix enough sound for this frame of video
-		Movie_PrepareSound();
-		do {
-			S_Update_();
-		} while (! Movie_TransferSound());
+	if (Movie_IsCapturingAVI()) {
+		Movie_MixFrameSound(S_Update_);
 	}
 #endif
 
@@ -891,16 +886,20 @@ static void GetSoundtime(void)
 			//S_StopAllSounds (true);
 		}
 	}
-
+	
 	shw->oldsamplepos = shw->samplepos;
 
-#ifdef _WIN32
+//#ifdef _WIN32
+#if 0
 	if (Movie_IsCapturingAVI())
 	{
 		float demospeed = Demo_GetSpeed();
 		int views = min(cl_multiview.integer ? cl_multiview.integer : 1, 1);
+		double samples = cls.frametime * shw->khz * views * (1.0 / demospeed);
 
-		soundtime += (int)(0.5 + cls.frametime * shw->khz * views * (1.0 / demospeed)); //joe: fix for slowmo/fast forward
+		if (samples) {
+			soundtime += (int)(0.5 + samples); //joe: fix for slowmo/fast forward
+		}
 	}
 	else
 #endif
