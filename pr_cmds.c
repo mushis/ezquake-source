@@ -22,13 +22,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "qwsvdef.h"
 
 #define	RETURN_EDICT(e) (((int *)pr_globals)[OFS_RETURN] = EDICT_TO_PROG(e))
-#define	RETURN_STRING(s) (((int *)pr_globals)[OFS_RETURN] = PR_SetString(s))
+#define	RETURN_STRING(s) (((int *)pr_globals)[OFS_RETURN] = PR1_SetString(s))
 
 /*
 ===============================================================================
- 
-						BUILT-IN FUNCTIONS
- 
+
+BUILT-IN FUNCTIONS
+
 ===============================================================================
 */
 
@@ -62,7 +62,7 @@ void PF_error (void)
 	edict_t	*ed;
 
 	s = PF_VarString(0);
-	Con_Printf ("======SERVER ERROR in %s:\n%s\n", PR_GetString(pr_xfunction->s_name) ,s);
+	Con_Printf ("======SERVER ERROR in %s:\n%s\n", PR1_GetString(pr_xfunction->s_name) ,s);
 	ed = PROG_TO_EDICT(pr_global_struct->self);
 	ED_Print (ed);
 
@@ -85,7 +85,7 @@ void PF_objerror (void)
 	edict_t	*ed;
 
 	s = PF_VarString(0);
-	Con_Printf ("======OBJECT ERROR in %s:\n%s\n", PR_GetString(pr_xfunction->s_name),s);
+	Con_Printf ("======OBJECT ERROR in %s:\n%s\n", PR1_GetString(pr_xfunction->s_name),s);
 	ed = PROG_TO_EDICT(pr_global_struct->self);
 	ED_Print (ed);
 	ED_Free (ed);
@@ -125,6 +125,7 @@ void PF_setorigin (void)
 	e = G_EDICT(OFS_PARM0);
 	org = G_VECTOR(OFS_PARM1);
 	VectorCopy (org, e->v.origin);
+	SV_AntilagReset (e);
 	SV_LinkEdict (e, false);
 }
 
@@ -171,17 +172,17 @@ static void PF_setmodel (void)
 	e = G_EDICT(OFS_PARM0);
 	m = G_STRING(OFS_PARM1);
 
-// check to see if model was properly precached
+	// check to see if model was properly precached
 	for (i = 0, check = sv.model_precache; i < MAX_MODELS && *check ; i++, check++)
 		if (!strcmp(*check, m))
 			goto ok;
 	PR_RunError ("PF_setmodel: no precache: %s\n", m);
 ok:
 
-		e->v.model = G_INT(OFS_PARM1);
+	e->v.model = G_INT(OFS_PARM1);
 	e->v.modelindex = i;
 
-// if it is an inline model, get the size information for it
+	// if it is an inline model, get the size information for it
 	if (m[0] == '*') {
 		mod = CM_InlineModel (m);
 		VectorCopy (mod->mins, e->v.mins);
@@ -191,10 +192,11 @@ ok:
 	}
 	else if (pr_nqprogs) {
 		// hacks to make NQ progs happy
-		if (!strcmp(PR_GetString(e->v.model), "maps/b_explob.bsp")) {
+		if (!strcmp(PR1_GetString(e->v.model), "maps/b_explob.bsp")) {
 			VectorClear (e->v.mins);
 			VectorSet (e->v.maxs, 32, 32, 64);
-		} else {
+		}
+		else {
 			// FTE does this, so we do, too; I'm not sure if it makes a difference
 			VectorSet (e->v.mins, -16, -16, -16);
 			VectorSet (e->v.maxs, 16, 16, 16);
@@ -221,7 +223,8 @@ void PF_bprint (void)
 	if (pr_nqprogs) {
 		level = PRINT_HIGH;
 		s = PF_VarString(0);
-	} else {
+	}
+	else {
 		level = G_FLOAT(OFS_PARM0);
 		s = PF_VarString(1);
 	}
@@ -253,7 +256,8 @@ void PF_sprint (void)
 	if (pr_nqprogs) {
 		level = PRINT_HIGH;
 		s = PF_VarString(1);
-	} else {
+	}
+	else {
 		level = G_FLOAT(OFS_PARM1);
 		s = PF_VarString(2);
 	}
@@ -412,7 +416,7 @@ void PF_vectoyaw (void)
 		yaw = 0;
 	else
 	{
-		yaw = (int) (atan2(value1[1], value1[0]) * 180 / M_PI);
+		yaw = /*(int)*/ (atan2(value1[1], value1[0]) * 180 / M_PI);
 		if (yaw < 0)
 			yaw += 360;
 	}
@@ -494,7 +498,7 @@ static void PF_particle (void)
 	float	color, count;
 	int		replacement_te;
 	int		replacement_count = 0 /* suppress compiler warning */;
-			
+	
 	org = G_VECTOR(OFS_PARM0);
 	dir = G_VECTOR(OFS_PARM1);
 	color = G_FLOAT(OFS_PARM2);
@@ -505,17 +509,21 @@ static void PF_particle (void)
 	if (pr_argc >= 5) {
 		replacement_te = G_FLOAT(OFS_PARM4);
 		replacement_count = (pr_argc >= 6) ? G_FLOAT(OFS_PARM5) : 1;
-	} else {
+	}
+	else {
 		// To aid porting of NQ mods, if the extra arguments are not provided, try
 		// to figure out what progs want by inspecting color and count
 		if (count == 255) {
 			replacement_te = TE_EXPLOSION;		// count is not used
-		} else if (color == 73) {
+		}
+		else if (color == 73) {
 			replacement_te = TE_BLOOD;
 			replacement_count = 1;	// FIXME: use count / <some value>?
-		} else if (color == 225) {
+		}
+		else if (color == 225) {
 			replacement_te = TE_LIGHTNINGBLOOD;	// count is not used
-		} else {
+		}
+		else {
 			replacement_te = 0;		// don't send anything
 		}
 	}
@@ -609,17 +617,17 @@ void PF_break (void)
 {
 	Con_Printf ("break statement\n");
 	*(int *)-4 = 0;	// dump to debugger
-	//	PR_RunError ("break statement");
+					//	PR_RunError ("break statement");
 }
 
 /*
 =================
 PF_traceline
- 
+
 Used for use tracing and shot targeting
 Traces are blocked by bbox and exact bsp entityes, and also slide box entities
 if the tryents flag is set.
- 
+
 traceline (vector1, vector2, tryents)
 =================
 */
@@ -634,6 +642,9 @@ void PF_traceline (void)
 	v2 = G_VECTOR(OFS_PARM1);
 	nomonsters = G_FLOAT(OFS_PARM2);
 	ent = G_EDICT(OFS_PARM3);
+
+	if (sv_antilag.value == 2)
+		nomonsters |= MOVE_LAGGED;
 
 	trace = SV_Trace (v1, vec3_origin, vec3_origin, v2, nomonsters, ent);
 
@@ -676,7 +687,7 @@ int PF_newcheckclient (int check)
 	edict_t	*ent;
 	vec3_t	org;
 
-// cycle to the next one
+	// cycle to the next one
 
 	if (check < 1)
 		check = 1;
@@ -705,11 +716,11 @@ int PF_newcheckclient (int check)
 		if ((int)ent->v.flags & FL_NOTARGET)
 			continue;
 
-	// anything that is a client, or has a client as an enemy
+		// anything that is a client, or has a client as an enemy
 		break;
 	}
 
-// get the PVS for the entity
+	// get the PVS for the entity
 	VectorAdd (ent->v.origin, ent->v.view_ofs, org);
 	checkpvs = CM_LeafPVS (CM_PointInLeaf(org));
 
@@ -738,15 +749,15 @@ static void PF_checkclient (void)
 	edict_t	*ent, *self;
 	int		l;
 	vec3_t	vieworg;
-	
-// find a new check if on a new frame
+
+	// find a new check if on a new frame
 	if (sv.time - sv.lastchecktime >= 0.1)
 	{
 		sv.lastcheck = PF_newcheckclient (sv.lastcheck);
 		sv.lastchecktime = sv.time;
 	}
 
-// return check if it might be visible	
+	// return check if it might be visible
 	ent = EDICT_NUM(sv.lastcheck);
 	if (ent->e->free || ent->v.health <= 0)
 	{
@@ -754,7 +765,7 @@ static void PF_checkclient (void)
 		return;
 	}
 
-// if current entity can't possibly see the check entity, return 0
+	// if current entity can't possibly see the check entity, return 0
 	self = PROG_TO_EDICT(pr_global_struct->self);
 	VectorAdd (self->v.origin, self->v.view_ofs, vieworg);
 	l = CM_Leafnum(CM_PointInLeaf(vieworg)) - 1;
@@ -764,7 +775,7 @@ static void PF_checkclient (void)
 		return;
 	}
 
-// might be able to see it
+	// might be able to see it
 	RETURN_EDICT(ent);
 }
 
@@ -857,24 +868,11 @@ void PF_localcmd (void)
 	str = G_STRING(OFS_PARM0);
 
 	if (pr_nqprogs && !strcmp(str, "restart\n")) {
-		Cbuf_AddText (va("map %s\n", host_mapname.string));
+		Cbuf_AddText (va("map %s\n", sv.mapname));
 		return;
 	}
 
 	Cbuf_AddText (str);
-}
-
-void PF_executecmd (void)
-{
-	int old_other, old_self; // mod_consolecmd will be executed, so we need to store this
-
-	old_self = pr_global_struct->self;
-	old_other = pr_global_struct->other;
-
-	Cbuf_Execute();
-
-	pr_global_struct->self = old_self;
-	pr_global_struct->other = old_other;
 }
 
 #define MAX_PR_STRING_SIZE	2048
@@ -938,30 +936,16 @@ void PF_argv (void)
 
 	num = (int) G_FLOAT(OFS_PARM0);
 
-//	if (num < 0 ) num = 0;
-//	if (num > Cmd_Argc()-1) num = Cmd_Argc()-1;
+	//	if (num < 0 ) num = 0;
+	//	if (num > Cmd_Argc()-1) num = Cmd_Argc()-1;
 
 	if (num < 0 || num >= Cmd_Argc())
 		RETURN_STRING("");
 	else {
 		snprintf (pr_string_temp, MAX_PR_STRING_SIZE, "%s", Cmd_Argv(num));
 		RETURN_STRING(pr_string_temp);
-//		G_INT(OFS_RETURN) = PR_SetString(pr_string_temp);
 		PF_SetTempString();
 	}
-}
-
-/*
-=================
-PF_teamfield
- 
-string teamfield(.string field)
-=================
-*/
-
-void PF_teamfield (void)
-{
-	pr_teamfield = G_INT(OFS_PARM0);
 }
 
 /*
@@ -996,7 +980,7 @@ void PF_substr (void)
 
 	strlcpy(pr_string_temp, s, len + 1);
 
-	G_INT(OFS_RETURN) = PR_SetString(pr_string_temp);
+	G_INT(OFS_RETURN) = PR1_SetString(pr_string_temp);
 
 	PF_SetTempString();
 }
@@ -1011,9 +995,8 @@ string strcat(string str1, string str2)
 
 void PF_strcat (void)
 {
-	/* FIXME */
-	strcpy(pr_string_temp, PF_VarString(0)/*, MAX_PR_STRING_SIZE*/);
-	G_INT(OFS_RETURN) = PR_SetString(pr_string_temp);
+	strlcpy(pr_string_temp, PF_VarString(0), MAX_PR_STRING_SIZE);
+	G_INT(OFS_RETURN) = PR1_SetString(pr_string_temp);
 
 	PF_SetTempString();
 }
@@ -1029,32 +1012,6 @@ float strlen(string str)
 void PF_strlen (void)
 {
 	G_FLOAT(OFS_RETURN) = (float) strlen(G_STRING(OFS_PARM0));
-}
-
-/*
-=================
-PF_str2byte
- 
-float str2byte (string str)
-=================
-*/
-
-void PF_str2byte (void)
-{
-	G_FLOAT(OFS_RETURN) = (float) *G_STRING(OFS_PARM0);
-}
-
-/*
-=================
-PF_str2short
- 
-float str2short (string str)
-=================
-*/
-
-void PF_str2short (void)
-{
-	G_FLOAT(OFS_RETURN) = (float) LittleShort(*(short*)G_STRING(OFS_PARM0));
 }
 
 /*
@@ -1137,83 +1094,15 @@ void PF_clear_strtbl(void)
 	}
 }
 
-/*
-=================
-PF_readcmd
- 
-string readmcmd (string str)
-=================
-*/
-
-void PF_readcmd (void)
-{
-	char *s;
-	static char output[OUTPUTBUF_SIZE];
-	extern char outputbuf[];
-	extern redirect_t sv_redirected;
-	redirect_t old;
-
-	s = G_STRING(OFS_PARM0);
-
-	Cbuf_Execute();
-	Cbuf_AddText (s);
-
-	old = sv_redirected;
-	if (old != RD_NONE)
-		SV_EndRedirect();
-
-	SV_BeginRedirect(RD_MOD);
-	Cbuf_Execute();
-	strlcpy(output, outputbuf, sizeof(output));
-	SV_EndRedirect();
-
-	if (old != RD_NONE)
-		SV_BeginRedirect(old);
-
-
-	G_INT(OFS_RETURN) = PR_SetString(output);
-}
-
-/*
-=================
-PF_redirectcmd
- 
-void redirectcmd (entity to, string str)
-=================
-*/
-
-void PF_redirectcmd (void)
-{
-	char *s;
-	int entnum;
-	extern redirect_t sv_redirected;
-
-	if (sv_redirected)
-		return;
-
-	entnum = G_EDICTNUM(OFS_PARM0);
-	if (entnum < 1 || entnum > MAX_CLIENTS)
-		PR_RunError ("Parm 0 not a client");
-
-	s = G_STRING(OFS_PARM1);
-
-	Cbuf_AddText (s);
-
-	SV_BeginRedirect((redirect_t) (RD_MOD + entnum));
-	Cbuf_Execute();
-	SV_EndRedirect();
-}
-
-dfunction_t *ED_FindFunction (char *name);
-
 //FTE_CALLTIMEOFDAY
 void PF_calltimeofday (void)
 {
-	date_t date;
-	dfunction_t *f;
+	extern func_t ED_FindFunctionOffset (char *name);
+	func_t f;
 
-	if ((f = ED_FindFunction ("timeofday")) != NULL)
+	if ((f = ED_FindFunctionOffset ("timeofday")))
 	{
+		date_t date;
 
 		SV_TimeOfDay(&date);
 
@@ -1225,165 +1114,8 @@ void PF_calltimeofday (void)
 		G_FLOAT(OFS_PARM5) = (float)date.year;
 		G_INT(OFS_PARM6) = PR_SetTmpString(date.str);
 
-		PR_ExecuteProgram((func_t)(f - pr_functions));
+		PR_ExecuteProgram(f);
 	}
-
-}
-
-/*
-=================
-PF_forcedemoframe
- 
-void PF_forcedemoframe(float now)
-Forces demo frame
-if argument 'now' is set, frame is written instantly
-=================
-*/
-
-void PF_forcedemoframe (void)
-{
-	demo.forceFrame = 1;
-	if (G_FLOAT(OFS_PARM0) == 1)
-		SV_SendDemoMessage();
-}
-
-
-/*
-=================
-PF_strcpy
- 
-void strcpy(string dst, string src)
-FIXME: check for null pointers first?
-=================
-*/
-
-void PF_strcpy (void)
-{
-	strcpy(G_STRING(OFS_PARM0), G_STRING(OFS_PARM1));
-}
-
-/*
-=================
-PF_strncpy
- 
-void strcpy(string dst, string src, float count)
-FIXME: check for null pointers first?
-=================
-*/
-
-void PF_strncpy (void)
-{
-	strncpy(G_STRING(OFS_PARM0), G_STRING(OFS_PARM1), (int) G_FLOAT(OFS_PARM2));
-}
-
-
-/*
-=================
-PF_strstr
- 
-string strstr(string str, string sub)
-=================
-*/
-
-void PF_strstr (void)
-{
-	char *str, *sub, *p;
-
-	str = G_STRING(OFS_PARM0);
-	sub = G_STRING(OFS_PARM1);
-
-	if ((p = strstr(str, sub)) == NULL)
-	{
-		G_INT(OFS_RETURN) = 0;
-		return;
-	}
-
-	RETURN_STRING(p);
-}
-
-/*
-====================
-SV_CleanName_Init
- 
-sets chararcter table to translate quake texts to more friendly texts
-====================
-*/
-
-char chartbl2[256];
-
-void PR_CleanLogText_Init (void)
-{
-	int i;
-
-	for (i = 0; i < 32; i++)
-		chartbl2[i] = chartbl2[i + 128] = '#';
-	for (i = 32; i < 128; i++)
-		chartbl2[i] = chartbl2[i + 128] = i;
-
-	// special cases
-	chartbl2[10] = 10;
-	chartbl2[13] = 13;
-
-	// dot
-	chartbl2[5      ] = chartbl2[14      ] = chartbl2[15      ] = chartbl2[28      ] = chartbl2[46      ] = '.';
-	chartbl2[5 + 128] = chartbl2[14 + 128] = chartbl2[15 + 128] = chartbl2[28 + 128] = chartbl2[46 + 128] = '.';
-
-	// numbers
-	for (i = 18; i < 28; i++)
-		chartbl2[i] = chartbl2[i + 128] = i + 30;
-
-	// brackets
-	chartbl2[16] = chartbl2[16 + 128]= '[';
-	chartbl2[17] = chartbl2[17 + 128] = ']';
-	chartbl2[29] = chartbl2[29 + 128] = chartbl2[128] = '(';
-	chartbl2[31] = chartbl2[31 + 128] = chartbl2[130] = ')';
-
-	// left arrow
-	chartbl2[127] = '>';
-	// right arrow
-	chartbl2[141] = '<';
-
-	// '='
-	chartbl2[30] = chartbl2[129] = chartbl2[30 + 128] = '=';
-}
-
-void PR_CleanText(unsigned char *text)
-{
-	for ( ; *text; text++)
-		*text = chartbl2[*text];
-}
-
-/*
-================
-PF_log
- 
-void log(string name, float console, string text)
-=================
-*/
-
-void PF_log(void)
-{
-	char name[MAX_OSPATH], *text;
-	FILE *file;
-
-	snprintf(name, MAX_OSPATH, "%s/%s.log", fs_gamedir, G_STRING(OFS_PARM0));
-	text = PF_VarString(2);
-	PR_CleanText((unsigned char*)text);
-
-	if ((file = fopen(name, "a")) == NULL)
-	{
-		Sys_Printf("coldn't open log file %s\n", name);
-	}
-	else
-	{
-		fprintf (file, "%s", text);
-		fflush (file);
-		fclose(file);
-	}
-
-	if (G_FLOAT(OFS_PARM1))
-		Sys_Printf("%s", text);
-
 }
 
 /*
@@ -1399,14 +1131,16 @@ void PF_cvar (void)
 
 	str = G_STRING(OFS_PARM0);
 
-	if (!strcasecmp(str, "pr_checkextension") && !is_ktpro) {
+	if (!strcasecmp(str, "pr_checkextension")) {
 		// we do support PF_checkextension
 		G_FLOAT(OFS_RETURN) = 1.0;
 		return;
 	}
 
 	if (pr_nqprogs && !pr_globals[35]/* deathmatch */
-	&& (!strcmp(str, "timelimit") || !strcmp(str, "samelevel"))) {
+		&& (!strcmp(str, "timelimit") || !strcmp(str, "samelevel"))
+		)
+	{
 		// workaround for NQ progs bug: timelimit and samelevel are checked in SP/coop
 		G_FLOAT(OFS_RETURN) = 0.0;
 		return;
@@ -1471,7 +1205,7 @@ static void PF_findradius (void)
 
 	chain = (edict_t *)sv.edicts;
 
-// touch linked edicts
+	// touch linked edicts
 	for (i = 0; i < numtouch; i++)
 	{
 		ent = touchlist[i];
@@ -1501,18 +1235,6 @@ void PF_dprint (void)
 	Con_Printf ("%s",PF_VarString(0));
 }
 
-/*
-=========
-PF_conprint
-=========
-*/
-void PF_conprint (void)
-{
-	Sys_Printf ("%s",PF_VarString(0));
-}
-
-//char	pr_string_temp[128];
-
 void PF_ftos (void)
 {
 	float	v;
@@ -1522,7 +1244,7 @@ void PF_ftos (void)
 		snprintf (pr_string_temp, MAX_PR_STRING_SIZE, "%d",(int)v);
 	else
 		snprintf (pr_string_temp, MAX_PR_STRING_SIZE, "%5.1f",v);
-	G_INT(OFS_RETURN) = PR_SetString(pr_string_temp);
+	G_INT(OFS_RETURN) = PR1_SetString(pr_string_temp);
 	PF_SetTempString();
 }
 
@@ -1536,7 +1258,7 @@ void PF_fabs (void)
 void PF_vtos (void)
 {
 	snprintf (pr_string_temp, MAX_PR_STRING_SIZE, "'%5.1f %5.1f %5.1f'", G_VECTOR(OFS_PARM0)[0], G_VECTOR(OFS_PARM0)[1], G_VECTOR(OFS_PARM0)[2]);
-	G_INT(OFS_RETURN) = PR_SetString(pr_string_temp);
+	G_INT(OFS_RETURN) = PR1_SetString(pr_string_temp);
 
 	PF_SetTempString();
 }
@@ -1657,7 +1379,7 @@ static void PF_precache_vwep_model (void)
 	
 	if (sv.state != ss_loading)
 		PR_RunError ("PF_Precache_*: Precache can only be done in spawn functions");
-		
+
 	s = G_STRING(OFS_PARM0);
 	PR_CheckEmptyString (s);
 
@@ -2031,7 +1753,7 @@ void NQP_Reset (void)
 
 static void NQP_Flush (int count)
 {
-// FIXME, we make no distinction reliable or not
+	// FIXME, we make no distinction reliable or not
 	assert (count <= nqp_buf.cursize);
 	SZ_Write (&sv.reliable_datagram, nqp_buf_data, count);
 	memcpy (nqp_buf_data, nqp_buf_data + count, nqp_buf.cursize - count);
@@ -2160,57 +1882,57 @@ static void NQP_Process (void)
 			if (nqp_buf.cursize < 2)
 				break;
 
-switch (nqp_buf_data[1]) {
-  case TE_SPIKE:
-  case TE_SUPERSPIKE:
-  case TE_EXPLOSION:
-  case TE_TAREXPLOSION:
-  case TE_WIZSPIKE:
-  case TE_KNIGHTSPIKE:
-  case TE_LAVASPLASH:
-  case TE_TELEPORT:
-		nqp_expect = 8;
-		break;
-  case TE_GUNSHOT:
-		if (nqp_buf.cursize < 8)
-			goto waitformore;
-		NQP_Flush (2);
-		MSG_WriteByte (&sv.reliable_datagram, 1);
-		NQP_Flush (6);
-		break;
+		switch (nqp_buf_data[1]) {
+			case TE_SPIKE:
+			case TE_SUPERSPIKE:
+			case TE_EXPLOSION:
+			case TE_TAREXPLOSION:
+			case TE_WIZSPIKE:
+			case TE_KNIGHTSPIKE:
+			case TE_LAVASPLASH:
+			case TE_TELEPORT:
+				nqp_expect = 8;
+				break;
+			case TE_GUNSHOT:
+				if (nqp_buf.cursize < 8)
+					goto waitformore;
+				NQP_Flush (2);
+				MSG_WriteByte (&sv.reliable_datagram, 1);
+				NQP_Flush (6);
+				break;
 
-  case TE_LIGHTNING1:
-  case TE_LIGHTNING2:
-  case TE_LIGHTNING3:
-		nqp_expect = 16;
-	  break;
-  case NQ_TE_BEAM:
-  {		int entnum;
-		if (nqp_buf.cursize < 16)
-			goto waitformore;
-		MSG_WriteByte (&sv.reliable_datagram, svc_temp_entity);
-		MSG_WriteByte (&sv.reliable_datagram, TE_LIGHTNING1);
-		entnum = nqp_buf_data[2] + nqp_buf_data[3]*256;
-		if ((unsigned int)entnum > 1023)
-			entnum = 0;
-		MSG_WriteShort (&sv.reliable_datagram, (short)(entnum - 1288));
-		NQP_Skip (4);
-		nqp_expect = 12;
-		break;
-  }
+			case TE_LIGHTNING1:
+			case TE_LIGHTNING2:
+			case TE_LIGHTNING3:
+				nqp_expect = 16;
+				break;
+			case NQ_TE_BEAM:
+			{
+				int entnum;
+				if (nqp_buf.cursize < 16)
+					goto waitformore;
+				MSG_WriteByte (&sv.reliable_datagram, svc_temp_entity);
+				MSG_WriteByte (&sv.reliable_datagram, TE_LIGHTNING1);
+				entnum = nqp_buf_data[2] + nqp_buf_data[3]*256;
+				if ((unsigned int)entnum > 1023)
+					entnum = 0;
+				MSG_WriteShort (&sv.reliable_datagram, (short)(entnum - 1288));
+				NQP_Skip (4);
+				nqp_expect = 12;
+				break;
+			}
 
-  case NQ_TE_EXPLOSION2:
-		nqp_expect = 10;
-		break;
-  default:
-		Com_Printf ("WARNING: progs.dat sent an unsupported svc_temp_entity: %i\n", nqp_buf_data[1]);
-	    goto ignore;
-}
-
+			case NQ_TE_EXPLOSION2:
+				nqp_expect = 10;
+				break;
+			default:
+				Con_Printf ("WARNING: progs.dat sent an unsupported svc_temp_entity: %i\n", nqp_buf_data[1]);
+				goto ignore;
+			}
 		}
 		else {
-			Com_Printf ("WARNING: progs.dat sent an unsupported svc: %i\n", cmd);
-ignore:
+			Con_Printf ("WARNING: progs.dat sent an unsupported svc: %i\n", cmd);
+		ignore:
 			nqp_ignore_this_frame = true;
 			break;
 		}
@@ -2280,7 +2002,8 @@ void PF_WriteChar (void)
 
 void PF_WriteShort (void)
 {
-	if (pr_nqprogs) {
+	if (pr_nqprogs)
+	{
 		if (G_FLOAT(OFS_PARM0) == MSG_ONE || G_FLOAT(OFS_PARM0) == MSG_INIT)
 			return;	// we don't support this
 		MSG_WriteShort (&nqp_buf, G_FLOAT(OFS_PARM1));
@@ -2462,13 +2185,13 @@ void PF_makestatic (void)
 
 	ent = G_EDICT(OFS_PARM0);
 	//bliP: for maps with null models which crash clients (nmtrees.bsp) ->
-	if (!SV_ModelIndex(PR_GetString(ent->v.model)))
+	if (!SV_ModelIndex(PR1_GetString(ent->v.model)))
 		return;
 	//<-
 
 	MSG_WriteByte (&sv.signon,svc_spawnstatic);
 
-	MSG_WriteByte (&sv.signon, SV_ModelIndex(PR_GetString(ent->v.model)));
+	MSG_WriteByte (&sv.signon, SV_ModelIndex(PR1_GetString(ent->v.model)));
 
 	MSG_WriteByte (&sv.signon, ent->v.frame);
 	MSG_WriteByte (&sv.signon, ent->v.colormap);
@@ -2578,241 +2301,6 @@ void PF_logfrag (void)
 	//	SV_Write_Log(MOD_FRAG_LOG, 1, "}====================\n");
 }
 
-//bliP: map voting ->
-/*==================
-PF_findmap
-finds maps in sv_gamedir either by id number or name
-returns id for exist, 0 for not
-float(string s) findmap
-==================*/
-void PF_findmap (void)
-{
-	dir_t	dir;
-	file_t *list;
-	char map[MAX_DEMO_NAME];
-	char *s;
-	int id;
-	int i;
-
-	strlcpy(map, G_STRING(OFS_PARM0), sizeof(map));
-	for (i = 0, s = map; *s; s++)
-	{
-		if (*s < '0' || *s > '9')
-		{
-			i = 1;
-			break;
-		}
-	}
-	id = (i) ? 0 : Q_atoi(map);
-
-	if (!strstr(map, ".bsp"))
-		strlcat(map, ".bsp", sizeof(map));
-
-	dir = Sys_listdir(va("%s/maps", Info_ValueForKey(svs.info, "*gamedir")),
-	                  ".bsp$", SORT_BY_NAME);
-	list = dir.files;
-
-	i = 1;
-	while (list->name[0])
-	{
-		if (((id > 0) && (i == id)) || !strcmp(list->name, map))
-		{
-			G_FLOAT(OFS_RETURN) = i;
-			return;
-		}
-		i++;
-		list++;
-	}
-
-	G_FLOAT(OFS_RETURN) = 0;
-}
-
-/*==================
-PF_findmapname
-returns map name from a map id
-string(float id) findmapname
-==================*/
-void PF_findmapname (void)
-{
-	dir_t	dir;
-	file_t *list;
-	//char *s;
-	int id;
-	int i;
-
-	id = G_FLOAT(OFS_PARM0);
-
-	dir = Sys_listdir(va("%s/maps", Info_ValueForKey(svs.info, "*gamedir")),
-	                  ".bsp$", SORT_BY_NAME);
-	list = dir.files;
-
-	i = 1;
-	while (list->name[0])
-	{
-		if (i == id)
-		{
-			list->name[strlen(list->name) - 4] = 0; //strip .bsp
-			//if ((s = strchr(list->name, '.')))
-			//  *s = '\0';
-			RETURN_STRING(list->name);
-			return;
-		}
-		i++;
-		list++;
-	}
-	G_FLOAT(OFS_RETURN) = 0;
-}
-
-/*==================
-PF_listmaps
-prints a range of map names from sv_gamedir (because of the likes of thundervote)
-returns position if more maps, 0 if displayed them all
-float(entity client, float level, float range, float start, float style, float footer) listmaps
-==================*/
-void PF_listmaps (void)
-{
-	int entnum, level, start, range, foot, style;
-	client_t	*client;
-	char line[256];
-	char tmp[64];
-	char num[16];
-	dir_t	dir;
-	file_t *list;
-	//char *s;
-	int id, pad;
-	int ti, i, j;
-
-	entnum = G_EDICTNUM(OFS_PARM0);
-	level = G_FLOAT(OFS_PARM1);
-	range = G_FLOAT(OFS_PARM2);
-	start = G_FLOAT(OFS_PARM3);
-	style = G_FLOAT(OFS_PARM4);
-	foot = G_FLOAT(OFS_PARM5);
-
-	if (entnum < 1 || entnum > MAX_CLIENTS)
-	{
-		Con_Printf ("tried to listmap to a non-client\n");
-		G_FLOAT(OFS_RETURN) = 0;
-		return;
-	}
-
-	client = &svs.clients[entnum-1];
-	dir = Sys_listdir(va("%s/maps", Info_ValueForKey(svs.info, "*gamedir")),
-	                  ".bsp$", SORT_BY_NAME);
-	list = dir.files;
-	snprintf(tmp, sizeof(tmp), "%d", dir.numfiles);
-	pad = strlen(tmp);
-
-	if (!list->name[0])
-	{
-		SV_ClientPrintf(client, level, "No maps.\n");
-		G_FLOAT(OFS_RETURN) = 0;
-		return;
-	}
-
-	//don't go off the end of the world
-	if ((range < 0) || (range > dir.numfiles))
-	{
-		range = dir.numfiles;
-	}
-	start--;
-	if ((start < 0) || (start > dir.numfiles-1))
-	{
-		start = 0;
-	}
-	ti = (range <= 10) ? range : 10;
-
-	//header - progs can do this
-	/*if (!start) {
-	  SV_ClientPrintf(client, level, "Available maps:\n");
-	}*/
-
-	list = dir.files + start;
-	line[0] = '\0';
-	j = 1;
-	for (i = 0, id = start + 1; list->name[0] && i < range && id < dir.numfiles + 1; id++)
-	{
-		list->name[strlen(list->name) - 4] = 0; //strip .bsp
-		//if ((s = strchr(list->name, '.'))) //strip .bsp
-		//	*s = '\0';
-		switch (style)
-		{
-		case 1:
-			if (i % ti == 0)
-			{ //print header
-				snprintf(tmp, sizeof(tmp), "%d-%d", id, id + ti - 1);
-				num[0] = '\0';
-				for (j = strlen(tmp); j < ((pad * 2) + 1); j++) //padding to align
-					strlcat(num, " ", sizeof(num));
-				SV_ClientPrintf(client, level, "%s%s %c ", num, tmp, 133);
-				j = 1;
-			}
-			i++;
-			//print id and name
-			snprintf(tmp, sizeof(tmp), "%d:%s ", j++, list->name);
-			if (i % 2 != 0) //red every second
-				Q_redtext((unsigned char*)tmp);
-			strlcat(line, tmp, sizeof(line));
-			if (i % 10 == 0)
-			{ //print entire line
-				SV_ClientPrintf(client, level, "%s\n", line);
-				line[0] = '\0';
-			}
-			break;
-		case 2:
-			snprintf(tmp, sizeof(tmp), "%d", id);
-			num[0] = '\0';
-			for (j = strlen(tmp); j < pad; j++) //padding to align
-				strlcat(num, " ", sizeof(num));
-			Q_redtext((unsigned char*)tmp);
-			SV_ClientPrintf(client, level, "%s%s%c %s\n", num, tmp, 133, list->name);
-			break;
-		case 3:
-			list->name[13] = 0;
-			snprintf(tmp, sizeof(tmp), "%03d", id);
-			Q_redtext((unsigned char*)tmp);
-			snprintf(line, sizeof(line), "%s\x85%-13s", tmp, list->name);
-			id++;
-			list++;
-			if (!list->name[0])
-				continue;
-			list->name[13] = 0;
-			list->name[strlen(list->name) - 4] = 0;
-			snprintf(tmp, sizeof(tmp), "%03d", id);
-			Q_redtext((unsigned char*)tmp);
-			SV_ClientPrintf(client, level, "%s %s\x85%-13s\n", line, tmp, list->name);
-			line[0] = 0; //bliP: 24/9 bugfix
-			break;
-		default:
-			snprintf(tmp, sizeof(tmp), "%d", id);
-			Q_redtext((unsigned char*)tmp);
-			SV_ClientPrintf(client, level, "%s%c%s%s", tmp, 133, list->name, (i == range) ? "\n" : " ");
-			i++;
-		}
-		list++;
-	}
-	if (((style == 1) || (style == 3)) && line[0]) //still things to print
-		SV_ClientPrintf(client, level, "%s\n", line);
-	else if (style == 0)
-		SV_ClientPrintf(client, level, "\n");
-
-	if (id < dir.numfiles + 1)
-	{ //more to come
-		G_FLOAT(OFS_RETURN) = id;
-		return;
-	}
-
-	if (foot)
-	{ //footer
-		strlcpy(tmp, "Total:", sizeof(tmp));
-		Q_redtext((unsigned char*)tmp);
-		SV_ClientPrintf (client, level,	"%s %d maps %.0fKB (%.2fMB)\n", tmp, dir.numfiles, (float)dir.size/1024, (float)dir.size/1024/1024);
-	}
-
-	G_FLOAT(OFS_RETURN) = 0;
-}
-//<-
-
 /*
 ==============
 PF_infokey
@@ -2836,11 +2324,7 @@ void PF_infokey (void)
 
 	if (e1 == 0)
 	{
-		if (is_ktpro && !strncmp(key, "*version", 9))
-			value = QW_VERSION;
-		else if (is_ktpro && !strncmp(key, "*qwe_version", 13))
-			value = QWE_VERSION;
-		else if ((value = Info_ValueForKey (svs.info, key)) == NULL || !*value)
+		if ((value = Info_ValueForKey (svs.info, key)) == NULL || !*value)
 			value = Info_Get(&_localinfo_, key);
 	}
 	else if (e1 <= MAX_CLIENTS)
@@ -2997,32 +2481,32 @@ void(vector v1, vector mins, vector maxs, vector v2, float nomonsters, entity ig
 */
 static void PF_tracebox (void)
 {
-        float       *v1, *v2, *mins, *maxs;
-        edict_t     *ent;
-        int          nomonsters;
-        trace_t      trace;
+	float       *v1, *v2, *mins, *maxs;
+	edict_t     *ent;
+	int          nomonsters;
+	trace_t      trace;
 
-        v1 = G_VECTOR(OFS_PARM0);
-        mins = G_VECTOR(OFS_PARM1);
-        maxs = G_VECTOR(OFS_PARM2);
-        v2 = G_VECTOR(OFS_PARM3);
-        nomonsters = G_FLOAT(OFS_PARM4);
-        ent = G_EDICT(OFS_PARM5);
+	v1 = G_VECTOR(OFS_PARM0);
+	mins = G_VECTOR(OFS_PARM1);
+	maxs = G_VECTOR(OFS_PARM2);
+	v2 = G_VECTOR(OFS_PARM3);
+	nomonsters = G_FLOAT(OFS_PARM4);
+	ent = G_EDICT(OFS_PARM5);
 
-        trace = SV_Trace (v1, mins, maxs, v2, nomonsters, ent);
+	trace = SV_Trace (v1, mins, maxs, v2, nomonsters, ent);
 
-        PR_GLOBAL(trace_allsolid) = trace.allsolid;
-        PR_GLOBAL(trace_startsolid) = trace.startsolid;
-        PR_GLOBAL(trace_fraction) = trace.fraction;
-        PR_GLOBAL(trace_inwater) = trace.inwater;
-        PR_GLOBAL(trace_inopen) = trace.inopen;
-        VectorCopy (trace.endpos, PR_GLOBAL(trace_endpos));
-        VectorCopy (trace.plane.normal, PR_GLOBAL(trace_plane_normal));
-        PR_GLOBAL(trace_plane_dist) =  trace.plane.dist;
-        if (trace.e.ent)
-                PR_GLOBAL(trace_ent) = EDICT_TO_PROG(trace.e.ent);
-        else
-                PR_GLOBAL(trace_ent) = EDICT_TO_PROG(sv.edicts);
+	PR_GLOBAL(trace_allsolid) = trace.allsolid;
+	PR_GLOBAL(trace_startsolid) = trace.startsolid;
+	PR_GLOBAL(trace_fraction) = trace.fraction;
+	PR_GLOBAL(trace_inwater) = trace.inwater;
+	PR_GLOBAL(trace_inopen) = trace.inopen;
+	VectorCopy (trace.endpos, PR_GLOBAL(trace_endpos));
+	VectorCopy (trace.plane.normal, PR_GLOBAL(trace_plane_normal));
+	PR_GLOBAL(trace_plane_dist) =  trace.plane.dist;
+	if (trace.e.ent)
+		PR_GLOBAL(trace_ent) = EDICT_TO_PROG(trace.e.ent);
+	else
+		PR_GLOBAL(trace_ent) = EDICT_TO_PROG(sv.edicts);
 }
 
 /*
@@ -3065,8 +2549,10 @@ static void PF_cvar_string (void)
 		G_INT(OFS_RETURN) = 0;
 		return;
 	}
-	strlcpy (pr_string_temp, var->string, sizeof(pr_string_temp));
+
+	strlcpy (pr_string_temp, var->string, MAX_PR_STRING_SIZE);
 	RETURN_STRING(pr_string_temp);
+	PF_SetTempString();
 }
 
 // DP_REGISTERCVAR
@@ -3155,209 +2641,169 @@ void PF_Fixme (void)
 
 
 static builtin_t std_builtins[] =
-    {
-        PF_Fixme,		//#0
-        PF_makevectors,	// void(entity e)	makevectors 		= #1;
-        PF_setorigin,	// void(entity e, vector o) setorigin	= #2;
-        PF_setmodel,	// void(entity e, string m) setmodel	= #3;
-        PF_setsize,	// void(entity e, vector min, vector max) setsize = #4;
-        PF_Fixme,	// void(entity e, vector min, vector max) setabssize = #5;
-        PF_break,	// void() break						= #6;
-        PF_random,	// float() random						= #7;
-        PF_sound,	// void(entity e, float chan, string samp) sound = #8;
-        PF_normalize,	// vector(vector v) normalize			= #9;
-        PF_error,	// void(string e) error				= #10;
-        PF_objerror,	// void(string e) objerror				= #11;
-        PF_vlen,	// float(vector v) vlen				= #12;
-        PF_vectoyaw,	// float(vector v) vectoyaw		= #13;
-        PF_Spawn,	// entity() spawn						= #14;
-        PF_Remove,	// void(entity e) remove				= #15;
-        PF_traceline,	// float(vector v1, vector v2, float tryents) traceline = #16;
-        PF_checkclient,	// entity() clientlist					= #17;
-        PF_Find,	// entity(entity start, .string fld, string match) find = #18;
-        PF_precache_sound,	// void(string s) precache_sound		= #19;
-        PF_precache_model,	// void(string s) precache_model		= #20;
-        PF_stuffcmd,	// void(entity client, string s)stuffcmd = #21;
-        PF_findradius,	// entity(vector org, float rad) findradius = #22;
-        PF_bprint,	// void(string s) bprint				= #23;
-        PF_sprint,	// void(entity client, string s) sprint = #24;
-        PF_dprint,	// void(string s) dprint				= #25;
-        PF_ftos,	// void(string s) ftos				= #26;
-        PF_vtos,	// void(string s) vtos				= #27;
-        PF_coredump,
-        PF_traceon,
-        PF_traceoff,		//#30
-        PF_eprint,	// void(entity e) debug print an entire entity
-        PF_walkmove, // float(float yaw, float dist) walkmove
-        PF_Fixme, // float(float yaw, float dist) walkmove
-        PF_droptofloor,
-        PF_lightstyle,
-        PF_rint,
-        PF_floor,
-        PF_ceil,
-        PF_Fixme,
-        PF_checkbottom,		//#40
-        PF_pointcontents,
-        PF_Fixme,
-        PF_fabs,
-        PF_aim,
-        PF_cvar,
-        PF_localcmd,
-        PF_nextent,
-		PF_particle,
-        PF_changeyaw,
-        PF_Fixme,		//#50
-        PF_vectoangles,
+{
+	PF_Fixme,		//#0
+	PF_makevectors,	// void(entity e)	makevectors 		= #1;
+	PF_setorigin,	// void(entity e, vector o) setorigin	= #2;
+	PF_setmodel,	// void(entity e, string m) setmodel	= #3;
+	PF_setsize,	// void(entity e, vector min, vector max) setsize = #4;
+	PF_Fixme,	// void(entity e, vector min, vector max) setabssize = #5;
+	PF_break,	// void() break						= #6;
+	PF_random,	// float() random						= #7;
+	PF_sound,	// void(entity e, float chan, string samp) sound = #8;
+	PF_normalize,	// vector(vector v) normalize			= #9;
+	PF_error,	// void(string e) error				= #10;
+	PF_objerror,	// void(string e) objerror				= #11;
+	PF_vlen,	// float(vector v) vlen				= #12;
+	PF_vectoyaw,	// float(vector v) vectoyaw		= #13;
+	PF_Spawn,	// entity() spawn						= #14;
+	PF_Remove,	// void(entity e) remove				= #15;
+	PF_traceline,	// float(vector v1, vector v2, float tryents) traceline = #16;
+	PF_checkclient,	// entity() clientlist					= #17;
+	PF_Find,	// entity(entity start, .string fld, string match) find = #18;
+	PF_precache_sound,	// void(string s) precache_sound		= #19;
+	PF_precache_model,	// void(string s) precache_model		= #20;
+	PF_stuffcmd,	// void(entity client, string s)stuffcmd = #21;
+	PF_findradius,	// entity(vector org, float rad) findradius = #22;
+	PF_bprint,	// void(string s) bprint				= #23;
+	PF_sprint,	// void(entity client, string s) sprint = #24;
+	PF_dprint,	// void(string s) dprint				= #25;
+	PF_ftos,	// void(string s) ftos				= #26;
+	PF_vtos,	// void(string s) vtos				= #27;
+	PF_coredump,
+	PF_traceon,
+	PF_traceoff,		//#30
+	PF_eprint,	// void(entity e) debug print an entire entity
+	PF_walkmove, // float(float yaw, float dist) walkmove
+	PF_Fixme, // float(float yaw, float dist) walkmove
+	PF_droptofloor,
+	PF_lightstyle,
+	PF_rint,
+	PF_floor,
+	PF_ceil,
+	PF_Fixme,
+	PF_checkbottom,		//#40
+	PF_pointcontents,
+	PF_Fixme,
+	PF_fabs,
+	PF_aim,
+	PF_cvar,
+	PF_localcmd,
+	PF_nextent,
+	PF_particle,
+	PF_changeyaw,
+	PF_Fixme,		//#50
+	PF_vectoangles,
 
-        PF_WriteByte,
-        PF_WriteChar,
-        PF_WriteShort,
-        PF_WriteLong,
-        PF_WriteCoord,
-        PF_WriteAngle,
-        PF_WriteString,
-        PF_WriteEntity,		//#59
+	PF_WriteByte,
+	PF_WriteChar,
+	PF_WriteShort,
+	PF_WriteLong,
+	PF_WriteCoord,
+	PF_WriteAngle,
+	PF_WriteString,
+	PF_WriteEntity,		//#59
 
-        //bliP: added pr as requested ->
-        PF_sin, //float(float f) sin = #60;
-        PF_cos, //float(float f) cos = #61;
-        PF_sqrt, //float(float f) sqrt = #62;
-        PF_min, //float(float val1, float val2) min = #63;
-        PF_max, //float(float val1, float val2) max = #64;
-        //<-
+	PF_Fixme,
+	PF_Fixme,
+	PF_Fixme,
+	PF_Fixme,
+	PF_Fixme,
+	PF_Fixme,
+	PF_Fixme,
 
-        PF_Fixme,
-        PF_Fixme,
+	SV_MoveToGoal,
+	PF_precache_file,
+	PF_makestatic,
 
-        SV_MoveToGoal,
-        PF_precache_file,
-        PF_makestatic,
+	PF_changelevel,		//#70
+	PF_Fixme,
 
-        PF_changelevel,		//#70
-        PF_Fixme,
+	PF_cvar_set,
+	PF_centerprint,
 
-        PF_cvar_set,
-        PF_centerprint,
+	PF_ambientsound,
 
-        PF_ambientsound,
+	PF_precache_model,
+	PF_precache_sound,		// precache_sound2 is different only for qcc
+	PF_precache_file,
 
-        PF_precache_model,
-        PF_precache_sound,		// precache_sound2 is different only for qcc
-        PF_precache_file,
+	PF_setspawnparms,
 
-        PF_setspawnparms,
+	PF_logfrag,
 
-        PF_logfrag,
+	PF_infokey,		//#80
+	PF_stof,
+	PF_multicast,
+};
 
-        PF_infokey,		//#80
-        PF_stof,
-        PF_multicast,
-// MVDSV extensions:
-        PF_executecmd,		//#83
-        PF_tokenize,
-        PF_argc,
-        PF_argv,
-        PF_teamfield,
-        PF_substr,
-        PF_strcat,
-        PF_strlen,		//#90
-        PF_str2byte,
-        PF_str2short,
-        PF_strzone,
-        PF_strunzone,
-        PF_conprint,
-        PF_readcmd,
-        PF_strcpy,
-        PF_strstr,
-        PF_strncpy,
-        PF_log,			//#100
-        PF_redirectcmd,
-        PF_calltimeofday,
-        PF_forcedemoframe,	//#103
-        //bliP: find map ->
-        PF_findmap,		//#104
-        PF_listmaps,		//#105
-        PF_findmapname,		//#106
-    };
-
-#define num_mvdsv_builtins (sizeof(std_builtins)/sizeof(std_builtins[0]))
-#define num_id_builtins 83
+#define num_std_builtins (sizeof(std_builtins)/sizeof(std_builtins[0]))
 
 static struct { int num; builtin_t func; } ext_builtins[] =
 {
-{63, PF_Fixme},		// mvdsv min() -- use QSG min() #94 instead
-{64, PF_Fixme},		// mvdsv max() -- use QSG max() #95 instead
+	{60, PF_sin},			//float(float f) sin = #60;
+	{61, PF_cos},			//float(float f) cos = #61;
+	{62, PF_sqrt},			//float(float f) sqrt = #62;
 
-{84, PF_tokenize},		// float(string s) tokenize
-{85, PF_argc},			// float() argc
-{86, PF_argv},			// string(float n) argv
+	{84, PF_tokenize},		// float(string s) tokenize
+	{85, PF_argc},			// float() argc
+	{86, PF_argv},			// string(float n) argv
 
-{90, PF_tracebox},		// void (vector v1, vector mins, vector maxs, vector v2, float nomonsters, entity ignore) tracebox
-{91, PF_randomvec},		// vector() randomvec
-////
-{93, PF_registercvar},	// float(string name, string value) registercvar
-{94, PF_min},			// float(float a, float b, ...) min
-{95, PF_max},			// float(float a, float b, ...) max
-{96, PF_bound},			// float(float min, float value, float max) bound
-{97, PF_pow},			// float(float x, float y) pow
-////
-{99, PF_checkextension},// float(string name) checkextension
-////
-{103, PF_cvar_string},	// string(string varname) cvar_string
-////
-{114, PF_strlen},		// float(string s) strlen
-{115, PF_strcat},		// string(string s1, string s2, ...) strcat
-{116, PF_substr},		// string(string s, float start, float count) substr
-//{117, PF_stov},			// vector(string s) stov
-{118, PF_strzone},		// string(string s) strzone
-{119, PF_strunzone},	// void(string s) strunzone
-{231, PF_calltimeofday},// void() calltimeofday
-{448, PF_cvar_string},	// string(string varname) cvar_string
-{531,PF_setpause},		//void(float pause) setpause
-{532,PF_precache_vwep_model},	// float(string model) precache_vwep_model = #532;
+	{90, PF_tracebox},		// void (vector v1, vector mins, vector maxs, vector v2, float nomonsters, entity ignore) tracebox
+	{91, PF_randomvec},		// vector() randomvec
+							////
+	{93, PF_registercvar},	// float(string name, string value) registercvar
+	{94, PF_min},			// float(float a, float b, ...) min
+	{95, PF_max},			// float(float a, float b, ...) max
+	{96, PF_bound},			// float(float min, float value, float max) bound
+	{97, PF_pow},			// float(float x, float y) pow
+							////
+	{99, PF_checkextension},// float(string name) checkextension
+							////
+	{103, PF_cvar_string},	// string(string varname) cvar_string
+							////
+	{114, PF_strlen},		// float(string s) strlen
+	{115, PF_strcat},		// string(string s1, string s2, ...) strcat
+	{116, PF_substr},		// string(string s, float start, float count) substr
+							//{117, PF_stov},			// vector(string s) stov
+	{118, PF_strzone},		// string(string s) strzone
+	{119, PF_strunzone},	// void(string s) strunzone
+	{231, PF_calltimeofday},// void() calltimeofday
+	{448, PF_cvar_string},	// string(string varname) cvar_string
+	{531, PF_setpause},		//void(float pause) setpause
+	{532, PF_precache_vwep_model},	// float(string model) precache_vwep_model = #532;
 };
 
 #define num_ext_builtins (sizeof(ext_builtins)/sizeof(ext_builtins[0]))
 
-builtin_t *pr_builtins;
-int pr_numbuiltins;
+builtin_t *pr_builtins = NULL;
+int pr_numbuiltins = 0;
 
 void PR_InitBuiltins (void)
 {
 	int i;
-	enum { UNINITIALIZED, KTPRO, QSG };
-	static int builtin_mode = UNINITIALIZED;
-	int newmode;
 
-	newmode = is_ktpro ? KTPRO : QSG;
-	if (newmode == builtin_mode)
-		return;
+	if (pr_builtins)
+		return; // We don't need reinit it.
 
-	if (builtin_mode == QSG)
-		Q_free (pr_builtins);
-
-	if (newmode == KTPRO) {
-		builtin_mode = KTPRO;
-		pr_builtins = std_builtins;
-		pr_numbuiltins = num_mvdsv_builtins;
-		return;
-	}
-
-	builtin_mode = QSG;
-
-	// find highest builtin number to see how much space we need
-	pr_numbuiltins = num_id_builtins;
+	// Free old array.
+	Q_free (pr_builtins);
+	// We have at least iD builtins.
+	pr_numbuiltins = num_std_builtins;
+	// Find highest builtin number to see how much space we actually need.
 	for (i = 0; i < num_ext_builtins; i++)
-		if (ext_builtins[i].num + 1 > pr_numbuiltins)
-			pr_numbuiltins = ext_builtins[i].num + 1;
-
+		pr_numbuiltins = max(ext_builtins[i].num + 1, pr_numbuiltins);
+	// Allocate builtins array.
 	pr_builtins = (builtin_t *) Q_malloc(pr_numbuiltins * sizeof(builtin_t));
-	memcpy (pr_builtins, std_builtins, num_id_builtins * sizeof(builtin_t));
-	for (i = num_id_builtins; i < pr_numbuiltins; i++)
+	// Init new array to PF_Fixme().
+	for (i = 0; i < pr_numbuiltins; i++)
 		pr_builtins[i] = PF_Fixme;
-	for (i = 0; i < num_ext_builtins; i++) {
+	// Copy iD builtins in new array.
+	memcpy (pr_builtins, std_builtins, num_std_builtins * sizeof(builtin_t));
+	// Add QSG builtins or, probably, overwrite iD ones.
+	for (i = 0; i < num_ext_builtins; i++)
+	{
 		assert (ext_builtins[i].num >= 0);
 		pr_builtins[ext_builtins[i].num] = ext_builtins[i].func;
 	}
 }
-

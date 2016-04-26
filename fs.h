@@ -42,10 +42,27 @@ void FS_SetUserDirectory (char *dir, char *type);
 // ====================================================================
 // Virtual File System
 
+// FS_FLocateFile return type.
+typedef enum
+{
+	FSLFRT_IFFOUND,			// return true if file found, false if not found.
+	FSLFRT_LENGTH,			// return file length if found, -1 if not found.
+	FSLFRT_DEPTH_OSONLY,	// return depth (no paks), 0x7fffffff if not found.
+	FSLFRT_DEPTH_ANYPATH	// return depth, 0x7fffffff if not found.
+} FSLF_ReturnType_e;
+
 typedef enum {
 	VFSERR_NONE,
 	VFSERR_EOF
 } vfserrno_t;
+
+typedef struct {
+	struct searchpath_s *search;
+	int             index;
+	char            rawname[MAX_OSPATH];
+	int             offset;
+	int             len;
+} flocation_t;
 
 typedef struct vfsfile_s {
 	int (*ReadBytes) (struct vfsfile_s *file, void *buffer, int bytestoread, vfserrno_t *err);
@@ -64,6 +81,7 @@ typedef enum {
 	FS_NONE_OS, // file name used as is, opened with OS functions (no paks)
 	FS_GAME_OS, // file used as com_basedir/filename, opened with OS functions 
 				// (no paks)
+	FS_GAME,	// Searched on path as filename, including packs.
 	FS_BASE,	// file is relative to the com_basedir/com_homedir
 	FS_HOME,
 	FS_PAK,
@@ -87,8 +105,10 @@ void			VFS_TICK   (void);  // fill in/out our internall buffers
 vfsfile_t      *VFS_Filter(const char *filename, vfsfile_t *handle);
 qbool			VFS_COPYPROTECTED(struct vfsfile_s *vf);
 
-// some general function to open VFS file, except TCP
-vfsfile_t *FS_OpenVFS(const char *filename, char *mode,relativeto_t relativeto);
+void FS_FlushFSHash(void);
+
+vfsfile_t *FS_OpenVFS(const char *filename, char *mode, relativeto_t relativeto);
+int FS_FLocateFile(const char *filename, FSLF_ReturnType_e returntype, flocation_t *loc);
 
 // TCP VFS file
 vfsfile_t *FS_OpenTCP(char *name);

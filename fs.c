@@ -68,6 +68,7 @@ searchpath_t	*fs_purepaths;
 
 static int FS_AddPak(char *pathto, char *pakname, searchpath_t *search, searchpathfuncs_t *funcs);
 static qbool FS_RemovePak (const char *pakfile);
+static void FS_GameDirChanged (void);
 
 //============================================================================
 #include "q_shared.h"
@@ -85,13 +86,6 @@ int fs_hash_dups;
 int fs_hash_files;
 
 cvar_t fs_cache = {"fs_cache", "1"};
-
-typedef enum {
-	FSLFRT_IFFOUND,
-	FSLFRT_LENGTH,
-	FSLFRT_DEPTH_OSONLY,
-	FSLFRT_DEPTH_ANYPATH
-} FSLF_ReturnType_e;
 
 void FS_CreatePathRelative(char *pname, int relativeto);
 void FS_ForceToPure(char *str, char *crcs, int seed);
@@ -420,8 +414,6 @@ FS_SetUserDirectory
 ================
 */
 void FS_SetUserDirectory (char *dir, char *type) {
-	char tmp[sizeof(com_gamedirfile)];
-
 	if (strstr(dir, "..") || strstr(dir, "/")
 	        || strstr(dir, "\\") || strstr(dir, ":") ) {
 		Com_Printf ("Userdir should be a single filename, not a path\n");
@@ -430,9 +422,7 @@ void FS_SetUserDirectory (char *dir, char *type) {
 	strlcpy(userdirfile, dir, sizeof(userdirfile));
 	userdir_type = Q_atoi(type);
 
-	strlcpy(tmp, com_gamedirfile, sizeof(tmp)); // save
-	com_gamedirfile[0]='\0'; // force reread
-	FS_SetGamedir(tmp); // restore
+	FS_GameDirChanged (); // restore
 }
 
 // ==========
@@ -557,7 +547,7 @@ static void FS_AddUserPaks(char *dir, searchpath_t *parent, FS_Load_File_Types l
 
 // <-- QW262
 
-void FS_AddUserDirectory ( char *dir ) {
+static void FS_AddUserDirectory ( const char *dir ) {
 	size_t dir_len;
 	char *malloc_dir;
 
@@ -588,9 +578,8 @@ void FS_AddUserDirectory ( char *dir ) {
 void Draw_InitConback(void);
 
 // Sets the gamedir and path to a different directory.
-void FS_SetGamedir (char *dir)
+void FS_SetGamedir (char *dir, qbool force)
 {
-	searchpath_t  *next;
 	if (strstr(dir, "..") || strstr(dir, "/")
 	 || strstr(dir, "\\") || strstr(dir, ":") ) 
 	{
@@ -598,10 +587,17 @@ void FS_SetGamedir (char *dir)
 		return;
 	}
 
-	if (!strcmp(com_gamedirfile, dir))
+	if (!force && !strcmp (com_gamedirfile, dir))
 		return;		// Still the same.
 	
 	strlcpy (com_gamedirfile, dir, sizeof(com_gamedirfile));
+
+	FS_GameDirChanged ();
+}
+
+static void FS_GameDirChanged (void)
+{
+	searchpath_t  *next;
 
 	// Free up any current game dir info.
 	FS_FlushFSHash();
@@ -620,19 +616,19 @@ void FS_SetGamedir (char *dir)
 	// Flush all data, so it will be forced to reload.
 	Cache_Flush ();
 
-	snprintf(com_gamedir, sizeof(com_gamedir), "%s/%s", com_basedir, dir);
+	snprintf(com_gamedir, sizeof(com_gamedir), "%s/%s", com_basedir, com_gamedirfile);
 
 	FS_AddGameDirectory(com_gamedir, FS_LOAD_FILE_ALL);
 	if (*com_homedir) {
 		char tmp[MAX_OSPATH];
-		snprintf(&tmp[0], sizeof(tmp), "%s/%s", com_homedir, dir);
+		snprintf(&tmp[0], sizeof(tmp), "%s/%s", com_homedir, com_gamedirfile);
 		FS_AddHomeDirectory(tmp, FS_LOAD_FILE_ALL);
 	}
 
 	// Reload gamedir specific conback as its not flushed
 	Draw_InitConback();
 
-	FS_AddUserDirectory(dir);
+	FS_AddUserDirectory(com_gamedirfile);
 }
 
 char *FS_NextPath (char *prevpath)
@@ -807,7 +803,7 @@ void FS_InitFilesystemEx( qbool guess_cwd ) {
 	if (!(i = COM_CheckParm ("-game")))
 		i = COM_CheckParm ("+gamedir");
 	if (i && i < COM_Argc() - 1)
-		FS_SetGamedir (COM_Argv(i + 1));
+		FS_SetGamedir (COM_Argv(i + 1), true);
 }
 
 void FS_InitFilesystem( void ) {
@@ -1125,6 +1121,17 @@ archive_fail:
 
 		snprintf(fullname, sizeof(fullname), "%s/%s/%s", com_basedir, com_gamedirfile, filename);
 		return VFSOS_Open(fullname, mode);
+
+	case FS_GAME:
+		// That an error attempt to write with FS_GAME, since file can be in pack file. redirect.
+		if (strchr(mode, 'w') || strchr(mode, 'a'))
+			return FS_OpenVFS(filename, mode, FS_GAME_OS);
+
+		// Search on path, try to open if found.
+		if (FS_FLocateFile(filename, FSLFRT_IFFOUND, &loc))
+			return loc.search->funcs->OpenVFS(loc.search->handle, &loc, mode);
+
+		return NULL;
 
 /* VFS-XXX: Removed as we don't really use this
  *	case FS_SKINS:

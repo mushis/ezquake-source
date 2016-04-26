@@ -29,14 +29,6 @@ extern int fs_hash_dups;
 extern int fs_hash_files;		
 
 typedef struct {
-	struct searchpath_s *search;
-	int             index;
-	char            rawname[MAX_OSPATH];
-	int             offset;
-	int             len;
-} flocation_t;
-
-typedef struct {
 	void	(*PrintPath)(void *handle);
 	void	(*ClosePath)(void *handle);
 	void	(*BuildHash)(void *handle);
@@ -77,6 +69,31 @@ int FS_BreakUpArchivePath(const char *filename,
 searchpathfuncs_t *FS_FileNameToSearchFunctions(const char *filename);
 #endif
 
+/*
+typedef enum
+{
+	FS_NONE_OS, // FIXME: probably must be removed, as not so secure...
+				// Opened with OS functions (no paks).
+				// filename.
+
+	FS_GAME_OS, // Opened with OS functions (no paks).
+				// fs_basedir/fs_gamedirfile/filename.
+
+	FS_GAME,	// Searched on path as filename, including packs.
+
+	FS_BASE_OS,	// Opened with OS functions (no paks).
+				// fs_basedir/filename.
+
+	FS_ANY		// That slightly evil, derived from ezquake.
+				// 1) FS_GAME.
+				// 2) FS_NONE_OS.
+} relativeto_t;
+
+void FS_FlushFSHash(void);
+
+vfsfile_t *FS_OpenVFS(const char *filename, char *mode, relativeto_t relativeto);
+int FS_FLocateFile(const char *filename, FSLF_ReturnType_e returntype, flocation_t *loc);
+*/
 //=================================
 // STDIO Files (OS)
 //=================================

@@ -141,6 +141,14 @@ typedef struct
 
 #define	NUM_SPAWN_PARMS 16
 
+// { sv_antilag related
+typedef struct
+{
+	qbool present;
+	vec3_t laggedpos;
+} laggedentinfo_t;
+// }
+
 typedef enum
 {
 	cs_free,		// can be reused for a new connection
@@ -158,9 +166,21 @@ typedef struct
 	// reply
 	double			senttime;
 	float			ping_time;
+
+// { sv_antilag
+	double				sv_time;
+// }
+
 	packet_entities_t	entities;
 } client_frame_t;
 
+typedef struct
+{
+	double			localtime;
+	vec3_t			origin;
+} antilag_position_t;
+
+#define MAX_ANTILAG_POSITIONS	128
 #define MAX_BACK_BUFFERS	128
 #define MAX_STUFFTEXT		256
 #define	CLIENT_LOGIN_LEN	16
@@ -185,6 +205,9 @@ typedef struct client_s
 	ctxinfo_t		_userinfo_ctx_;			// infostring
 	ctxinfo_t		_userinfoshort_ctx_;	// infostring
 
+	antilag_position_t	antilag_positions[MAX_ANTILAG_POSITIONS];
+	int				antilag_position_next;
+
 	usercmd_t		lastcmd;			// for filling in big drops and partial predictions
 	double			localtime;			// of last message
 	qbool			jump_held;
@@ -196,10 +219,9 @@ typedef struct client_s
 #ifdef USE_PR2
 	int		isBot;
 	usercmd_t		botcmd;				// bot movment
-	char			*name;				// in PR2 points to ent->v.netname
-#else
-	char			name[CLIENT_NAME_LEN];		// for printing to other people
 #endif
+	char			name[CLIENT_NAME_LEN];		// for printing to other people
+
 	char			team[CLIENT_NAME_LEN];
 							// extracted from userinfo
 	int				messagelevel;			// for filtering printed messages
@@ -220,6 +242,12 @@ typedef struct client_s
 	double			connection_started;		// or time of disconnect for zombies
 	qbool			send_message;			// set on frames a datagram arived on
 
+// { sv_antilag related
+	laggedentinfo_t	laggedents[MAX_CLIENTS];
+	unsigned int	laggedents_count;
+	float			laggedents_frac;
+// }
+	
 // spawn parms are carried from level to level
 	float			spawn_parms[NUM_SPAWN_PARMS];
 
@@ -569,6 +597,10 @@ typedef struct
 #define	FL_PARTIALGROUND		1024	// not all corners are valid
 #define	FL_WATERJUMP			2048	// player jumping out of water
 
+// { sv_antilag
+#define FL_LAGGEDMOVE			(1<<16)
+// }
+
 #define	SPAWNFLAG_NOT_EASY		256
 #define	SPAWNFLAG_NOT_MEDIUM		512
 #define	SPAWNFLAG_NOT_HARD		1024
@@ -617,9 +649,9 @@ typedef struct
 //============================================================================
 
 extern	cvar_t	sv_paused; // 1 - normal, 2 - auto (single player), 3 - both
-
-extern	cvar_t	sv_mintic, sv_maxtic, sv_ticrate;
 extern	cvar_t	sv_maxspeed;
+extern	cvar_t	sv_mintic, sv_maxtic, sv_maxfps;
+extern	cvar_t	sv_antilag, sv_antilag_no_pred, sv_antilag_projectiles;
 
 extern	int current_skill;
 
@@ -652,7 +684,6 @@ extern	int		host_hunklevel;
 
 extern	qbool		sv_error;
 
-extern qbool		server_cfg_done;
 extern char		master_rcon_password[128];
 
 extern qbool is_ktpro;
@@ -761,7 +792,7 @@ unsigned char *Q_yelltext (unsigned char *str); //VVD: white to red text and yel
 //
 int SV_ModelIndex (char *name);
 void SV_FlushSignon (void);
-void SV_SpawnServer (char *server, qbool devmap);
+void SV_SpawnServer (char *server, qbool devmap, char* entityfile);
 
 
 //
@@ -817,6 +848,7 @@ void SV_TogglePause (const char *msg, int bit);
 //
 void SV_Status_f (void);
 void SV_SendServerInfoChange (char *key, char *value);
+void SV_ServerinfoChanged (char *key, char *string);
 
 //
 // sv_ents.c

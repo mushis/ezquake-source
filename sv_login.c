@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  
-	$Id: sv_login.c 759 2008-02-25 16:16:46Z qqshka $
+
 */
 
 #include "qwsvdef.h"
@@ -70,7 +70,7 @@ Writes account list to disk
 =================
 */
 
-static void WriteAccounts(void)
+static void WriteAccounts()
 {
 	int c;
 	FILE *f;
@@ -97,6 +97,9 @@ static void WriteAccounts(void)
 	}
 
 	fclose(f);
+
+	// force cache rebuild.
+	FS_FlushFSHash();
 }
 
 /*
@@ -133,7 +136,7 @@ void SV_LoadAccounts(void)
 		memset(acc, 0, sizeof(account_t));
 		// Is realy safe to use 'fscanf(f, "%s", s)'? FIXME!
 		if (fscanf(f, "%s", acc->login) != 1) {
-			Com_Printf("Error reading account data\n");
+			Con_Printf("Error reading account data\n");
 			break;
 		}
 		if (StringToFilter(acc->login, &acc->adress))
@@ -141,13 +144,13 @@ void SV_LoadAccounts(void)
 			strlcpy(acc->pass, acc->login, MAX_LOGINNAME);
 			acc->use = use_ip;
 			if (fscanf(f, "%s %d\n", acc->pass, (int *)&acc->state) != 2) {
-				Com_Printf("Error reading account data\n");
+				Con_Printf("Error reading account data\n");
 				break;
 			}
 		}
 		else {
 			if (fscanf(f, "%s %d %d\n", acc->pass,  (int *)&acc->state, &acc->failures) != 3) {
-				Com_Printf("Error reading account data\n");
+				Con_Printf("Error reading account data\n");
 				break;
 			}
 		}
@@ -171,7 +174,7 @@ void SV_LoadAccounts(void)
 
 		for (i = 0, acc = accounts; i < num_accounts; i++, acc++)
 			if ( (acc->use == use_log && !strncmp(acc->login, cl->login, CLIENT_LOGIN_LEN))
-			        || (acc->use == use_ip && !strcmp(acc->login, va("%d.%d.%d.%d", cl->realip.ip[0], cl->realip.ip[1], cl->realip.ip[2], cl->realip.ip[3]))) )
+				|| (acc->use == use_ip && !strcmp(acc->login, va("%d.%d.%d.%d", cl->realip.ip[0], cl->realip.ip[1], cl->realip.ip[2], cl->realip.ip[3]))) )
 				break;
 
 		if (i < num_accounts && acc->state == a_ok)
@@ -284,7 +287,7 @@ void SV_CreateAccount_f(void)
 	else
 		i = 1;
 	strlcpy(accounts[spot].pass, (int)sv_hashpasswords.value && use == use_log ?
-	        SHA1(Cmd_Argv(i)) : Cmd_Argv(i), MAX_LOGINNAME);
+		SHA1(Cmd_Argv(i)) : Cmd_Argv(i), MAX_LOGINNAME);
 
 	accounts[spot].state = a_ok;
 	accounts[spot].use = use;
@@ -453,7 +456,7 @@ static int checklogin(char *log1, char *pass, int num, quse_t use)
 			continue;
 
 		if (use == accounts[i].use &&
-		        /*use == use_log && accounts[i].use == use_log && */
+			/*use == use_log && accounts[i].use == use_log && */
 			!strcasecmp(log1, accounts[i].login))
 		{
 			if (accounts[i].inuse && accounts[i].use == use_log)
@@ -463,8 +466,8 @@ static int checklogin(char *log1, char *pass, int num, quse_t use)
 				return -2;
 
 			if (use == use_ip ||
-			        (!(int)sv_hashpasswords.value && !strcasecmp(pass,       accounts[i].pass)) ||
-			        ( (int)sv_hashpasswords.value && !strcasecmp(SHA1(pass), accounts[i].pass)))
+				(!(int)sv_hashpasswords.value && !strcasecmp(pass,       accounts[i].pass)) ||
+				( (int)sv_hashpasswords.value && !strcasecmp(SHA1(pass), accounts[i].pass)))
 			{
 				accounts[i].failures = 0;
 				accounts[i].inuse++;

@@ -14,13 +14,12 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-    $Id: sv_demo_misc.c 718 2007-10-22 19:00:41Z qqshka $
+
 */
 
 // sv_demo_misc.c - misc demo related stuff, helpers
 
 #include "qwsvdef.h"
-#include "pcre.h"
 
 static char chartbl[256];
 
@@ -122,10 +121,14 @@ char *SV_CleanName (unsigned char *name)
 
 	*out = chartbl[*name++];
 
-	while (*name && ((out - text) < (int) sizeof(text)))
-		if (*out == '_' && chartbl[*name] == '_')
+	while (*name && ((out - text) < (int) sizeof (text))) {
+		if (*out == '_' && chartbl[*name] == '_') {
 			name++;
-		else *++out = chartbl[*name++];
+		}
+		else {
+			*++out = chartbl[*name++];
+		}
+	}
 
 	*++out = 0;
 	return text;
@@ -189,6 +192,9 @@ qbool SV_DirSizeCheck (void)
 				//Con_Printf("Remove %d - %s/%s/%s\n", n, fs_gamedir, sv_demoDir.string, list->name);
 				n--;
 			}
+
+			// force cache rebuild.
+			FS_FlushFSHash();
 		}
 	}
 	return true;
@@ -197,6 +203,7 @@ qbool SV_DirSizeCheck (void)
 void Run_sv_demotxt_and_sv_onrecordfinish (const char *dest_name, const char *dest_path, qbool destroyfiles)
 {
 	char path[MAX_OSPATH];
+	char tempPath[MAX_OSPATH];
 
 	snprintf(path, MAX_OSPATH, "%s/%s/%s", fs_gamedir, dest_path, dest_name);
 	strlcpy(path + strlen(path) - 3, "txt", MAX_OSPATH - strlen(path) + 3);
@@ -225,34 +232,40 @@ void Run_sv_demotxt_and_sv_onrecordfinish (const char *dest_name, const char *de
 		extern redirect_t sv_redirected;
 		redirect_t old = sv_redirected;
 		char *p;
-	
+
 		if ((p = strstr(sv_onrecordfinish.string, " ")) != NULL)
 			*p = 0; // strip parameters
-	
-		strlcpy(path, dest_name, MAX_OSPATH);
-		strlcpy(path + strlen(dest_name) - 3, "txt", MAX_OSPATH - strlen(dest_name) + 3);
-	
+
+		strlcpy(path, dest_name, sizeof(path));
+		{
+			COM_StripExtension (path, tempPath, sizeof(tempPath));
+
+			strlcpy (path, tempPath, sizeof (path));
+		}
+
 		sv_redirected = RD_NONE; // onrecord script is called always from the console
-		Cmd_TokenizeString(va("script %s \"%s\" \"%s\" \"%s\" %s", sv_onrecordfinish.string, dest_path, dest_name, path, p != NULL ? p+1 : ""));
+		Cmd_TokenizeString(va("script %s \"%s\" \"%s\" %s", sv_onrecordfinish.string, dest_path, path, p != NULL ? p+1 : ""));
 
 		if (p)
-			*p = ' ';
+			*p = ' '; // restore params
 
 		SV_Script_f();
-	
+
 		sv_redirected = old;
 	}
+
+	// force cache rebuild.
+	FS_FlushFSHash();
 }
 
 char *SV_PrintTeams (void)
 {
-	char			*teams[MAX_CLIENTS], *p;
+	char			*teams[MAX_CLIENTS];
 	int				i, j, numcl = 0, numt = 0, scores;
 	client_t		*clients[MAX_CLIENTS];
 	char			buf[2048];
 	static char		lastscores[2048];
 	extern cvar_t	teamplay;
-	extern char		chartbl2[];
 	date_t			date;
 	SV_TimeOfDay(&date);
 
@@ -331,8 +344,8 @@ char *SV_PrintTeams (void)
 			sizeof(lastscores) - strlen(lastscores), "@ %s\n", sv.mapname);
 	}
 
-	for (p = buf; *p; p++) *p = chartbl2[(byte)*p];
-	for (p = lastscores; *p; p++) *p = chartbl2[(byte)*p];
+	Q_normalizetext(buf);
+	Q_normalizetext(lastscores);
 	strlcat(lastscores, buf, sizeof(lastscores));
 	return lastscores;
 }
@@ -353,7 +366,7 @@ void SV_DemoList (qbool use_regex)
 
 	memset(files, 0, sizeof(files));
 
-	Con_Printf("content of %s/%s/%s\n", fs_gamedir, sv_demoDir.string, sv_demoRegexp.string);
+	Con_Printf("Listing content of %s/%s/%s\n", fs_gamedir, sv_demoDir.string, sv_demoRegexp.string);
 	dir = Sys_listdir(va("%s/%s", fs_gamedir, sv_demoDir.string), sv_demoRegexp.string, SORT_BY_DATE);
 	list = dir.files;
 	if (!list->name[0])
@@ -367,16 +380,15 @@ void SV_DemoList (qbool use_regex)
 		{
 			if (use_regex)
 			{
-				if (!(preg = pcre_compile(Q_normalizetext(Cmd_Argv(j)),
-											PCRE_CASELESS, &errbuf, &r, NULL)))
+				if (!(preg = pcre_compile(Q_normalizetext(Cmd_Argv(j)),	PCRE_CASELESS, &errbuf, &r, NULL)))
 				{
 					Con_Printf("Sys_listdir: pcre_compile(%s) error: %s at offset %d\n",
-					           Cmd_Argv(j), errbuf, r);
+						Cmd_Argv(j), errbuf, r);
 					Q_free(preg);
 					break;
 				}
 				switch (r = pcre_exec(preg, NULL, list->name,
-				                      strlen(list->name), 0, 0, NULL, 0))
+					strlen(list->name), 0, 0, NULL, 0))
 				{
 				case 0:
 					Q_free(preg);
@@ -385,7 +397,7 @@ void SV_DemoList (qbool use_regex)
 					break;
 				default:
 					Con_Printf("Sys_listdir: pcre_exec(%s, %s) error code: %d\n",
-					           Cmd_Argv(j), list->name, r);
+						Cmd_Argv(j), list->name, r);
 				}
 				Q_free(preg);
 				break;
@@ -407,9 +419,9 @@ void SV_DemoList (qbool use_regex)
 		i = files[j];
 
 		if ((d = DestByName(list[i - 1].name)))
-			Con_Printf("*%d: %s %dk\n", i, list[i - 1].name, d->totalsize / 1024);
+			Con_Printf("*%4d: %s (%dk)\n", i, list[i - 1].name, d->totalsize / 1024);
 		else
-			Con_Printf("%d: %s %dk\n", i, list[i - 1].name, list[i - 1].size / 1024);
+			Con_Printf("%4d: %s (%dk)\n", i, list[i - 1].name, list[i - 1].size / 1024);
 	}
 
 	for (d = demo.dest; d; d = d->nextdest)
@@ -460,17 +472,17 @@ char *SV_MVDNum (int num)
 			name2[c - 5] = '\0'; // crop quoted extension '\.mvd'
 
 		dir = Sys_listdir(va("%s/%s", fs_gamedir, sv_demoDir.string),
-						  va("^%s%s", name2, sv_demoRegexp.string), SORT_NO);
+		                  va("^%s%s", name2, sv_demoRegexp.string), SORT_NO);
 		list = dir.files;
 		if (dir.numfiles > 1)
 		{
 			Con_Printf("SV_MVDNum: where are %d demos with name: %s%s\n",
-						dir.numfiles, name2, sv_demoRegexp.string);
+			           dir.numfiles, name2, sv_demoRegexp.string);
 		}
 		if (!dir.numfiles)
 		{
 			Con_Printf("SV_MVDNum: where are no demos with name: %s%s\n",
-						name2, sv_demoRegexp.string);
+			           name2, sv_demoRegexp.string);
 			return NULL;
 		}
 		Q_free(name2);
@@ -525,7 +537,7 @@ static char *SV_MVDName2Txt (char *name)
 	if (!(preg = pcre_compile(sv_demoRegexp.string, PCRE_CASELESS, &errbuf, &r, NULL)))
 	{
 		Con_Printf("SV_MVDName2Txt: pcre_compile(%s) error: %s at offset %d\n",
-					sv_demoRegexp.string, errbuf, r);
+		           sv_demoRegexp.string, errbuf, r);
 		Q_free(preg);
 		return NULL;
 	}
@@ -539,7 +551,7 @@ static char *SV_MVDName2Txt (char *name)
 			return NULL;
 		default:
 			Con_Printf("SV_MVDName2Txt: pcre_exec(%s, %s) error code: %d\n",
-						sv_demoRegexp.string, s, r);
+			           sv_demoRegexp.string, s, r);
 			return NULL;
 		}
 	}
@@ -614,8 +626,11 @@ void SV_MVDRemove_f (void)
 		}
 		else
 		{
-			Con_Printf("no matching found\n");
+			Con_Printf("no match found\n");
 		}
+
+		// force cache rebuild.
+		FS_FlushFSHash();
 
 		return;
 	}
@@ -648,6 +663,9 @@ void SV_MVDRemove_f (void)
 		Con_Printf("unable to remove demo %s\n", name);
 
 	Sys_remove(SV_MVDName2Txt(path));
+
+	// force cache rebuild.
+	FS_FlushFSHash();
 }
 
 void SV_MVDRemoveNum_f (void)
@@ -696,6 +714,9 @@ void SV_MVDRemoveNum_f (void)
 			Con_Printf("unable to remove demo %s\n", name);
 
 		Sys_remove(SV_MVDName2Txt(path));
+
+		// force cache rebuild.
+		FS_FlushFSHash();
 	}
 	else
 		Con_Printf("invalid demo num\n");
@@ -720,8 +741,8 @@ void SV_MVDInfoAdd_f (void)
 			return;
 		}
 
-//		snprintf(path, MAX_OSPATH, "%s/%s/%s", fs_gamedir, demo.path, SV_MVDName2Txt(demo.name));
-// FIXME: dunno is this right, just using first dest, also may be we must use demo.dest->path instead of sv_demoDir
+		//		snprintf(path, MAX_OSPATH, "%s/%s/%s", fs_gamedir, demo.path, SV_MVDName2Txt(demo.name));
+		// FIXME: dunno is this right, just using first dest, also may be we must use demo.dest->path instead of sv_demoDir
 		snprintf(path, MAX_OSPATH, "%s/%s/%s", fs_gamedir, sv_demoDir.string, SV_MVDName2Txt(demo.dest->name));
 	}
 	else
@@ -780,6 +801,9 @@ void SV_MVDInfoAdd_f (void)
 
 	fflush(f);
 	fclose(f);
+
+	// force cache rebuild.
+	FS_FlushFSHash();
 }
 
 void SV_MVDInfoRemove_f (void)
@@ -800,8 +824,8 @@ void SV_MVDInfoRemove_f (void)
 			return;
 		}
 
-//		snprintf(path, MAX_OSPATH, "%s/%s/%s", fs_gamedir, demo.path, SV_MVDName2Txt(demo.name));
-// FIXME: dunno is this right, just using first dest, also may be we must use demo.dest->path instead of sv_demoDir
+		//		snprintf(path, MAX_OSPATH, "%s/%s/%s", fs_gamedir, demo.path, SV_MVDName2Txt(demo.name));
+		// FIXME: dunno is this right, just using first dest, also may be we must use demo.dest->path instead of sv_demoDir
 		snprintf(path, MAX_OSPATH, "%s/%s/%s", fs_gamedir, sv_demoDir.string, SV_MVDName2Txt(demo.dest->name));
 	}
 	else
@@ -818,8 +842,12 @@ void SV_MVDInfoRemove_f (void)
 	}
 
 	if (Sys_remove(path))
-		Con_Printf("failed to remove the file\n");
-	else Con_Printf("file removed\n");
+		Con_Printf("failed to remove the file %s\n", path);
+	else
+		Con_Printf("file %s removed\n", path);
+
+	// force cache rebuild.
+	FS_FlushFSHash();
 }
 
 void SV_MVDInfo_f (void)
@@ -842,8 +870,8 @@ void SV_MVDInfo_f (void)
 			return;
 		}
 
-//		snprintf(path, MAX_OSPATH, "%s/%s/%s", fs_gamedir, demo.path, SV_MVDName2Txt(demo.name));
-// FIXME: dunno is this right, just using first dest, also may be we must use demo.dest->path instead of sv_demoDir
+		//		snprintf(path, MAX_OSPATH, "%s/%s/%s", fs_gamedir, demo.path, SV_MVDName2Txt(demo.name));
+		// FIXME: dunno is this right, just using first dest, also may be we must use demo.dest->path instead of sv_demoDir
 		snprintf(path, MAX_OSPATH, "%s/%s/%s", fs_gamedir, sv_demoDir.string, SV_MVDName2Txt(demo.dest->name));
 	}
 	else
@@ -908,18 +936,18 @@ void SV_LastScores_f (void)
 
 	if (demos > MAXDEMOS && GameStarted())
 		Con_Printf("<numlastdemos> was decreased to %i: match is in progress.\n",
-					demos = MAXDEMOS);
+		           demos = MAXDEMOS);
 
 	if (demos > MAXDEMOS_RD_PACKET && sv_redirected == RD_PACKET)
 		Con_Printf("<numlastdemos> was decreased to %i: command from connectionless packet.\n",
-					demos = MAXDEMOS_RD_PACKET);
+			       demos = MAXDEMOS_RD_PACKET);
 
 	Con_Printf("List of %d last demos:\n", demos);
 
 	for (i = dir.numfiles - demos; i < dir.numfiles; )
 	{
 		snprintf(path, MAX_OSPATH, "%s/%s/%s", fs_gamedir, sv_demoDir.string,
-					SV_MVDName2Txt(dir.files[i].name));
+		         SV_MVDName2Txt(dir.files[i].name));
 
 		Con_Printf("%i. ", ++i);
 		if ((f = fopen(path, "rt")) == NULL)

@@ -1,24 +1,24 @@
 /*
- *  QW262
- *  Copyright (C) 2004  [sd] angel
- *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- *
- *  $Id: pr2_exec.c 695 2007-09-30 14:43:34Z tonik $
- */
+*  QW262
+*  Copyright (C) 2004  [sd] angel
+*
+*  This program is free software; you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License as published by
+*  the Free Software Foundation; either version 2 of the License, or
+*  (at your option) any later version.
+*
+*  This program is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*  GNU General Public License for more details.
+*
+*  You should have received a copy of the GNU General Public License
+*  along with this program; if not, write to the Free Software
+*  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*
+*
+*  
+*/
 
 #ifdef USE_PR2
 
@@ -36,14 +36,15 @@ void ED2_PrintEdicts (void);
 void PR2_Profile_f (void);
 void ED2_PrintEdict_f (void);
 void ED_Count (void);
-void PR_CleanLogText_Init(void);
 void PR2_Init(void)
 {
 	int p;
 	int usedll;
 	Cvar_Register(&sv_progtype);
 	Cvar_Register(&sv_progsname);
+#ifdef WITH_NQPROGS
 	Cvar_Register(&sv_forcenqprogs);
+#endif
 #ifdef QVM_PROFILE
 	Cvar_Register(&sv_enableprofile);
 #endif
@@ -59,30 +60,29 @@ void PR2_Init(void)
 		Cvar_SetValue(&sv_progtype,usedll);
 	}
 
-
 	Cmd_AddCommand ("edict", ED2_PrintEdict_f);
 	Cmd_AddCommand ("edicts", ED2_PrintEdicts);
 	Cmd_AddCommand ("edictcount", ED_Count);
 	Cmd_AddCommand ("profile", PR2_Profile_f);
 	Cmd_AddCommand ("mod", PR2_GameConsoleCommand);
 
-	PR_CleanLogText_Init();
+	memset(pr_newstrtbl, 0, sizeof(pr_newstrtbl));
 }
 
 //===========================================================================
 // PR2_GetString
 //===========================================================================
-char *PR2_GetString(int num)
+char *PR2_GetString(intptr_t num)
 {
 	qvm_t *qvm;
 
 	if(!sv_vm)
-		return PR_GetString(num);
+		return PR1_GetString(num);
 
 	switch (sv_vm->type)
 	{
 	case VM_NONE:
-		return PR_GetString(num);
+		return PR1_GetString(num);
 
 	case VM_NATIVE:
 		if (num)
@@ -109,20 +109,20 @@ char *PR2_GetString(int num)
 // PR2_SetString
 // FIXME for VM
 //===========================================================================
-int PR2_SetString(char *s)
+intptr_t PR2_SetString(char *s)
 {
 	qvm_t *qvm;
-	int off;
+	intptr_t off;
 	if(!sv_vm)
-		return PR_SetString(s);
+		return PR1_SetString(s);
 
 	switch (sv_vm->type)
 	{
 	case VM_NONE:
-		return PR_SetString(s);
+		return PR1_SetString(s);
 
 	case VM_NATIVE:
-		return (int) s;
+		return (intptr_t) s;
 
 	case VM_BYTECODE:
 		qvm = (qvm_t*)(sv_vm->hInst);
@@ -146,10 +146,17 @@ extern char *pr2_ent_data_ptr;
 
 void PR2_LoadEnts(char *data)
 {
-	pr2_ent_data_ptr = data;
+	if (sv_vm)
+	{
+		pr2_ent_data_ptr = data;
 
-	//Init parse
-	VM_Call(sv_vm, GAME_LOADENTS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+		//Init parse
+		VM_Call(sv_vm, GAME_LOADENTS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	}
+	else
+	{
+		PR1_LoadEnts(data);
+	}
 }
 
 //===========================================================================
@@ -157,8 +164,10 @@ void PR2_LoadEnts(char *data)
 //===========================================================================
 void PR2_GameStartFrame(void)
 {
-	VM_Call(sv_vm, GAME_START_FRAME, (int) (sv.time * 1000), 0, 0, 0, 0, 0, 0, 0, 0,
-	        0, 0, 0);
+	if (sv_vm)
+		VM_Call(sv_vm, GAME_START_FRAME, (int) (sv.time * 1000), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	else
+		PR1_GameStartFrame();
 }
 
 //===========================================================================
@@ -166,7 +175,10 @@ void PR2_GameStartFrame(void)
 //===========================================================================
 void PR2_GameClientConnect(int spec)
 {
-	VM_Call(sv_vm, GAME_CLIENT_CONNECT, spec, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	if (sv_vm)
+		VM_Call(sv_vm, GAME_CLIENT_CONNECT, spec, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	else
+		PR1_GameClientConnect(spec);
 }
 
 //===========================================================================
@@ -174,7 +186,10 @@ void PR2_GameClientConnect(int spec)
 //===========================================================================
 void PR2_GamePutClientInServer(int spec)
 {
-	VM_Call(sv_vm, GAME_PUT_CLIENT_IN_SERVER, spec, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	if (sv_vm)
+		VM_Call(sv_vm, GAME_PUT_CLIENT_IN_SERVER, spec, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	else
+		PR1_GamePutClientInServer(spec);
 }
 
 //===========================================================================
@@ -182,7 +197,10 @@ void PR2_GamePutClientInServer(int spec)
 //===========================================================================
 void PR2_GameClientDisconnect(int spec)
 {
-	VM_Call(sv_vm, GAME_CLIENT_DISCONNECT, spec, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	if (sv_vm)
+		VM_Call(sv_vm, GAME_CLIENT_DISCONNECT, spec, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	else
+		PR1_GameClientDisconnect(spec);
 }
 
 //===========================================================================
@@ -190,7 +208,10 @@ void PR2_GameClientDisconnect(int spec)
 //===========================================================================
 void PR2_GameClientPreThink(int spec)
 {
-	VM_Call(sv_vm, GAME_CLIENT_PRETHINK, spec, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	if (sv_vm)
+		VM_Call(sv_vm, GAME_CLIENT_PRETHINK, spec, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	else
+		PR1_GameClientPreThink(spec);
 }
 
 //===========================================================================
@@ -198,7 +219,10 @@ void PR2_GameClientPreThink(int spec)
 //===========================================================================
 void PR2_GameClientPostThink(int spec)
 {
-	VM_Call(sv_vm, GAME_CLIENT_POSTTHINK, spec, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	if (sv_vm)
+		VM_Call(sv_vm, GAME_CLIENT_POSTTHINK, spec, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	else
+		PR1_GameClientPostThink(spec);
 }
 
 //===========================================================================
@@ -206,24 +230,48 @@ void PR2_GameClientPostThink(int spec)
 //===========================================================================
 qbool PR2_ClientCmd(void)
 {
-	return VM_Call(sv_vm, GAME_CLIENT_COMMAND, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	if (sv_vm)
+		return VM_Call(sv_vm, GAME_CLIENT_COMMAND, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	else
+		return PR1_ClientCmd();
+}
+
+//===========================================================================
+// ClientKill
+//===========================================================================
+void PR2_ClientKill(void)
+{
+	if (sv_vm)
+		PR2_ClientCmd(); // PR2 have some universal way for command execution unlike QC based mods.
+	else
+		PR1_ClientKill();
 }
 
 //===========================================================================
 // ClientSay return false if say unhandled by mod
 //===========================================================================
-qbool PR2_ClientSay(int isTeamSay)
+qbool PR2_ClientSay(int isTeamSay, char *message)
 {
-	return VM_Call(sv_vm, GAME_CLIENT_SAY, isTeamSay, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-}
+	//
+	// message - used for QC based mods only.
+	// PR2 mods get it from Cmd_Args() and such.
+	//
 
+	if (sv_vm)
+		return VM_Call(sv_vm, GAME_CLIENT_SAY, isTeamSay, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	else
+		return PR1_ClientSay(isTeamSay, message);
+}
 
 //===========================================================================
 // GameSetNewParms
 //===========================================================================
 void PR2_GameSetNewParms(void)
 {
-	VM_Call(sv_vm, GAME_SETNEWPARMS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	if (sv_vm)
+		VM_Call(sv_vm, GAME_SETNEWPARMS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	else
+		PR1_GameSetNewParms();
 }
 
 //===========================================================================
@@ -231,32 +279,45 @@ void PR2_GameSetNewParms(void)
 //===========================================================================
 void PR2_GameSetChangeParms(void)
 {
-	VM_Call(sv_vm, GAME_SETCHANGEPARMS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	if (sv_vm)
+		VM_Call(sv_vm, GAME_SETCHANGEPARMS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	else
+	{
+		PR1_GameSetChangeParms();
+	}
 }
-
 
 //===========================================================================
 // EdictTouch
 //===========================================================================
-void PR2_EdictTouch(void)
+void PR2_EdictTouch(func_t f)
 {
-	VM_Call(sv_vm, GAME_EDICT_TOUCH, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	if (sv_vm)
+		VM_Call(sv_vm, GAME_EDICT_TOUCH, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	else
+		PR1_EdictTouch(f);
 }
 
 //===========================================================================
 // EdictThink
 //===========================================================================
-void PR2_EdictThink(void)
+void PR2_EdictThink(func_t f)
 {
-	VM_Call(sv_vm, GAME_EDICT_THINK, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	if (sv_vm)
+		VM_Call(sv_vm, GAME_EDICT_THINK, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	else
+		PR1_EdictThink(f);
 }
 
 //===========================================================================
 // EdictBlocked
 //===========================================================================
-void PR2_EdictBlocked(void)
+void PR2_EdictBlocked(func_t f)
 {
-	VM_Call(sv_vm, GAME_EDICT_BLOCKED, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	if (sv_vm)
+		VM_Call(sv_vm, GAME_EDICT_BLOCKED, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	else
+		PR1_EdictBlocked(f);
 }
 
 //===========================================================================
@@ -264,19 +325,58 @@ void PR2_EdictBlocked(void)
 //===========================================================================
 qbool PR2_UserInfoChanged(void)
 {
-	return VM_Call(sv_vm, GAME_CLIENT_USERINFO_CHANGED, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	if (sv_vm)
+		return VM_Call(sv_vm, GAME_CLIENT_USERINFO_CHANGED, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	else
+		return PR1_UserInfoChanged();
 }
 
 //===========================================================================
-// UserInfoChanged
+// GameShutDown
 //===========================================================================
 void PR2_GameShutDown(void)
 {
-	VM_Call(sv_vm, GAME_SHUTDOWN, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	if (sv_vm)
+		VM_Call(sv_vm, GAME_SHUTDOWN, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	else
+		PR1_GameShutDown();
 }
 
 //===========================================================================
-// UserInfoChanged
+// UnLoadProgs
+//===========================================================================
+void PR2_UnLoadProgs(void)
+{
+	if (sv_vm)
+	{
+		VM_Unload( sv_vm );
+		sv_vm = NULL;
+	}
+	else
+	{
+		PR1_UnLoadProgs();
+	}
+}
+
+//===========================================================================
+// LoadProgs
+//===========================================================================
+void PR2_LoadProgs(void)
+{
+	sv_vm = (vm_t *) VM_Load(sv_vm, (vm_type_t) (int) sv_progtype.value, sv_progsname.string, sv_syscall, sv_sys_callex);
+
+	if ( sv_vm )
+	{
+		; // nothing.
+	}
+	else
+	{
+		PR1_LoadProgs ();
+	}
+}
+
+//===========================================================================
+// GameConsoleCommand
 //===========================================================================
 void PR2_GameConsoleCommand(void)
 {
@@ -315,8 +415,10 @@ void PR2_GameConsoleCommand(void)
 //===========================================================================
 void PR2_PausedTic(float duration)
 {
-	VM_Call(sv_vm, GAME_PAUSED_TIC, duration*1000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	if (sv_vm)
+		VM_Call(sv_vm, GAME_PAUSED_TIC, duration*1000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	else
+		PR1_PausedTic(duration);
 }
-
 
 #endif /* USE_PR2 */

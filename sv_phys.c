@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-	$Id: sv_phys.c 739 2007-11-04 17:05:07Z qqshka $
+
 */
 // sv_phys.c
 
@@ -48,6 +48,10 @@ cvar_t	sv_maxspeed		= { "sv_maxspeed", "320"};
 cvar_t	sv_spectatormaxspeed 	= { "sv_spectatormaxspeed", "500"};
 cvar_t	sv_accelerate		= { "sv_accelerate", "10"};
 cvar_t	sv_airaccelerate	= { "sv_airaccelerate", "10"};
+
+cvar_t	sv_antilag		= { "sv_antilag", "", CVAR_SERVERINFO};
+cvar_t	sv_antilag_no_pred	= { "sv_antilag_no_pred", "", CVAR_SERVERINFO}; // "negative" cvar so it doesn't show on serverinfo for no reason
+cvar_t	sv_antilag_projectiles	= { "sv_antilag_projectiles", "", CVAR_SERVERINFO};
 
 cvar_t	sv_wateraccelerate	= { "sv_wateraccelerate", "10"};
 cvar_t	sv_friction		= { "sv_friction", "4"};
@@ -91,24 +95,12 @@ void SV_CheckVelocity (edict_t *ent)
 	{
 		if (IS_NAN(ent->v.velocity[i]))
 		{
-			Con_DPrintf ("Got a NaN velocity on %s\n",
-#ifdef USE_PR2
-			             PR2_GetString(ent->v.classname)
-#else
-			             PR_GetString(ent->v.classname)
-#endif
-			            );
+			Con_DPrintf ("Got a NaN velocity on %s\n", PR_GetString(ent->v.classname));
 			ent->v.velocity[i] = 0;
 		}
 		if (IS_NAN(ent->v.origin[i]))
 		{
-			Con_DPrintf ("Got a NaN origin on %s\n",
-#ifdef USE_PR2
-			             PR2_GetString(ent->v.classname)
-#else
-			             PR_GetString(ent->v.classname)
-#endif
-			            );
+			Con_DPrintf ("Got a NaN origin on %s\n", PR_GetString(ent->v.classname));
 			ent->v.origin[i] = 0;
 		}
 /*		if (ent->v.velocity[i] > sv_maxvelocity.value)
@@ -157,12 +149,7 @@ qbool SV_RunThink (edict_t *ent)
 		pr_global_struct->time = thinktime;
 		pr_global_struct->self = EDICT_TO_PROG(ent);
 		pr_global_struct->other = EDICT_TO_PROG(sv.edicts);
-#ifdef USE_PR2
-		if ( sv_vm )
-			PR2_EdictThink();
-		else
-#endif
-			PR_ExecuteProgram (ent->v.think);
+		PR_EdictThink(ent->v.think);
 
 		if (ent->e->free)
 			return false;
@@ -190,24 +177,14 @@ void SV_Impact (edict_t *e1, edict_t *e2)
 	{
 		pr_global_struct->self = EDICT_TO_PROG(e1);
 		pr_global_struct->other = EDICT_TO_PROG(e2);
-#ifdef USE_PR2
-		if ( sv_vm )
-			PR2_EdictTouch();
-		else
-#endif
-			PR_ExecuteProgram (e1->v.touch);
+		PR_EdictTouch(e1->v.touch);
 	}
 
 	if (e2->v.touch && e2->v.solid != SOLID_NOT)
 	{
 		pr_global_struct->self = EDICT_TO_PROG(e2);
 		pr_global_struct->other = EDICT_TO_PROG(e1);
-#ifdef USE_PR2
-		if( sv_vm )
-			PR2_EdictTouch();
-		else
-#endif
-			PR_ExecuteProgram (e2->v.touch);
+		PR_EdictTouch(e2->v.touch);
 	}
 
 	pr_global_struct->self = old_self;
@@ -414,20 +391,23 @@ SV_PushEntity
 Does not change the entities velocity at all
 ============
 */
-trace_t SV_PushEntity (edict_t *ent, vec3_t push)
+trace_t SV_PushEntity (edict_t *ent, vec3_t push, unsigned int traceflags)
 {
 	trace_t	trace;
 	vec3_t	end;
 
 	VectorAdd (ent->v.origin, push, end);
 
+	if ((int)ent->v.flags&FL_LAGGEDMOVE)
+		traceflags |= MOVE_LAGGED;
+
 	if (ent->v.movetype == MOVETYPE_FLYMISSILE)
-		trace = SV_Trace (ent->v.origin, ent->v.mins, ent->v.maxs, end, MOVE_MISSILE, ent);
+		trace = SV_Trace (ent->v.origin, ent->v.mins, ent->v.maxs, end, MOVE_MISSILE|traceflags, ent);
 	else if (ent->v.solid == SOLID_TRIGGER || ent->v.solid == SOLID_NOT)
 		// only clip against bmodels
-		trace = SV_Trace (ent->v.origin, ent->v.mins, ent->v.maxs, end, MOVE_NOMONSTERS, ent);
+		trace = SV_Trace (ent->v.origin, ent->v.mins, ent->v.maxs, end, MOVE_NOMONSTERS|traceflags, ent);
 	else
-		trace = SV_Trace (ent->v.origin, ent->v.mins, ent->v.maxs, end, MOVE_NORMAL, ent);
+		trace = SV_Trace (ent->v.origin, ent->v.mins, ent->v.maxs, end, MOVE_NORMAL|traceflags, ent);
 
 	VectorCopy (trace.endpos, ent->v.origin);
 	SV_LinkEdict (ent, true);
@@ -477,8 +457,8 @@ qbool SV_Push (edict_t *pusher, vec3_t move)
 		if (check->e->free)
 			continue;
 		if (check->v.movetype == MOVETYPE_PUSH
-		|| check->v.movetype == MOVETYPE_NONE
-		|| check->v.movetype == MOVETYPE_NOCLIP)
+			|| check->v.movetype == MOVETYPE_NONE
+			|| check->v.movetype == MOVETYPE_NOCLIP)
 			continue;
 
 		solid_save = pusher->v.solid;
@@ -490,14 +470,14 @@ qbool SV_Push (edict_t *pusher, vec3_t move)
 
 		// if the entity is standing on the pusher, it will definately be moved
 		if ( ! ( ((int)check->v.flags & FL_ONGROUND)
-		&& PROG_TO_EDICT(check->v.groundentity) == pusher) )
+			&& PROG_TO_EDICT(check->v.groundentity) == pusher) )
 		{
 			if ( check->v.absmin[0] >= maxs[0]
-			|| check->v.absmin[1] >= maxs[1]
-			|| check->v.absmin[2] >= maxs[2]
-			|| check->v.absmax[0] <= mins[0]
-			|| check->v.absmax[1] <= mins[1]
-			|| check->v.absmax[2] <= mins[2] )
+				|| check->v.absmin[1] >= maxs[1]
+				|| check->v.absmin[2] >= maxs[2]
+				|| check->v.absmax[0] <= mins[0]
+				|| check->v.absmax[1] <= mins[1]
+				|| check->v.absmax[2] <= mins[2] )
 				continue;
 
 			// see if the ent's bbox is inside the pusher's final position
@@ -553,21 +533,12 @@ qbool SV_Push (edict_t *pusher, vec3_t move)
 
 		// if the pusher has a "blocked" function, call it
 		// otherwise, just stay in place until the obstacle is gone
-#ifdef USE_PR2
-		if ( sv_vm )
+		if (pusher->v.blocked)
 		{
 			pr_global_struct->self = EDICT_TO_PROG(pusher);
 			pr_global_struct->other = EDICT_TO_PROG(check);
-			PR2_EdictBlocked();
+			PR_EdictBlocked (pusher->v.blocked);
 		}
-		else
-#endif
-			if (pusher->v.blocked)
-			{
-				pr_global_struct->self = EDICT_TO_PROG(pusher);
-				pr_global_struct->other = EDICT_TO_PROG(check);
-				PR_ExecuteProgram (pusher->v.blocked);
-			}
 
 		// move back any entities we already moved
 		for (i=0 ; i<num_moved ; i++)
@@ -644,12 +615,8 @@ void SV_Physics_Pusher (edict_t *ent)
 		pr_global_struct->time = sv.time;
 		pr_global_struct->self = EDICT_TO_PROG(ent);
 		pr_global_struct->other = EDICT_TO_PROG(sv.edicts);
-#ifdef USE_PR2
-		if ( sv_vm )
-			PR2_EdictThink();
-		else
-#endif
-			PR_ExecuteProgram (ent->v.think);
+		PR_EdictThink(ent->v.think);
+
 		if (ent->e->free)
 			return;
 		VectorSubtract (ent->v.origin, oldorg, move);
@@ -661,11 +628,8 @@ void SV_Physics_Pusher (edict_t *ent)
 			VectorCopy (oldorg, ent->v.origin);
 			SV_Push (ent, move);
 		}
-
 	}
-
 }
-
 
 /*
 =============
@@ -773,7 +737,7 @@ void SV_Physics_Toss (edict_t *ent)
 
 	// add gravity
 	if (ent->v.movetype != MOVETYPE_FLY
-	&& ent->v.movetype != MOVETYPE_FLYMISSILE)
+		&& ent->v.movetype != MOVETYPE_FLYMISSILE)
 		SV_AddGravity (ent, 1.0);
 
 	// move angles
@@ -781,7 +745,7 @@ void SV_Physics_Toss (edict_t *ent)
 
 	// move origin
 	VectorScale (ent->v.velocity, sv_frametime, move);
-	trace = SV_PushEntity (ent, move);
+	trace = SV_PushEntity (ent, move, (sv_antilag.value == 2 && sv_antilag_projectiles.value) ? MOVE_LAGGED:0);
 	if (trace.fraction == 1)
 		return;
 	if (ent->e->free)
@@ -874,12 +838,7 @@ void SV_ProgStartFrame (void)
 	pr_global_struct->self = EDICT_TO_PROG(sv.edicts);
 	pr_global_struct->other = EDICT_TO_PROG(sv.edicts);
 	pr_global_struct->time = sv.time;
-#ifdef USE_PR2
-	if ( sv_vm )
-		PR2_GameStartFrame();
-	else
-#endif
-		PR_ExecuteProgram (PR_GLOBAL(StartFrame));
+	PR_GameStartFrame();
 }
 
 /*
@@ -985,19 +944,12 @@ void SV_RunNewmis (void)
 SV_Physics
 ================
 */
-#ifdef USE_PR2
-void SV_PreRunCmd(void);
-void SV_RunCmd (usercmd_t *ucmd, qbool inside);
-void SV_PostRunCmd(void);
-#endif
 void SV_Physics (void)
 {
 	int i;
-	edict_t *ent;
-#ifdef USE_PR2
 	client_t *cl,*savehc;
 	edict_t *savesvpl;
-#endif
+	edict_t *ent;
 
 	if (sv.state != ss_active)
 		return;
@@ -1047,28 +999,32 @@ void SV_Physics (void)
 	if (PR_GLOBAL(force_retouch))
 		PR_GLOBAL(force_retouch)--;
 
-#ifdef USE_PR2
 	savesvpl = sv_player;
 	savehc = sv_client;
 
 	// so spec will have right goalentity - if speccing someone
-	// qqshka {
-	if ( sv_vm ) // don't fix .qc based mods
-		for ( i = 0, cl = svs.clients; i < MAX_CLIENTS; i++, cl++ )
-		{
-			if ( cl->state == cs_free )
-				continue;
-
-			sv_client = cl;
-			ent = cl->edict;
-
-			if( sv_client->spectator && sv_client->spec_track > 0 )
-				ent->v.goalentity = EDICT_TO_PROG(svs.clients[sv_client->spec_track-1].edict);
-		}
-	// }
-
 	for ( i = 0, cl = svs.clients; i < MAX_CLIENTS; i++, cl++ )
 	{
+		if ( cl->state == cs_free )
+			continue;
+
+		sv_client = cl;
+		sv_player = cl->edict;
+
+		if( sv_client->spectator && sv_client->spec_track > 0 )
+			sv_player->v.goalentity = EDICT_TO_PROG(svs.clients[sv_client->spec_track-1].edict);
+	}
+
+#ifdef USE_PR2
+	//
+	// Run bots physics.
+	//
+	for ( i = 0, cl = svs.clients; i < MAX_CLIENTS; i++, cl++ )
+	{
+		extern void SV_PreRunCmd(void);
+		extern void SV_RunCmd (usercmd_t *ucmd, qbool inside);
+		extern void SV_PostRunCmd(void);
+
 		if ( cl->state == cs_free )
 			continue;
 		if ( !cl->isBot )
@@ -1088,10 +1044,25 @@ void SV_Physics (void)
 
 		cl->localtime = sv.time;
 		cl->delta_sequence = -1;	// no delta unless requested
+
+		if (sv_antilag.value)
+		{
+			if (cl->antilag_position_next == 0 || cl->antilag_positions[(cl->antilag_position_next - 1) % MAX_ANTILAG_POSITIONS].localtime < cl->localtime)
+			{
+				cl->antilag_positions[cl->antilag_position_next % MAX_ANTILAG_POSITIONS].localtime = cl->localtime;
+				VectorCopy(cl->edict->v.origin, cl->antilag_positions[cl->antilag_position_next % MAX_ANTILAG_POSITIONS].origin);
+				cl->antilag_position_next++;
+			}
+		}
+		else
+		{
+			cl->antilag_position_next = 0;
+		}
 	}
+#endif
+
 	sv_player = savesvpl;
 	sv_client = savehc;
-#endif
 }
 
 void SV_SetMoveVars(void)

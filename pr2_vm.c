@@ -1,24 +1,24 @@
 /*
- *  QW262
- *  Copyright (C) 2004  [sd] angel
- *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- *
- *  $Id: pr2_vm.c 761 2008-02-25 20:39:51Z qqshka $
- */
+*  QW262
+*  Copyright (C) 2004  [sd] angel
+*
+*  This program is free software; you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License as published by
+*  the Free Software Foundation; either version 2 of the License, or
+*  (at your option) any later version.
+*
+*  This program is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*  GNU General Public License for more details.
+*
+*  You should have received a copy of the GNU General Public License
+*  along with this program; if not, write to the Free Software
+*  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*
+*
+*
+*/
 /*
   Quake3 compatible virtual machine
   map file support
@@ -30,7 +30,6 @@
 #ifdef USE_PR2
 
 #include "qwsvdef.h"
-//#include "crc.c"
 
 #ifdef QVM_PROFILE
 cvar_t	sv_enableprofile = {"sv_enableprofile","0"};
@@ -184,7 +183,7 @@ qbool VM_LoadNative( vm_t * vm )
 		return false;
 
 	dllEntry = (void (EXPORT_FN *)(void *)) Sys_DLProc( (DL_t) vm->hInst, "dllEntry" );
-	vm->vmMain = (int (EXPORT_FN *)(int,int,int,int,int,int,int,int,int,int,int,int,int)) Sys_DLProc( (DL_t) vm->hInst, "vmMain" );
+	vm->vmMain = (intptr_t (EXPORT_FN *)(int,int,int,int,int,int,int,int,int,int,int,int,int)) Sys_DLProc( (DL_t) vm->hInst, "vmMain" );
 	if ( !dllEntry || !vm->vmMain )
 	{
 		VM_Unload( vm );
@@ -192,8 +191,6 @@ qbool VM_LoadNative( vm_t * vm )
 	}
 	dllEntry( (void *) vm->syscall );
 
-	//	Info_SetValueForStarKey( svs.info, "*qvm", DLEXT, MAX_SERVERINFO_STRING );
-	Info_SetStar( &_localinfo_, "*qvm", DLEXT );
 	Info_SetValueForStarKey( svs.info, "*progs", DLEXT, MAX_SERVERINFO_STRING );
 	vm->type = VM_NATIVE;
 	return true;
@@ -326,9 +323,6 @@ qbool VM_LoadBytecode( vm_t * vm, sys_callex_t syscall1 )
 		return false;
 
 	// add qvm crc to the serverinfo
-	Info_SetStar( &_localinfo_, "*qvm", "QVM" );
-	//	Info_SetValueForStarKey( svs.info, "*qvm", "QVM", MAX_SERVERINFO_STRING );
-
 	snprintf( num, sizeof(num), "%i", CRC_Block( ( byte * ) buff, filesize ) );
 	Info_SetValueForStarKey( svs.info, "*progs", num, MAX_SERVERINFO_STRING );
 
@@ -493,8 +487,8 @@ vm_t   *VM_Load( vm_t * vm, vm_type_t type, char *name, sys_call_t syscall1, sys
 int     QVM_Exec( register qvm_t * qvm, int command, int arg0, int arg1, int arg2, int arg3,
                   int arg4, int arg5, int arg6, int arg7, int arg8, int arg9, int arg10, int arg11 );
 
-int VM_Call( vm_t * vm, int command, int arg0, int arg1, int arg2, int arg3, int arg4, int arg5,
-             int arg6, int arg7, int arg8, int arg9, int arg10, int arg11 )
+intptr_t VM_Call( vm_t * vm, int command, int arg0, int arg1, int arg2, int arg3, int arg4, int arg5,
+                  int arg6, int arg7, int arg8, int arg9, int arg10, int arg11 )
 {
 	if ( !vm )
 		Sys_Error( "VM_Call with NULL vm" );
@@ -960,8 +954,8 @@ int QVM_Exec( register qvm_t * qvm, int command, int arg0, int arg1, int arg2, i
 				len = op.parm._int;
 #ifdef QVM_DATA_PROTECTION
 				if ( (off1 & (~qvm->ds_mask) ) || (off2 & (~qvm->ds_mask) )
-				        || ((off1 + len) & (~qvm->ds_mask) )
-				        || ((off2 + len) & (~qvm->ds_mask) ))
+					|| ((off1 + len) & (~qvm->ds_mask) )
+					|| ((off2 + len) & (~qvm->ds_mask) ))
 					QVM_RunError( qvm, "block copy out of range %8x\n", ivar );
 				memmove( qvm->ds + off1, qvm->ds + off2, len );
 #else
@@ -1114,90 +1108,90 @@ int QVM_Exec( register qvm_t * qvm, int command, int arg0, int arg1, int arg2, i
   QVM Debug stuff
 */
 char   *opcode_names[] = {
-                             "OP_UNDEF",
+    "OP_UNDEF",
 
-                             "OP_IGNORE",
+	"OP_IGNORE",
 
-                             "OP_BREAK",
+	"OP_BREAK",
 
-                             "OP_ENTER",
-                             "OP_LEAVE",
-                             "OP_CALL",
-                             "OP_PUSH",
-                             "OP_POP",
+	"OP_ENTER",
+	"OP_LEAVE",
+	"OP_CALL",
+	"OP_PUSH",
+	"OP_POP",
 
-                             "OP_CONST",
-                             "OP_LOCAL",
+	"OP_CONST",
+	"OP_LOCAL",
 
-                             "OP_JUMP",
+	"OP_JUMP",
 
-                             //-------------------
+	//-------------------
 
-                             "OP_EQ",
-                             "OP_NE",
+	"OP_EQ",
+	"OP_NE",
 
-                             "OP_LTI",
-                             "OP_LEI",
-                             "OP_GTI",
-                             "OP_GEI",
+	"OP_LTI",
+	"OP_LEI",
+	"OP_GTI",
+	"OP_GEI",
 
-                             "OP_LTU",
-                             "OP_LEU",
-                             "OP_GTU",
-                             "OP_GEU",
+	"OP_LTU",
+	"OP_LEU",
+	"OP_GTU",
+	"OP_GEU",
 
-                             "OP_EQF",
-                             "OP_NEF",
+	"OP_EQF",
+	"OP_NEF",
 
-                             "OP_LTF",
-                             "OP_LEF",
-                             "OP_GTF",
-                             "OP_GEF",
+	"OP_LTF",
+	"OP_LEF",
+	"OP_GTF",
+	"OP_GEF",
 
-                             //-------------------
+	//-------------------
 
-                             "OP_LOAD1",
-                             "OP_LOAD2",
-                             "OP_LOAD4",
-                             "OP_STORE1",
-                             "OP_STORE2",
-                             "OP_STORE4",		// *(stack[top-1]) = stack[yop
-                             "OP_ARG",
-                             "OP_BLOCK_COPY",
+	"OP_LOAD1",
+	"OP_LOAD2",
+	"OP_LOAD4",
+	"OP_STORE1",
+	"OP_STORE2",
+	"OP_STORE4",		// *(stack[top-1]) = stack[yop
+	"OP_ARG",
+	"OP_BLOCK_COPY",
 
-                             //-------------------
+	//-------------------
 
-                             "OP_SEX8",
-                             "OP_SEX16",
+	"OP_SEX8",
+	"OP_SEX16",
 
-                             "OP_NEGI",
-                             "OP_ADD",
-                             "OP_SUB",
-                             "OP_DIVI",
-                             "OP_DIVU",
-                             "OP_MODI",
-                             "OP_MODU",
-                             "OP_MULI",
-                             "OP_MULU",
+	"OP_NEGI",
+	"OP_ADD",
+	"OP_SUB",
+	"OP_DIVI",
+	"OP_DIVU",
+	"OP_MODI",
+	"OP_MODU",
+	"OP_MULI",
+	"OP_MULU",
 
-                             "OP_BAND",
-                             "OP_BOR",
-                             "OP_BXOR",
-                             "OP_BCOM",
+	"OP_BAND",
+	"OP_BOR",
+	"OP_BXOR",
+	"OP_BCOM",
 
-                             "OP_LSH",
-                             "OP_RSHI",
-                             "OP_RSHU",
+	"OP_LSH",
+	"OP_RSHI",
+	"OP_RSHU",
 
-                             "OP_NEGF",
-                             "OP_ADDF",
-                             "OP_SUBF",
-                             "OP_DIVF",
-                             "OP_MULF",
+	"OP_NEGF",
+	"OP_ADDF",
+	"OP_SUBF",
+	"OP_DIVF",
+	"OP_MULF",
 
-                             "OP_CVIF",
-                             "OP_CVFI"
-                         };
+	"OP_CVIF",
+	"OP_CVFI"
+};
 
 void PrintInstruction( qvm_t * qvm )
 {
@@ -1239,4 +1233,4 @@ void PrintInstruction( qvm_t * qvm )
 
 }
 
-#endif				/* USE_PR2 */
+#endif /* USE_PR2 */
