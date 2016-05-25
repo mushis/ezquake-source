@@ -42,6 +42,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 void OnChange_sys_highpriority (cvar_t *, char *, qbool *);
 cvar_t	sys_highpriority = {"sys_highpriority", "0", 0, OnChange_sys_highpriority};
 
+extern cvar_t in_nolegacyevents;
+
 static HANDLE	qwclsemaphore;
 static HANDLE	tevent;
 HANDLE	hinput, houtput;
@@ -144,6 +146,50 @@ void Sys_ActiveAppChanged (void)
 		hookWasActive = WinKeyHook_isActive;
 
 		ReleaseKeyHook ();
+	}
+}
+
+typedef BOOL	(WINAPI *pRegisterRawInputDevices)	(IN PCRAWINPUTDEVICE pRawInputDevices, IN UINT uiNumDevices, IN UINT cbSize);
+
+void Sys_GrabMouseEvent (void)
+{
+	if (SDL_GetRelativeMouseMode () && in_nolegacyevents.integer) {
+		// Return 0 if rawinput is not available
+		HMODULE user32 = LoadLibrary("user32.dll");
+		pRegisterRawInputDevices _RRID = NULL;
+		RAWINPUTDEVICE Rid; // Register only for mouse messages from wm_input.
+
+		if (!user32)
+		{
+			Com_Printf("Raw input: unable to load user32.dll\n");
+			Cvar_SetValue (&in_nolegacyevents, 0);
+			return;
+		}
+		_RRID = (pRegisterRawInputDevices)GetProcAddress(user32,"RegisterRawInputDevices");
+		if (!_RRID)
+		{
+			Com_Printf("Raw input: function RegisterRawInputDevices could not be registered\n");
+			FreeLibrary (user32);
+			Cvar_SetValue (&in_nolegacyevents, 0);
+			return;
+		}
+
+		// register to get wm_input messages
+		Rid.usUsagePage = 0x01;
+		Rid.usUsage = 0x02;
+		Rid.dwFlags = RIDEV_NOLEGACY; // adds HID mouse and also ignores legacy mouse messages
+		Rid.hwndTarget = NULL;
+
+		// Register to receive the WM_INPUT message for any change in mouse (buttons, wheel, and movement will all generate the same message)
+		if (!(*_RRID)(&Rid, 1, sizeof (Rid))) {
+			Com_Printf ("Raw input: RegisterRawInputDevices() failed, error %x\n", GetLastError ());
+		}
+		else {
+			Com_Printf ("Raw input: Legacy messages disabled.\n");
+		}
+
+		FreeLibrary (user32);
+		return;
 	}
 }
 

@@ -34,6 +34,7 @@
 #include <windows.h>
 
 void Sys_ActiveAppChanged (void);
+void Sys_GrabMouseEvent (void);
 #endif
 
 #ifdef __APPLE__
@@ -127,6 +128,9 @@ cvar_t vid_hwgammacontrol     = {"vid_hwgammacontrol",    "2",   CVAR_LATCH };
 cvar_t in_raw                 = {"in_raw",                "1",   CVAR_ARCHIVE | CVAR_SILENT, in_raw_callback};
 cvar_t in_grab_windowed_mouse = {"in_grab_windowed_mouse","1",   CVAR_ARCHIVE | CVAR_SILENT, in_grab_windowed_mouse_callback};
 cvar_t in_release_mouse_modes = {"in_release_mouse_modes","2",   CVAR_SILENT };
+#ifdef _WIN32
+cvar_t in_nolegacyevents      = {"in_nolegacyevents",     "0",   CVAR_LATCH  };
+#endif
 cvar_t vid_vsync_lag_fix      = {"vid_vsync_lag_fix",     "0"                };
 cvar_t vid_vsync_lag_tweak    = {"vid_vsync_lag_tweak",   "1.0"              };
 cvar_t r_swapInterval         = {"vid_vsync",             "0",   CVAR_SILENT };
@@ -214,6 +218,10 @@ static void GrabMouse(qbool grab, qbool raw)
 	SDL_SetCursor(NULL); /* Force rewrite of it */
 
 	mouse_active = grab;
+
+#ifdef _WIN32
+	Sys_GrabMouseEvent ();
+#endif
 }
 
 void IN_Commands(void)
@@ -225,6 +233,9 @@ void IN_StartupMouse(void)
 	Cvar_Register(&in_raw);
 	Cvar_Register(&in_grab_windowed_mouse);
 	Cvar_Register(&in_release_mouse_modes);
+#ifdef _WIN32
+	Cvar_Register(&in_nolegacyevents);
+#endif
 
 	mouseinitialized = true;
 

@@ -9504,9 +9504,15 @@
         { "name": "3", "description": "Windows: Raw Input; Linux: EVDEV mouse" }
       ]
     },
+    "in_nolegacy": {
+      "group-id": "11",
+      "desc": "Experimental.  May decrease sense of lag when using raw input.",
+      "remarks": "Windows only.",
+      "type": "boolean"
+    },
     "in_raw": {
       "group-id": "11",
-      "desc": "If set, ",
+      "desc": "If set, use raw input to track mouse movement & events",
       "type": "boolean"
     },
     "in_raw_allbuttons": {
