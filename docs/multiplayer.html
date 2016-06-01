@@ -1,0 +1,1696 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="ezQuake: most popular QuakeWorld client for competitive online play">
+    <link rel="stylesheet" href="http://network.quakeworld.nu/bar/style.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="../stylesheets/stylesheet.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <title>ezQuake - QuakeWorld client for competitive online play</title>
+</head>
+<body>
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <div id="qwnetwork">
+            <div id="qwnet_content">
+                <a href="http://nquake.com/" title="nQuake - Download QuakeWorld today!" id="qwnet_nquake"></a>
+                <a href="http://ezquake.github.io/" title="ezQuake - The best QW client" id="qwnet_ezquake" class="qwnet_current"></a>
+                <div class="qwnet_separator">&nbsp;</div>
+                <a href="http://www.quakeworld.nu/" title="QuakeWorld.nu - Your portal to everything Quake" id="qwnet_qwnu"></a>
+                <a href="http://www.quakeworld.nu/forum/" title="QW.nu Forum - Discuss anything QW-related" id="qwnet_forums"></a>
+                <a href="http://qwdrama.quakeworld.nu/" title="qwdrama - News, tutorials, interviews, drama and more" id="qwnet_qwdrama"></a>
+                <div class="qwnet_separator">&nbsp;</div>
+                <a href="http://eql.quakeworld.nu/" title="EQL - European Quake League" id="qwnet_eql"></a>
+                <div class="qwnet_separator">&nbsp;</div>
+                <a href="http://wiki.quakeworld.nu/" title="QuakeWorld Wiki - The open QW encyclopedia" id="qwnet_wiki"></a>
+                <a href="http://www.quakeservers.net/quakeworld/servers/pl=1/so=8/" title="QuakeServers.net - QW server listings and info" id="qwnet_quakeservers"></a>
+                <a href="http://stats.quakeworld.nu/" title="QuakeWorld Statistics - QW statistics, ranking systems and more." id="qwnet_stats"></a>
+                <a href="http://qtv.quakeworld.nu/" title="QuakeTV - Watch QW now!" id="qwnet_qtv"></a>
+                <div class="qwnet_separator">&nbsp;</div>
+                <a href="http://videos.quakeworld.nu/" title="QuakeWorld.nu Videos - Watch QW videos, interviews and more" id="qwnet_videos"></a>
+                <a href="http://gfx.quakeworld.nu/" title="QuakeWorld GFX - Download custom graphics" id="qwnet_gfx"></a>
+                <div id="qwnet_clearer">&nbsp;</div>
+            </div>
+        </div>
+        <header class="inner">
+            <a id="forkme_banner" href="https://github.com/ezQuake/ezQuake-source">View on GitHub</a>
+            <h1 id="project_title">ezQuake</h1>
+            <h2 id="project_tagline"></h2>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+        <section id="main_content" class="inner">
+            <ul class="nav nav-tabs" role="navigation">
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="../about.html">About</a></li>
+                <li><a href="../features.html">Features</a></li>
+                <li><a href="../screenshots.html">Screenshots</a></li>
+                <li><a href="../downloads.html">Downloads</a></li>
+                <li class="active"><a href="../manual.html">Manual</a></li>
+                <li><a href="../contribute.html">Contribute</a></li>
+            </ul>
+            <h3>Multiplayer</h3>
+<h4><a id="network-settings" class="anchor" href="#network-settings" aria-hidden="true"><span class="octicon octicon-link"></span></a>Network Settings</h4>
+<div class="doc-group"><div class="cvar panel panel-default" id="cvar-cl_c2simpulsebackup">
+  <div class="panel-heading"><div class="panel-title">cl_c2sImpulseBackup</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Used with cl_c2spps, it controls how many backup copies of packets with non-zero <br />impulses are to be sent to the server. The recommended value is 3, <br />but you can try 2 or even 1 to reduce traffic if you don&#39;t have any packet loss.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>integer</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-cl_c2spps">
+  <div class="panel-heading"><div class="panel-title">cl_c2spps</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Packet filtering (a la Qizmo&#39;s .c2spps command). Use this to reduce network traffic<br />if you&#39;re playing on a 28800 (or worse) connection and can&#39;t set cl_maxfps 72 <br />because it causes lag.  Also consider use of FPS independent physics in conjunction with cl_physfps.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>integer</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-cl_chunksperframe">
+  <div class="panel-heading"><div class="panel-title">cl_chunksperframe</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Affects the download speed when using chunked downloads, more chunks per frame results in higher download speed</div></div>
+    <div class="doc-row type"><div>Type:</div><div>integer</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>Servers can limit the amount of chunks sent per frame</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-cl_crypt_rcon">
+  <div class="panel-heading"><div class="panel-title">cl_crypt_rcon</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Encrypts rcon messages sent to server.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-cl_delay_packet">
+  <div class="panel-heading"><div class="panel-title">cl_delay_packet</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Client will delay incoming and outgoing packets, allowing user to increase his ping in the game.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>integer</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>Specified in ms.  If delay is 20ms, incoming packets will be delayed by 10ms, outgoing packets too. It&#39;s preferred to use the least value that gives the desired ping.</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-cl_earlypackets">
+  <div class="panel-heading"><div class="panel-title">cl_earlypackets</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Read network data independently on physical frames. When using independent physics, network data will be read as early as possible, compared to the old way when it was read only on every physframe (77 times per second).</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td></td></tr>
+<tr>
+<td>true</td><td></td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-cl_fix_mvd">
+  <div class="panel-heading"><div class="panel-title">cl_fix_mvd</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>A fix for buggy MVD demos, making the client to parse them properly</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>Was caused by a flaw in MVDSV server</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td></td></tr>
+<tr>
+<td>true</td><td></td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-cl_nodelta">
+  <div class="panel-heading"><div class="panel-title">cl_nodelta</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Control the network packet delta compression. When you get blue lines<br />in your netgraph, you should set &#39;cl_nodelta 1&#39;.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Enable delta compression.</td></tr>
+<tr>
+<td>true</td><td>Disable delta compression.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-cl_nopred">
+  <div class="panel-heading"><div class="panel-title">cl_nopred</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>For debugging, disables movement prediction for your character; other players are still predicted.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Predict movement</td></tr>
+<tr>
+<td>true</td><td>Don&#39;t predict movement</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-cl_pext">
+  <div class="panel-heading"><div class="panel-title">cl_pext</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>If set, enable support for FTE&#39;s protocol extensions</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-cl_pext_256packetentities">
+  <div class="panel-heading"><div class="panel-title">cl_pext_256packetentities</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Allow protocol extension for allowing more packet entities.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td></td></tr>
+<tr>
+<td>true</td><td></td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-cl_pext_alpha">
+  <div class="panel-heading"><div class="panel-title">cl_pext_alpha</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>If set, enable support for FTE&#39;s alpha attribute protocol extension</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-cl_pext_chunkeddownloads">
+  <div class="panel-heading"><div class="panel-title">cl_pext_chunkeddownloads</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Enables protocol extension called \&quot;Chunked downloads\&quot;. Allows you to download maps and demos from servers faster.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td></td></tr>
+<tr>
+<td>true</td><td></td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-cl_pext_floatcoords">
+  <div class="panel-heading"><div class="panel-title">cl_pext_floatcoords</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>If set, enable support for FTE&#39;s floating point coordinate protocol extension.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-cl_pext_other">
+  <div class="panel-heading"><div class="panel-title">cl_pext_other</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Allows other protocol extensions other than Chunked downloads</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td></td></tr>
+<tr>
+<td>true</td><td></td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-cl_predict_half">
+  <div class="panel-heading"><div class="panel-title">cl_predict_half</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>The new default eliminates player models&#39; jittering when independent physics is enabled; a possible downside is larger prediction errors of modem players&#39; movement, hence the option to revert to old behavior.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Full prediction of players&#39; movement (ezQuake default)</td></tr>
+<tr>
+<td>true</td><td>Predicting half the move (QW 2.30 default)</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-cl_predict_players">
+  <div class="panel-heading"><div class="panel-title">cl_predict_players</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This toggles the prediction for other players&#39; movement. Unless you are having <br />problems this variable should be left at &quot;1&quot;.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td></td></tr>
+<tr>
+<td>true</td><td></td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-cl_proxyaddr">
+  <div class="panel-heading"><div class="panel-title">cl_proxyaddr</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>IP address of the proxy server to use while connecting to servers.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>This will override the /connect and /reconnect commands so that the connection is established via given proxy server.</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-cl_solid_players">
+  <div class="panel-heading"><div class="panel-title">cl_solid_players</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>If not set then client will not perform collision detection against other players.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-cl_timeout">
+  <div class="panel-heading"><div class="panel-title">cl_timeout</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This variable defines the timeout value in seconds until the client considers<br />himself to be disconnected from the server.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-cl_useproxy">
+  <div class="panel-heading"><div class="panel-title">cl_useproxy</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This toggles whether Qizmo should be used (if detected) to a server. When<br />enabled the server browser will use an existing connection to a Qizmo when <br />connecting another server by using the ezQuake Server Browser.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>do not use Qizmo to connect a server chosen in the Server Browser</td></tr>
+<tr>
+<td>true</td><td>use Qizmo to connect a server chosen in the Server Browser</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-pushlatency">
+  <div class="panel-heading"><div class="panel-title">pushlatency</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This variable is outdated and exists for compatibility with old configs.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>integer</div></div>
+  </div>
+</div>
+</div><h4><a id="player-settings" class="anchor" href="#player-settings" aria-hidden="true"><span class="octicon octicon-link"></span></a>Player Settings</h4>
+<div class="doc-group"><div class="cvar panel panel-default" id="cvar-b_switch">
+  <div class="panel-heading"><div class="panel-title">b_switch</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This variable allows you to define the highest weapon that the client should switch <br />to upon a backpack pickup. The possible arguments of &quot;b_switch&quot; refer to the <br />impulse that is used to switch to a certain weapon.  Note that a setting of 1 will effectively disable backpack weapon switching.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>enum</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>1</td><td>Axe</td></tr>
+<tr>
+<td>2</td><td>Shotgun</td></tr>
+<tr>
+<td>3</td><td>Double-Barreled Shotgun</td></tr>
+<tr>
+<td>4</td><td>Nailgun</td></tr>
+<tr>
+<td>5</td><td>Super Nailgun</td></tr>
+<tr>
+<td>6</td><td>Grenade Launcher</td></tr>
+<tr>
+<td>7</td><td>Rocket Launcher</td></tr>
+<tr>
+<td>8</td><td>ThunderBolt</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-bottomcolor">
+  <div class="panel-heading"><div class="panel-title">bottomcolor</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Sets the pants color.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>enum</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>0</td><td>White</td></tr>
+<tr>
+<td>1</td><td>Brown</td></tr>
+<tr>
+<td>2</td><td>Lavender</td></tr>
+<tr>
+<td>3</td><td>Khaki</td></tr>
+<tr>
+<td>4</td><td>Red</td></tr>
+<tr>
+<td>5</td><td>Lt Brown</td></tr>
+<tr>
+<td>6</td><td>Peach</td></tr>
+<tr>
+<td>7</td><td>Lt Peach</td></tr>
+<tr>
+<td>8</td><td>Purple</td></tr>
+<tr>
+<td>9</td><td>Dk Purple</td></tr>
+<tr>
+<td>10</td><td>Tan</td></tr>
+<tr>
+<td>11</td><td>Green</td></tr>
+<tr>
+<td>12</td><td>Yellow</td></tr>
+<tr>
+<td>13</td><td>Blue</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-gender">
+  <div class="panel-heading"><div class="panel-title">gender</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Indicates the gender of the player.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>enum</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>This relies on server/mod support to function correctly</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>(empty)</td><td>Not specified (use gender-neutral language)</td></tr>
+<tr>
+<td>0</td><td>Male (he, his)</td></tr>
+<tr>
+<td>1</td><td>Female (she, her)</td></tr>
+<tr>
+<td>2</td><td>None (it, its)</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-msg">
+  <div class="panel-heading"><div class="panel-title">msg</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>enum</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>0</td><td>Maximum reporting of messages.</td></tr>
+<tr>
+<td>1</td><td>Parsed reporting of messages.</td></tr>
+<tr>
+<td>2</td><td>Limited reporting of messages.</td></tr>
+<tr>
+<td>3</td><td>Minimal reporting of messages.</td></tr>
+<tr>
+<td>4</td><td>No reporting of messages.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-mtu">
+  <div class="panel-heading"><div class="panel-title">mtu</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Maximum transmission unit size.  Suggests maximum packet size to server, if supported</div></div>
+    <div class="doc-row type"><div>Type:</div><div>integer</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-name">
+  <div class="panel-heading"><div class="panel-title">name</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Player&#39;s name.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-noaim">
+  <div class="panel-heading"><div class="panel-title">noaim</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This variable toggles whether a server-sided aiming-help should be used when shooting rockets (not possible when the server variable &quot;sv_aim&quot; is set to &quot;0&quot;).</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Enable server-side aiming help for rockets (if allowed by the server).</td></tr>
+<tr>
+<td>true</td><td>Disable server-side aiming help for rockets.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-railcolor">
+  <div class="panel-heading"><div class="panel-title">railcolor</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Player&#39;s rail color</div></div>
+    <div class="doc-row type"><div>Type:</div><div>enum</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>Possible values are: 1 - 7.  Sent to server, requires mod support</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>0</td><td>White</td></tr>
+<tr>
+<td>1</td><td>Blue</td></tr>
+<tr>
+<td>2</td><td>Green</td></tr>
+<tr>
+<td>3</td><td>Light Blue</td></tr>
+<tr>
+<td>4</td><td>Red</td></tr>
+<tr>
+<td>5</td><td>Magenta</td></tr>
+<tr>
+<td>6</td><td>Yellow</td></tr>
+<tr>
+<td>7</td><td>White</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-rate">
+  <div class="panel-heading"><div class="panel-title">rate</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Sets the maximum amount of bytes per second that the server should send to the client.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-ruleset">
+  <div class="panel-heading"><div class="panel-title">ruleset</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Enforces a set of restrictions on the client features</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>Most commonly used is \&quot;smackdown\&quot;</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-skin">
+  <div class="panel-heading"><div class="panel-title">skin</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Sets the skin name for the player.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-spectator">
+  <div class="panel-heading"><div class="panel-title">spectator</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Join to server as player.</td></tr>
+<tr>
+<td>true</td><td>Join to server as spectator.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-team">
+  <div class="panel-heading"><div class="panel-title">team</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Set the team name.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-topcolor">
+  <div class="panel-heading"><div class="panel-title">topcolor</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Sets the shirt color.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>enum</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>0</td><td>White</td></tr>
+<tr>
+<td>1</td><td>Brown</td></tr>
+<tr>
+<td>2</td><td>Lavender</td></tr>
+<tr>
+<td>3</td><td>Khaki</td></tr>
+<tr>
+<td>4</td><td>Red</td></tr>
+<tr>
+<td>5</td><td>Lt Brown</td></tr>
+<tr>
+<td>6</td><td>Peach</td></tr>
+<tr>
+<td>7</td><td>Lt Peach</td></tr>
+<tr>
+<td>8</td><td>Purple</td></tr>
+<tr>
+<td>9</td><td>Dk Purple</td></tr>
+<tr>
+<td>10</td><td>Tan</td></tr>
+<tr>
+<td>11</td><td>Green</td></tr>
+<tr>
+<td>12</td><td>Yellow</td></tr>
+<tr>
+<td>13</td><td>Blue</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-w_switch">
+  <div class="panel-heading"><div class="panel-title">w_switch</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This variable allows you to define the highest weapon that the client should switch <br />to when picking it up. The possible arguments of &quot;w_switch&quot; refer to the impulse <br />that is used to switch to a certain weapon:</div></div>
+    <div class="doc-row type"><div>Type:</div><div>enum</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>1</td><td>Axe</td></tr>
+<tr>
+<td>2</td><td>Shotgun</td></tr>
+<tr>
+<td>3</td><td>Double-Barreled Shotgun</td></tr>
+<tr>
+<td>4</td><td>Nailgun</td></tr>
+<tr>
+<td>5</td><td>Super Nailgun</td></tr>
+<tr>
+<td>6</td><td>Grenade Launcher</td></tr>
+<tr>
+<td>7</td><td>Rocket Launcher</td></tr>
+<tr>
+<td>8</td><td>ThunderBolt</td></tr>
+</tbody>
+</table>
+</div>
+</div><h4><a id="qtv-settings" class="anchor" href="#qtv-settings" aria-hidden="true"><span class="octicon octicon-link"></span></a>QTV Settings</h4>
+<div class="doc-group"><div class="cvar panel panel-default" id="cvar-qtv_adjustbuffer">
+  <div class="panel-heading"><div class="panel-title">qtv_adjustbuffer</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Enables balancing of the buffer length of the QTV stream. When turned on, the size of the stream buffer (the delay from the actual action) will be auto-adjusted (by changing the playback speed when necessary) so that it stays on the same level most of the time.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>When turned on, the speed of the playback may change sometimes - that&#39;s how the buffer lenght is balanced. But usually you want to have this turned on when you are watching a shoutcast-commentated game because you want to stay synchronized with the commentary.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Do not adjust buffer size, always play at 100% speed</td></tr>
+<tr>
+<td>true</td><td>Auto-adjust buffer size</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-qtv_adjusthighstart">
+  <div class="panel-heading"><div class="panel-title">qtv_adjusthighstart</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>The level on which QTV buffer auto-adjusting will start. E.g. when set to 1.5, (and qtv_adjustbuffer is 1), QTV buffer auto-adjusting will start when buffer length reached 150% of it&#39;s normal length (determined by qtv_buffertime setting)</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td></td><td>Only values higher than 1.0 make sense</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-qtv_adjustlowstart">
+  <div class="panel-heading"><div class="panel-title">qtv_adjustlowstart</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>The bottom level on which QTV buffer auto-adjusting will start. E.g. when set to 0.5, (and qtv_adjustbuffer is 1), QTV buffer auto-adjusting will start when buffer length reached 50% of it&#39;s normal length (determined by qtv_buffertime setting)</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td></td><td>Only values lower than 1.0 make sense</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-qtv_adjustmaxspeed">
+  <div class="panel-heading"><div class="panel-title">qtv_adjustmaxspeed</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>The fastest possible playback speed when QTV buffer becomes excessive and auto-adjusting starts. The higher the speed is, the faster the QTV buffer length will go down to normal levels.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>Works in conjunction with qtv_adjustbuffer 1</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td></td><td>Only values above 1.0 make sense</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-qtv_adjustminspeed">
+  <div class="panel-heading"><div class="panel-title">qtv_adjustminspeed</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>The slowest possible playback speed when QTV buffer adjusting takes action. The slower the speed is, the faster the QTV buffer will fill up.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>Not allowing to slow down enough, buffer level might still drop down to zero if there were longer network lag. This causes pausing during playback. Allowing to slow down too much is noticeable.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td></td><td>0.5 means 50% of the normal playback speed</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-qtv_allow_pause">
+  <div class="panel-heading"><div class="panel-title">qtv_allow_pause</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Allows QTV streams to be affected by cl_demospeed.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-qtv_api_url">
+  <div class="panel-heading"><div class="panel-title">qtv_api_url</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>URL used by /qtv command to resolve servers to QTV addresses and vice versa</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-qtv_buffertime">
+  <div class="panel-heading"><div class="panel-title">qtv_buffertime</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Defines how much the client buffers from the QTV stream</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>This determines the &quot;delay&quot; you will get from what is actually happening. For example if you want to synchronize shoutcast commentary with the QTV stream, this is the variable you need to change.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td></td><td>in seconds, values below 0.2 are treated as 0.2</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-qtv_chatprefix">
+  <div class="panel-heading"><div class="panel-title">qtv_chatprefix</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>String that will be added at the beginning of all messages send to a QTV chat.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-qtv_event_changename">
+  <div class="panel-heading"><div class="panel-title">qtv_event_changename</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Text pattern used when an user changes his name on a QTV stream</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-qtv_event_join">
+  <div class="panel-heading"><div class="panel-title">qtv_event_join</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Text pattern used when an user joins a QTV stream</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-qtv_event_leave">
+  <div class="panel-heading"><div class="panel-title">qtv_event_leave</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Text pattern used when an user leaves a QTV stream</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-qtv_gamechatprefix">
+  <div class="panel-heading"><div class="panel-title">qtv_gamechatprefix</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>String that will be added at the beginning of all messages send from QTV to the server where the broadcasted game is being played.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-qtv_say_team">
+  <div class="panel-heading"><div class="panel-title">qtv_say_team</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>say_team will be blocked when sending to QTV</td></tr>
+<tr>
+<td>true</td><td>say_team allowed as normal on QTV</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-qtv_skipchained">
+  <div class="panel-heading"><div class="panel-title">qtv_skipchained</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>QTV chat messages will have prefix detailing userIDs and proxy addresses</td></tr>
+<tr>
+<td>true</td><td>QTV chat messages will be in simpler form &lt;name&gt;: &lt;message&gt;</td></tr>
+</tbody>
+</table>
+</div>
+</div><h4><a id="server-browser" class="anchor" href="#server-browser" aria-hidden="true"><span class="octicon octicon-link"></span></a>Server Browser</h4>
+<div class="doc-group"><div class="cvar panel panel-default" id="cvar-sb_autohide">
+  <div class="panel-heading"><div class="panel-title">sb_autohide</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This toggles in which cases the server browser should automatically hide itself <br />when connecting to a server.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>enum</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>0</td><td>Never hide server browser</td></tr>
+<tr>
+<td>1</td><td>This will cause the server browser to always hide after connecting</td></tr>
+<tr>
+<td>2</td><td>This will cause the server browser to hide after connecting only, if the     connected server is not a qizmo proxy, useful if you often connect to Qizmos<br />    only for rerouting features (with &quot;useproxy 1&quot;)</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-sb_autoupdate">
+  <div class="panel-heading"><div class="panel-title">sb_autoupdate</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Enabled auto-updates (pings &amp; refreshes status) servers from actually marked server sources in Server Browser.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>Usefull with sb_starttab 1 and &#39;+cfg_load myconfig +menu_slist&#39; in command-line.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>do not refresh server list automatically</td></tr>
+<tr>
+<td>true</td><td>auto-refresh server list when first entering Server Browser menu</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-sb_findroutes">
+  <div class="panel-heading"><div class="panel-title">sb_findroutes</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Enables automatic lookup of lowest ping path via proxies for connection to each server in the server browser.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>Use with connectbr command.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Lookup disabled</td></tr>
+<tr>
+<td>true</td><td>Lookup will start after the &quot;getting infos&quot; phase.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-sb_hidedead">
+  <div class="panel-heading"><div class="panel-title">sb_hidedead</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This toggles whether ezQuake should hide dead servers.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>don&#39;t hide dead servers</td></tr>
+<tr>
+<td>true</td><td>hide dead servers</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-sb_hideempty">
+  <div class="panel-heading"><div class="panel-title">sb_hideempty</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This toggles whether ezQuake should hide empty servers.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>don&#39;t hide empty servers</td></tr>
+<tr>
+<td>true</td><td>hide empty servers</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-sb_hidefull">
+  <div class="panel-heading"><div class="panel-title">sb_hidefull</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This toggles whether ezQuake should hide full servers.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>don&#39;t hide full servers</td></tr>
+<tr>
+<td>true</td><td>hide full servers</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-sb_hidehighping">
+  <div class="panel-heading"><div class="panel-title">sb_hidehighping</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Remove servers with high ping from the server list and also exclude them from querying servers for details.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td></td></tr>
+<tr>
+<td>true</td><td></td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-sb_hidenotempty">
+  <div class="panel-heading"><div class="panel-title">sb_hidenotempty</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This toggles whether ezQuake should hide empty servers.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>don&#39;t hide empty servers</td></tr>
+<tr>
+<td>true</td><td>hide empty servers</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-sb_ignore_proxy">
+  <div class="panel-heading"><div class="panel-title">sb_ignore_proxy</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-sb_inforetries">
+  <div class="panel-heading"><div class="panel-title">sb_inforetries</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This determines how often ezQuake should try to retrieve information from a server <br />until it is considered to be not responding.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-sb_infospersec">
+  <div class="panel-heading"><div class="panel-title">sb_infospersec</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This determines how many serverinfos per second ezQuake should retrieve when <br />scanning servers. When setting this value too high you will flood your line,<br />causing you to not receive information from servers or lagging your connect<br />to the server you are currently connected to.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-sb_infotimeout">
+  <div class="panel-heading"><div class="panel-title">sb_infotimeout</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This determines how long ezQuake will wait for a reply when trying to retrieve<br />information from a server until the attempt times out.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-sb_listcache">
+  <div class="panel-heading"><div class="panel-title">sb_listcache</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Cache the list of alive servers and load it on next startup of the client.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td></td></tr>
+<tr>
+<td>true</td><td></td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-sb_liveupdate">
+  <div class="panel-heading"><div class="panel-title">sb_liveupdate</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This will determine how often ezQuake should refresh the serverinfo window, the<br />specified value sets the delay in seconds. Setting it to &quot;0&quot; will disable<br />automatic refreshing.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-sb_mastercache">
+  <div class="panel-heading"><div class="panel-title">sb_mastercache</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This toggles whether ezQuake should cache the results of queries to master server <br />(in directory qw/sb/cache). If you restart ezQuake and don&#39;t update sources or if <br />a master server is down, ezQuake will use the cache.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>don&#39;t use cache for master servers</td></tr>
+<tr>
+<td>true</td><td>use the cache for master servers when they are down or haven&#39;t been refreshed</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-sb_masterretries">
+  <div class="panel-heading"><div class="panel-title">sb_masterretries</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This determines how often ezQuake should try to retrieve information from a master <br />server until it is considered to be not responding.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-sb_mastertimeout">
+  <div class="panel-heading"><div class="panel-title">sb_mastertimeout</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This determines how long ezQuake will wait for a reply when trying to retrieve<br />information from a master server until the attempt times out.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-sb_nosockraw">
+  <div class="panel-heading"><div class="panel-title">sb_nosockraw</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Disable ICMP pinging in server browser and use UDP QW Ping packet to query servers for their ping (multithreaded).</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td></td></tr>
+<tr>
+<td>true</td><td></td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-sb_pinglimit">
+  <div class="panel-heading"><div class="panel-title">sb_pinglimit</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Limit ping for servers to be visible when sb_hidehighping is enabled.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>integer</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-sb_pings">
+  <div class="panel-heading"><div class="panel-title">sb_pings</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This determines how many pings ezQuake will send to a server when trying to<br />determine your ping to it. A higher value will cause scanning servers to take<br />longer, but the result may be more exact. A lower value obviously makes scanning<br />faster, but pings may be inaccurate.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-sb_pingspersec">
+  <div class="panel-heading"><div class="panel-title">sb_pingspersec</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This determines how many pings per second ezQuake should sent out when scanning<br />servers. If you set this value too high the result will be that the pings will <br />not be accurate because you overloaded your line. If you set it too low scanning <br />servers will take very long especially when you have a large server list.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-sb_pingtimeout">
+  <div class="panel-heading"><div class="panel-title">sb_pingtimeout</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This determines how long ezQuake will wait for a reply when trying to ping a <br />server until the attempt times out.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-sb_proxinfopersec">
+  <div class="panel-heading"><div class="panel-title">sb_proxinfopersec</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Number of proxies to contact per second<br />Used when finding fastest path to a server.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-sb_proxretries">
+  <div class="panel-heading"><div class="panel-title">sb_proxretries</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Number of times to attempt contact with a proxy before </div></div>
+    <div class="doc-row type"><div>Type:</div><div>integer</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-sb_proxtimeout">
+  <div class="panel-heading"><div class="panel-title">sb_proxtimeout</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Timeout period (in ms) before a proxy connection times out.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>integer</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-sb_showaddress">
+  <div class="panel-heading"><div class="panel-title">sb_showaddress</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This toggles whether ezQuake should display the server IP column in the server<br />list.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>do not show the server IP column</td></tr>
+<tr>
+<td>true</td><td>show the server IP column</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-sb_showfraglimit">
+  <div class="panel-heading"><div class="panel-title">sb_showfraglimit</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This toggles whether ezQuake should display the fraglimit column in the server<br />list.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>do not show the fraglimit column</td></tr>
+<tr>
+<td>true</td><td>show the fraglimit column</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-sb_showgamedir">
+  <div class="panel-heading"><div class="panel-title">sb_showgamedir</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This toggles whether ezQuake should display the gamedir column in the server list,<br />for example to see which mod is being played.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>do not show the gamedir column</td></tr>
+<tr>
+<td>true</td><td>show the gamedir column</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-sb_showmap">
+  <div class="panel-heading"><div class="panel-title">sb_showmap</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This toggles whether ezQuake should display the map column in the server list.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>do not show the map column</td></tr>
+<tr>
+<td>true</td><td>show the map column</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-sb_showping">
+  <div class="panel-heading"><div class="panel-title">sb_showping</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This toggles whether ezQuake should display the ping column in the server list.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>do not show the ping column</td></tr>
+<tr>
+<td>true</td><td>show the ping column</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-sb_showplayers">
+  <div class="panel-heading"><div class="panel-title">sb_showplayers</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This toggles whether ezQuake should display the players column in the server list<br />that shows how many players are on the server as well as how many players are <br />allowed.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>do not show the players column</td></tr>
+<tr>
+<td>true</td><td>show the players column</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-sb_showproxies">
+  <div class="panel-heading"><div class="panel-title">sb_showproxies</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Toggle display of proxy servers (QWFwd and Qizmo) in the Server Browser.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>enum</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>0</td><td>Hide proxies in the server browser</td></tr>
+<tr>
+<td>1</td><td>Show proxies in the server browser</td></tr>
+<tr>
+<td>2</td><td>Only show proxies in the server browser</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-sb_showtimelimit">
+  <div class="panel-heading"><div class="panel-title">sb_showtimelimit</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This toggles whether ezQuake should display the timelimit column in the server <br />list.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>do not show the timelimit column</td></tr>
+<tr>
+<td>true</td><td>show the timelimit column</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-sb_sortplayers">
+  <div class="panel-heading"><div class="panel-title">sb_sortplayers</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This determines sort order in the players list. This uses the numbers from the<br />description of the columns. Check &quot;Columns available in servers/players list&quot;<br />above for an explanation of each number. A &quot;-&quot; in front of the value reverses <br />the sort order for that value from ascending to descending.<br />address (ip:port).</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-sb_sortservers">
+  <div class="panel-heading"><div class="panel-title">sb_sortservers</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This determines sort order in the servers list. This uses the numbers from the<br />description of the columns. Check &quot;Columns available in servers/players list&quot; <br />above for an explanation of each number. A &quot;-&quot; in front of the value reverses <br />the sort order for that value from ascending to descending.<br />server address (ip:port).</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-sb_sortsources">
+  <div class="panel-heading"><div class="panel-title">sb_sortsources</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Ordering instructions for server browser sources list are stored in this variable. You can order source server in Server browser by pressing Ctrl+1, Ctrl+2 and Ctrl+3. Sequence of your desired combination will be stored in this variable, newest keys first.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td></td><td>E.g.: 3-21 means you&#39;ve pressed Ctrl+1, Ctrl+2, Ctrl+2 and Ctrl+3 so your sources are now ordered by server count, last update time and source name.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-sb_sourcevalidity">
+  <div class="panel-heading"><div class="panel-title">sb_sourcevalidity</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This sets the time of master servers validity in minutes. Master servers that<br />were updated within the specified time will not be refreshed when updating <br />sources with [SPACE].</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-sb_status">
+  <div class="panel-heading"><div class="panel-title">sb_status</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This toggles whether the server status should be displayed in the two bottom <br />lines of the server browser.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>do not display the status</td></tr>
+<tr>
+<td>true</td><td>display the status</td></tr>
+</tbody>
+</table>
+</div>
+</div><h4><a id="skin-settings" class="anchor" href="#skin-settings" aria-hidden="true"><span class="octicon octicon-link"></span></a>Skin Settings</h4>
+<div class="doc-group"><div class="cvar panel panel-default" id="cvar-baseskin">
+  <div class="panel-heading"><div class="panel-title">baseskin</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Defines what skin you see other people using if you don&#39;t have their skin and don&#39;t have skin forcing on.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-cl_name_as_skin">
+  <div class="panel-heading"><div class="panel-title">cl_name_as_skin</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Allows you to override user skin settings and use player&#39;s name or ID as a his (her) skin</div></div>
+    <div class="doc-row type"><div>Type:</div><div>enum</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>There are many other skin settings that can override, e.g. all enemy*skin, team*skin settings override this setting.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>0</td><td>Use player&#39;s skin setting</td></tr>
+<tr>
+<td>1</td><td>Use player&#39;s name as his skin</td></tr>
+<tr>
+<td>2</td><td>Use player&#39;s ID as his skin</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-enemybothskin">
+  <div class="panel-heading"><div class="panel-title">enemybothskin</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Overrides the enemy quad pent skin so you can define the skin which applies to enemys with both the quad and pent powerups.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-enemybottomcolor">
+  <div class="panel-heading"><div class="panel-title">enemybottomcolor</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Determines the color of the pants of the enemies you see. Overrides player&#39;s skin settings.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>enum</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>To be able to use RGB 24bit colors, look for r_enemyskincolor variable.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>-1</td><td>disabled</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-enemyforceskins">
+  <div class="panel-heading"><div class="panel-title">enemyforceskins</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Allows you to set different skin for every enemy player even if they all have same skin names set or use names of skins that you do not have in your Quake dir</div></div>
+    <div class="doc-row type"><div>Type:</div><div>enum</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>Read &quot;Player skins&quot; manual page for more info on skin rules.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>0</td><td>Disabled</td></tr>
+<tr>
+<td>1</td><td>Use player&#39;s name as the name of the skin to be used</td></tr>
+<tr>
+<td>2</td><td>Use player&#39;s userid number (only useful for video capturing)</td></tr>
+<tr>
+<td>3</td><td>Assign skins &quot;e1&quot;, &quot;e2&quot;, &quot;e3&quot;, etc. to the enemies.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-enemypentskin">
+  <div class="panel-heading"><div class="panel-title">enemypentskin</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Overrides the enemy pent skin so you can define the skin which applies to enemy pents.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-enemyquadskin">
+  <div class="panel-heading"><div class="panel-title">enemyquadskin</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Overrides the enemy quad skin so you can define the skin which applies to enemy quads.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-enemyskin">
+  <div class="panel-heading"><div class="panel-title">enemyskin</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Overrides the enemies skin so you can define the skin which applies to enemies.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-enemytopcolor">
+  <div class="panel-heading"><div class="panel-title">enemytopcolor</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Determines the color of the shirt of the enemies you see. Overrides player&#39;s skin settings.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>integer</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>To be able to use RGB 24bit colors, look for r_enemyskincolor variable.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td></td><td>-1 to turn this off, values from 0 to 13 for standard Quake colors</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-noskins">
+  <div class="panel-heading"><div class="panel-title">noskins</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>enum</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>0</td><td>Enable skins.</td></tr>
+<tr>
+<td>1</td><td>Disable skins.</td></tr>
+<tr>
+<td>2</td><td>Enable skins but do not download new skins.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-r_enemyskincolor">
+  <div class="panel-heading"><div class="panel-title">r_enemyskincolor</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Allows you to set color for enemies you see in RGB format</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>See r_skincolormode for more info</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-r_fullbrightskins">
+  <div class="panel-heading"><div class="panel-title">r_fullbrightSkins</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Determines the fullbright percentage of skins. Fullbright skins can always be used during demo playback. <br />The f_skins response will indicate the brightness level being used as a percentage.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>0</td><td>Being 0% fullbright.</td></tr>
+<tr>
+<td>0.5</td><td>Being 50% fullbright.</td></tr>
+<tr>
+<td>1</td><td>Being 100% fullbright.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-r_skincolormode">
+  <div class="panel-heading"><div class="panel-title">r_skincolormode</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Toggles different modes of how colors from r_enemyskincolor and r_teamskincolor are applied to players.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>enum</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>0</td><td>Makes skin solid.</td></tr>
+<tr>
+<td>1</td><td>?</td></tr>
+<tr>
+<td>2</td><td>Makes skin sort of topographic with r_enemy/team skincolor color.</td></tr>
+<tr>
+<td>3</td><td>?</td></tr>
+<tr>
+<td>4</td><td>Same as 5 but fullbright.</td></tr>
+<tr>
+<td>5</td><td>Applies r_enemy/team skincolor hue to skin.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-r_teamskincolor">
+  <div class="panel-heading"><div class="panel-title">r_teamskincolor</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Allows you to set color for teammates you see in RGB format</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>See r_skincolormode for more info</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-teambothskin">
+  <div class="panel-heading"><div class="panel-title">teambothskin</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Overrides the team quad pent skin so you can define the skin which applies to team quads pents.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-teambottomcolor">
+  <div class="panel-heading"><div class="panel-title">teambottomcolor</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Determines the color of the pants of the teammates you see. Overrides player&#39;s skin settings.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>enum</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>To be able to use RGB 24bit colors, look for r_teamskincolor variable.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>-1</td><td>Disabled</td></tr>
+<tr>
+<td>0</td><td>White</td></tr>
+<tr>
+<td>1</td><td>Brown</td></tr>
+<tr>
+<td>2</td><td>Lavender</td></tr>
+<tr>
+<td>3</td><td>Khaki</td></tr>
+<tr>
+<td>4</td><td>Red</td></tr>
+<tr>
+<td>5</td><td>Lt Brown</td></tr>
+<tr>
+<td>6</td><td>Peach</td></tr>
+<tr>
+<td>7</td><td>Lt Peach</td></tr>
+<tr>
+<td>8</td><td>Purple</td></tr>
+<tr>
+<td>9</td><td>Dk Purple</td></tr>
+<tr>
+<td>10</td><td>Tan</td></tr>
+<tr>
+<td>11</td><td>Green</td></tr>
+<tr>
+<td>12</td><td>Yellow</td></tr>
+<tr>
+<td>13</td><td>Blue</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-teamforceskins">
+  <div class="panel-heading"><div class="panel-title">teamforceskins</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Allows you to set different skin for every team player even if they all have same skin names set or use names of skins that you do not have in your Quake dir</div></div>
+    <div class="doc-row type"><div>Type:</div><div>enum</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>Read &quot;Player skins&quot; manual page for more info on skin rules.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>0</td><td>Disabled</td></tr>
+<tr>
+<td>1</td><td>Use player&#39;s name as the name of the skin to be used</td></tr>
+<tr>
+<td>2</td><td>Use player&#39;s userid number (only useful for video capturing)</td></tr>
+<tr>
+<td>3</td><td>Assign skins &quot;t1&quot;, &quot;t2&quot;, &quot;t3&quot;, etc. to your teammates.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-teamlock">
+  <div class="panel-heading"><div class="panel-title">teamlock</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Observing feature. Do not toggle enemy recognition when you switch players. One team will always remain marked as enemy even if you spec their players.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td></td><td>Either 0 or 1 to turn this feature on / off, or put in the name of the team that will always be recognized as not-enemy.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-teampentskin">
+  <div class="panel-heading"><div class="panel-title">teampentskin</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Overrides the team pent skin so you can define the skin which applies to team pents.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-teamquadskin">
+  <div class="panel-heading"><div class="panel-title">teamquadskin</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Overrides the team quad skin so you can define the skin which applies to team quads.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-teamskin">
+  <div class="panel-heading"><div class="panel-title">teamskin</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Overrides the team skin so you can define the skin which applies to team mates.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-teamtopcolor">
+  <div class="panel-heading"><div class="panel-title">teamtopcolor</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Determines the color of the shirt of the teammates you see. Overrides player&#39;s skin settings.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>enum</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>To be able to use RGB 24bit colors, look for r_teamskincolor variable.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>-1</td><td>Disabled</td></tr>
+<tr>
+<td>0</td><td>White</td></tr>
+<tr>
+<td>1</td><td>Brown</td></tr>
+<tr>
+<td>2</td><td>Lavender</td></tr>
+<tr>
+<td>3</td><td>Khaki</td></tr>
+<tr>
+<td>4</td><td>Red</td></tr>
+<tr>
+<td>5</td><td>Lt Brown</td></tr>
+<tr>
+<td>6</td><td>Peach</td></tr>
+<tr>
+<td>7</td><td>Lt Peach</td></tr>
+<tr>
+<td>8</td><td>Purple</td></tr>
+<tr>
+<td>9</td><td>Dk Purple</td></tr>
+<tr>
+<td>10</td><td>Tan</td></tr>
+<tr>
+<td>11</td><td>Green</td></tr>
+<tr>
+<td>12</td><td>Yellow</td></tr>
+<tr>
+<td>13</td><td>Blue</td></tr>
+</tbody>
+</table>
+</div>
+</div><h4><a id="spectator-tracking" class="anchor" href="#spectator-tracking" aria-hidden="true"><span class="octicon octicon-link"></span></a>Spectator Tracking</h4>
+<div class="doc-group"><div class="cvar panel panel-default" id="cvar-cam_dist">
+  <div class="panel-heading"><div class="panel-title">cam_dist</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Distance from player. Use +forward/+back to adjust it smoothly</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>For use with cam_thirdperson</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-cam_lockdir">
+  <div class="panel-heading"><div class="panel-title">cam_lockdir</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Force camera to locked direction mode</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Dont force</td></tr>
+<tr>
+<td>true</td><td>Force</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-cam_lockpos">
+  <div class="panel-heading"><div class="panel-title">cam_lockpos</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Force camera to locked position mode</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>EXPEREMENTAL</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Dont force</td></tr>
+<tr>
+<td>true</td><td>Force</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-cam_thirdperson">
+  <div class="panel-heading"><div class="panel-title">cam_thirdperson</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Enables third person view in demo playback and spectator mode. In track mode, we look at the person being tracked rather than through his eyes.<br />Unlike cl_camera_tpp, you can use the mouse to look around.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>in track mode, we look at the person being tracked rather than through his eyes</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td></td></tr>
+<tr>
+<td>true</td><td></td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-cam_zoomaccel">
+  <div class="panel-heading"><div class="panel-title">cam_zoomaccel</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>To control how fast you zoom in onto the target with +forward/+back in cam_thirdperson mode</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-cam_zoomspeed">
+  <div class="panel-heading"><div class="panel-title">cam_zoomspeed</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>To control how fast you zoom in onto the target with +forward/+back in cam_thirdperson mode.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-cl_camera_death">
+  <div class="panel-heading"><div class="panel-title">cl_camera_death</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Camera view above your body after death.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>Enabled only for viewing demos and observing games.</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-cl_camera_tpp">
+  <div class="panel-heading"><div class="panel-title">cl_camera_tpp</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>enum</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>Enabled only for viewing demos and observing games.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>0</td><td>1st person view</td></tr>
+<tr>
+<td>1</td><td>3rd person view ala Tomb Raider (such a fun!)</td></tr>
+<tr>
+<td>2</td><td>3rd person view ala cl_chasecam 0 (buggy)</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-cl_camera_tpp_distance">
+  <div class="panel-heading"><div class="panel-title">cl_camera_tpp_distance</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Sets distance of 3rd person camera from tracked player.  You can use negative values too.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>For use with cl_camera_tpp. See cl_camera_tpp_height too.</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-cl_camera_tpp_height">
+  <div class="panel-heading"><div class="panel-title">cl_camera_tpp_height</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Sets vertical position of 3rd person camera.  You can use negative values too.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>Set cl_camera_tpp 1 first.</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-cl_chasecam">
+  <div class="panel-heading"><div class="panel-title">cl_chasecam</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Toggle between 3rd-person view and 1st-person view while observing or during demo playback.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Third-person view.</td></tr>
+<tr>
+<td>true</td><td>First-person (&quot;through-eyes&quot;) view.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-cl_hightrack">
+  <div class="panel-heading"><div class="panel-title">cl_hightrack</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Turns auto-tracking player with most frags ON when spectating or watching a demo.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+</div>
+        </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+        <footer class="inner">
+            <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+        </footer>
+    </div>
+</body>
+</html>

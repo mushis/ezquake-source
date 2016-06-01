@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="ezQuake: most popular QuakeWorld client for competitive online play">
+    <link rel="stylesheet" href="http://network.quakeworld.nu/bar/style.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="../stylesheets/stylesheet.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <title>ezQuake - QuakeWorld client for competitive online play</title>
+</head>
+<body>
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <div id="qwnetwork">
+            <div id="qwnet_content">
+                <a href="http://nquake.com/" title="nQuake - Download QuakeWorld today!" id="qwnet_nquake"></a>
+                <a href="http://ezquake.github.io/" title="ezQuake - The best QW client" id="qwnet_ezquake" class="qwnet_current"></a>
+                <div class="qwnet_separator">&nbsp;</div>
+                <a href="http://www.quakeworld.nu/" title="QuakeWorld.nu - Your portal to everything Quake" id="qwnet_qwnu"></a>
+                <a href="http://www.quakeworld.nu/forum/" title="QW.nu Forum - Discuss anything QW-related" id="qwnet_forums"></a>
+                <a href="http://qwdrama.quakeworld.nu/" title="qwdrama - News, tutorials, interviews, drama and more" id="qwnet_qwdrama"></a>
+                <div class="qwnet_separator">&nbsp;</div>
+                <a href="http://eql.quakeworld.nu/" title="EQL - European Quake League" id="qwnet_eql"></a>
+                <div class="qwnet_separator">&nbsp;</div>
+                <a href="http://wiki.quakeworld.nu/" title="QuakeWorld Wiki - The open QW encyclopedia" id="qwnet_wiki"></a>
+                <a href="http://www.quakeservers.net/quakeworld/servers/pl=1/so=8/" title="QuakeServers.net - QW server listings and info" id="qwnet_quakeservers"></a>
+                <a href="http://stats.quakeworld.nu/" title="QuakeWorld Statistics - QW statistics, ranking systems and more." id="qwnet_stats"></a>
+                <a href="http://qtv.quakeworld.nu/" title="QuakeTV - Watch QW now!" id="qwnet_qtv"></a>
+                <div class="qwnet_separator">&nbsp;</div>
+                <a href="http://videos.quakeworld.nu/" title="QuakeWorld.nu Videos - Watch QW videos, interviews and more" id="qwnet_videos"></a>
+                <a href="http://gfx.quakeworld.nu/" title="QuakeWorld GFX - Download custom graphics" id="qwnet_gfx"></a>
+                <div id="qwnet_clearer">&nbsp;</div>
+            </div>
+        </div>
+        <header class="inner">
+            <a id="forkme_banner" href="https://github.com/ezQuake/ezQuake-source">View on GitHub</a>
+            <h1 id="project_title">ezQuake</h1>
+            <h2 id="project_tagline"></h2>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+        <section id="main_content" class="inner">
+            <ul class="nav nav-tabs" role="navigation">
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="../about.html">About</a></li>
+                <li><a href="../features.html">Features</a></li>
+                <li><a href="../screenshots.html">Screenshots</a></li>
+                <li><a href="../downloads.html">Downloads</a></li>
+                <li class="active"><a href="../manual.html">Manual</a></li>
+                <li><a href="../contribute.html">Contribute</a></li>
+            </ul>
+            <h3>Demos</h3>
+<h4><a id="demo-handling" class="anchor" href="#demo-handling" aria-hidden="true"><span class="octicon octicon-link"></span></a>Demo Handling</h4>
+<div class="doc-group"><div class="cvar panel panel-default" id="cvar-cl_demopinginterval">
+  <div class="panel-heading"><div class="panel-title">cl_demoPingInterval</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>How often to request ping updates when recording demos. This variable doesn&#39;t <br />affect ping updates when the scoreboard is shown (they are always one update per 2 seconds).</div></div>
+    <div class="doc-row type"><div>Type:</div><div>integer</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>0</td><td>Disable automatic ping requests.</td></tr>
+<tr>
+<td>5</td><td>Request every 5 seconds (default).</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-cl_demospeed">
+  <div class="panel-heading"><div class="panel-title">cl_demospeed</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Controls the speed of demo playback in percentage (can be changed during demo playback if you wish).</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-cl_demoteamplay">
+  <div class="panel-heading"><div class="panel-title">cl_demoteamplay</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>If set, teamplay settings enabled during .dem playback.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-cl_startupdemo">
+  <div class="panel-heading"><div class="panel-title">cl_startupdemo</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Demo that should be played on client&#39;s startup.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td></td><td>File name of the demo.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-demo_autotrack">
+  <div class="panel-heading"><div class="panel-title">demo_autotrack</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Enables server-side autotrack to be accepted</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>Server-side autotrack is recorded in MVD demos and in QTV stream allowing all the observers of the match observe the same player at the same time</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td></td></tr>
+<tr>
+<td>true</td><td></td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-demo_benchmarkdumps">
+  <div class="panel-heading"><div class="panel-title">demo_benchmarkdumps</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Allows you to automatically dump timedemo benchmark results into $log_dir/timedemo.log file. The output is in XML markup format and contains info about your operating system, hardware configuration, client version, rendering, screen resolution and the result FPS.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>See timedemo command description for more info. Note: The result file is not a well-formed XML file.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Disable timedemo result dumping</td></tr>
+<tr>
+<td>true</td><td>Dump results of timedemo benchmark</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-demo_capture_codec">
+  <div class="panel-heading"><div class="panel-title">demo_capture_codec</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Determines what codes should be used for captured video stream compression. E.g. XVID, DIVX, ...</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-demo_capture_dir">
+  <div class="panel-heading"><div class="panel-title">demo_capture_dir</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Change the default capture directory.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-demo_capture_fps">
+  <div class="panel-heading"><div class="panel-title">demo_capture_fps</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Change the default capture fps.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-demo_capture_mp3">
+  <div class="panel-heading"><div class="panel-title">demo_capture_mp3</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>When set to 1 .avi capturing captures sound compressed in MP3 format.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>See demo_capture_mp3_kbps too.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Captures uncompressed sound</td></tr>
+<tr>
+<td>true</td><td>Captures sound in MP3 format</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-demo_capture_mp3_kbps">
+  <div class="panel-heading"><div class="panel-title">demo_capture_mp3_kbps</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Sets bitrate for captured sound stream when demo_capture_mp3 is set to 1.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-demo_capture_quiet">
+  <div class="panel-heading"><div class="panel-title">demo_capture_quiet</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Stops sound being played during demo capture</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-demo_capture_steadycam">
+  <div class="panel-heading"><div class="panel-title">demo_capture_steadycam</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Changes behaviour of keyboard/mouse input when capturing.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-demo_capture_vid_maxlen">
+  <div class="panel-heading"><div class="panel-title">demo_capture_vid_maxlen</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>If set, multiple files will be created.  This variable determines length in seconds of each file</div></div>
+    <div class="doc-row type"><div>Type:</div><div>integer</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-demo_dir">
+  <div class="panel-heading"><div class="panel-title">demo_dir</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Change the demos and autorecord directory.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-demo_format">
+  <div class="panel-heading"><div class="panel-title">demo_format</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Specifies the demo file format used when recording demo with Match tools.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>enum</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>See qwdtools_dir, qizmo_dir, match_auto_record.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>mvd</td><td>MultiView Demo, usually contains less frames per second.</td></tr>
+<tr>
+<td>qwd</td><td>Original QuakeWorld demo format.</td></tr>
+<tr>
+<td>qwz</td><td>Qizmo compressed demo.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-demo_getpings">
+  <div class="panel-heading"><div class="panel-title">demo_getpings</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This toggles whether the client should always record pings into the demo or only<br />when the player died and show(team)scores are being shown (QWCL default).</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>only update pings in the demo when the player died and show(team)scores<br />    are being shown</td></tr>
+<tr>
+<td>true</td><td>always update pings</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-qizmo_dir">
+  <div class="panel-heading"><div class="panel-title">qizmo_dir</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Change the default qizmo directory.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-qwdtools_dir">
+  <div class="panel-heading"><div class="panel-title">qwdtools_dir</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Specifies the qwdtools utility placement</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td></td><td>Use path relative to you quakedir</td></tr>
+</tbody>
+</table>
+</div>
+</div><h4><a id="match-tools" class="anchor" href="#match-tools" aria-hidden="true"><span class="octicon octicon-link"></span></a>Match Tools</h4>
+<div class="doc-group"><div class="cvar panel panel-default" id="cvar-match_auto_logconsole">
+  <div class="panel-heading"><div class="panel-title">match_auto_logconsole</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>When set to 1 or 2, a temp console log will automatically be created when a match starts (usually when the countdown starts).</div></div>
+    <div class="doc-row type"><div>Type:</div><div>enum</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>0</td><td>Do not auto-log console.</td></tr>
+<tr>
+<td>1</td><td>Auto record console but requires manuall saving. See &#39;match_save&#39;.</td></tr>
+<tr>
+<td>2</td><td>Automatically saves the console log after the match is completed.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-match_auto_logupload">
+  <div class="panel-heading"><div class="panel-title">match_auto_logupload</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Automatically upload match console log to remote server specified in match_auto_logurl.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td></td></tr>
+<tr>
+<td>true</td><td></td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-match_auto_logupload_token">
+  <div class="panel-heading"><div class="panel-title">match_auto_logupload_token</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-match_auto_logurl">
+  <div class="panel-heading"><div class="panel-title">match_auto_logurl</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-match_auto_minlength">
+  <div class="panel-heading"><div class="panel-title">match_auto_minlength</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>When using &#39;match_auto_record 2&#39;, temp demo&#39;s auto recorded won&#39;t be saved automatically if they are shorter than the number of seconds match_auto_minlength&#39; is set to.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>integer</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>If a temp demo is too short to autosave, you can still save it manually with &quot;match_save&quot;.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td></td><td>number of seconds</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-match_auto_record">
+  <div class="panel-heading"><div class="panel-title">match_auto_record</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>When set to 1 or 2, a temp demo will automatically be recorded when a match starts (usually when the countdown starts).</div></div>
+    <div class="doc-row type"><div>Type:</div><div>enum</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>0</td><td>No auto recording.</td></tr>
+<tr>
+<td>1</td><td>Demo will be recorded but requires manual saving with match_save</td></tr>
+<tr>
+<td>2</td><td>Automatically saves the demo after the match is completed.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-match_auto_spectating">
+  <div class="panel-heading"><div class="panel-title">match_auto_spectating</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>When set to 1, auto recording will also occur when in spectator mode.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Don&#39;t auto record demos in spectator mode.</td></tr>
+<tr>
+<td>true</td><td>Auto record demos even in spectator mode.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-match_auto_sshot">
+  <div class="panel-heading"><div class="panel-title">match_auto_sshot</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Set to 1 to automatically take a screenshot of the final scoreboard when a match ends. If your console is down or you are in the menus, then the client will remove the console/menu for a split second so it can take a screenshot of the scoreboard without any interference.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Do not take auto screenshot.</td></tr>
+<tr>
+<td>true</td><td>Take auto screenshot on match end.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-match_auto_unminimize">
+  <div class="panel-heading"><div class="panel-title">match_auto_unminimize</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Bring client from minimized state on countdown start.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>Only works on KT* servers.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td></td></tr>
+<tr>
+<td>true</td><td></td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-match_challenge">
+  <div class="panel-heading"><div class="panel-title">match_challenge</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>When enabled, sends announcements to duel ladder server about match start and match end. Can be activated by special startup *.qw file or by opening special qw: URL.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td></td></tr>
+<tr>
+<td>true</td><td></td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-match_challenge_url">
+  <div class="panel-heading"><div class="panel-title">match_challenge_url</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Web address where POST requests announcing challenge match start and end will be sent.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-match_format_2on2">
+  <div class="panel-heading"><div class="panel-title">match_format_2on2</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Each match category has a name format variable associated with it. This variable is called match_format_&lt;category&gt;. For example, there is match_format_duel, match_format_2on2, etc, etc. All these variables can contain macro&#39;s that are expanded according to the macro list given below.  You can also use the &quot;match_format_macrolist&quot; command inside the client to display a list of the macros and their meaning.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>See &#39;match_format_macrolist&#39; command and Match tools manual for more info.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td></td><td>This pattern will be used in following situation: (gamedir = &quot;qw&quot;, 2 teams with at least 1 team having 2 people)</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-match_format_3on3">
+  <div class="panel-heading"><div class="panel-title">match_format_3on3</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Each match category has a name format variable associated with it. This variable is called match_format_&lt;category&gt;. For example, there is match_format_duel, match_format_2on2, etc, etc. All these variables can contain macro&#39;s that are expanded according to the macro list given below.  You can also use the &quot;match_format_macrolist&quot; command inside the client to display a list of the macros and their meaning.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>See &#39;match_format_macrolist&#39; command and Match tools manual for more info.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td></td><td>This pattern will be used in following situation: (gamedir = &quot;qw&quot;, 2 teams with at least 1 team having 3 people)</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-match_format_4on4">
+  <div class="panel-heading"><div class="panel-title">match_format_4on4</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Each match category has a name format variable associated with it. This variable is called match_format_&lt;category&gt;. For example, there is match_format_duel, match_format_2on2, etc, etc. All these variables can contain macro&#39;s that are expanded according to the macro list given below.  You can also use the &quot;match_format_macrolist&quot; command inside the client to display a list of the macros and their meaning.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>See &#39;match_format_macrolist&#39; command and Match tools manual for more info.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td></td><td>This pattern will be used in following situation: (gamedir = &quot;qw&quot;, 2 teams with at least 1 team having 4 people)</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-match_format_arena">
+  <div class="panel-heading"><div class="panel-title">match_format_arena</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Each match category has a name format variable associated with it. This variable is called match_format_&lt;category&gt;. For example, there is match_format_duel, match_format_2on2, etc, etc. All these variables can contain macro&#39;s that are expanded according to the macro list given below.  You can also use the &quot;match_format_macrolist&quot; command inside the client to display a list of the macros and their meaning.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>See &#39;match_format_macrolist&#39; command and Match tools manual for more info.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td></td><td>This pattern will be used in following situation: (gamedir = &quot;arena&quot;)</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-match_format_coop">
+  <div class="panel-heading"><div class="panel-title">match_format_coop</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Each match category has a name format variable associated with it. This variable is called match_format_&lt;category&gt;. For example, there is match_format_duel, match_format_2on2, etc, etc. All these variables can contain macro&#39;s that are expanded according to the macro list given below.  You can also use the &quot;match_format_macrolist&quot; command inside the client to display a list of the macros and their meaning.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>See &#39;match_format_macrolist&#39; command and Match tools manual for more info.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td></td><td>This pattern will be used in following situation: (gamedir = &quot;qw&quot;, at least 2 people, deathmatch is off)</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-match_format_duel">
+  <div class="panel-heading"><div class="panel-title">match_format_duel</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Each match category has a name format variable associated with it. This variable is called match_format_&lt;category&gt;. For example, there is match_format_duel, match_format_2on2, etc, etc. All these variables can contain macro&#39;s that are expanded according to the macro list given below.  You can also use the &quot;match_format_macrolist&quot; command inside the client to display a list of the macros and their meaning.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>See &#39;match_format_macrolist&#39; command and Match tools manual for more info.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td></td><td>This pattern will be used in following situation: (gamedir = &quot;qw&quot;, 2 players)</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-match_format_ffa">
+  <div class="panel-heading"><div class="panel-title">match_format_ffa</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Each match category has a name format variable associated with it. This variable is called match_format_&lt;category&gt;. For example, there is match_format_duel, match_format_2on2, etc, etc. All these variables can contain macro&#39;s that are expanded according to the macro list given below.  You can also use the &quot;match_format_macrolist&quot; command inside the client to display a list of the macros and their meaning.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>See &#39;match_format_macrolist&#39; command and Match tools manual for more info.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td></td><td>This pattern will be used in following situation: (gamedir = &quot;qw&quot;, more than 2 players, teamplay off)</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-match_format_multiteam">
+  <div class="panel-heading"><div class="panel-title">match_format_multiteam</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Each match category has a name format variable associated with it. This variable is called match_format_&lt;category&gt;. For example, there is match_format_duel, match_format_2on2, etc, etc. All these variables can contain macro&#39;s that are expanded according to the macro list given below.  You can also use the &quot;match_format_macrolist&quot; command inside the client to display a list of the macros and their meaning.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>See &#39;match_format_macrolist&#39; command and Match tools manual for more info.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td></td><td>This pattern will be used in following situation: (gamedir = &quot;qw&quot;, 3 or more teams)</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-match_format_race">
+  <div class="panel-heading"><div class="panel-title">match_format_race</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Each match category has a name format variable associated with it. This variable is called match_format_&lt;category&gt;. For example, there is match_format_duel, match_format_2on2, etc, etc. All these variables can contain macro&#39;s that are expanded according to the macro list given below.  You can also use the &quot;match_format_macrolist&quot; command inside the client to display a list of the macros and their meaning.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>See &#39;match_format_macrolist&#39; command and Match tools manual for more info.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td></td><td>This pattern will be used in following situation: (gamedir = qw, serverinfo &quot;race&quot; key present and equal to mapname)</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-match_format_solo">
+  <div class="panel-heading"><div class="panel-title">match_format_solo</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Each match category has a name format variable associated with it. This variable is called match_format_&lt;category&gt;. For example, there is match_format_duel, match_format_2on2, etc, etc. All these variables can contain macro&#39;s that are expanded according to the macro list given below.  You can also use the &quot;match_format_macrolist&quot; command inside the client to display a list of the macros and their meaning.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>See &#39;match_format_macrolist&#39; command and Match tools manual for more info.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td></td><td>This pattern will be used in following situation: (any gamedir, 1 player on a server, not in race mode)</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-match_format_tdm">
+  <div class="panel-heading"><div class="panel-title">match_format_tdm</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Each match category has a name format variable associated with it. This variable is called match_format_&lt;category&gt;. For example, there is match_format_duel, match_format_2on2, etc, etc. All these variables can contain macro&#39;s that are expanded according to the macro list given below.  You can also use the &quot;match_format_macrolist&quot; command inside the client to display a list of the macros and their meaning.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>See &#39;match_format_macrolist&#39; command and Match tools manual for more info.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td></td><td>This pattern will be used in following situation: (gamedir = &quot;qw&quot;, 2 teams with at least 1 team having 5 people)</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-match_format_tf_clanwar">
+  <div class="panel-heading"><div class="panel-title">match_format_tf_clanwar</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Each match category has a name format variable associated with it. This variable is called match_format_&lt;category&gt;. For example, there is match_format_duel, match_format_2on2, etc, etc. All these variables can contain macro&#39;s that are expanded according to the macro list given below.  You can also use the &quot;match_format_macrolist&quot; command inside the client to display a list of the macros and their meaning.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>See &#39;match_format_macrolist&#39; command and Match tools manual for more info.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td></td><td>This pattern will be used in following situation: (gamedir = &quot;fortress&quot;, at least 2 teams)</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-match_format_tf_duel">
+  <div class="panel-heading"><div class="panel-title">match_format_tf_duel</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Each match category has a name format variable associated with it. This variable is called match_format_&lt;category&gt;. For example, there is match_format_duel, match_format_2on2, etc, etc. All these variables can contain macro&#39;s that are expanded according to the macro list given below.  You can also use the &quot;match_format_macrolist&quot; command inside the client to display a list of the macros and their meaning.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>See &#39;match_format_macrolist&#39; command and Match tools manual for more info.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td></td><td>This pattern will be used in following situation: (gamedir = &quot;fortress&quot;, 2 players)</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-match_ladder_id">
+  <div class="panel-heading"><div class="panel-title">match_ladder_id</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Identification of the current duel ladder. Not used right now, always 1.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-match_name_and">
+  <div class="panel-heading"><div class="panel-title">match_name_and</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Used for separating names in %k and %l.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-match_name_nick">
+  <div class="panel-heading"><div class="panel-title">match_name_nick</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>%n uses this if its not &quot;&quot;, otherwise it uses your in game name.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>See match_format_macrolist.</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-match_name_on">
+  <div class="panel-heading"><div class="panel-title">match_name_on</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Used for separating numbers in %a.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-match_name_spec">
+  <div class="panel-heading"><div class="panel-title">match_name_spec</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This is placed after your nick when using %n and are in spec mode. Eg. if you use &quot;match_name_nick foo&quot; and leave match_name_spec default, then %n will be &quot;foo(SPEC)&quot; in spec mode and &quot;foo&quot; when not in spec mode.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>See match_format_macrolist.</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-match_name_versus">
+  <div class="panel-heading"><div class="panel-title">match_name_versus</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Used for separating names in %b.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+</div><h4><a id="multiview-demos" class="anchor" href="#multiview-demos" aria-hidden="true"><span class="octicon octicon-link"></span></a>MultiView Demos</h4>
+<div class="doc-group"><div class="cvar panel panel-default" id="cvar-mvd_autohud">
+  <div class="panel-heading"><div class="panel-title">mvd_autohud</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Will load different Head Up Display settings when watching MultiView Demos.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>enum</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>0</td><td>Won&#39;t do anything</td></tr>
+<tr>
+<td>1</td><td>Will load appropriate config according to current match type. Possible types: 1on1, 4on4, custom. Config is like cfg/mvdhud_4on4.cfg</td></tr>
+<tr>
+<td>2</td><td>Will always load cfg/mvdhud_custom.cfg</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-mvd_autotrack">
+  <div class="panel-heading"><div class="panel-title">mvd_autotrack</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Turns auto-tracking function ON / OFF. This feature can be used while watching MultiView Demo. The client will choose and switch to the best player point of view using appropriate algorithm.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>enum</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>You can change the switching algorithm properties using mvd_autotrack_1on1, mvd_autotrack_2on2, etc. variables. The setting no. 4. cannot be customized and is independent on other autotrack client settings, except of mvd_autotrack_lockteam</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>0</td><td>Off</td></tr>
+<tr>
+<td>1</td><td>Autodetect current gametype and use the appropriate xonx settings</td></tr>
+<tr>
+<td>2</td><td>Force the use of mvd_autotrack_custom* settings</td></tr>
+<tr>
+<td>3</td><td>Enables the use of mvd_multitrack_1 - 4 allowing to set seperate algorthms for every window with cl_muiltiview 2-4</td></tr>
+<tr>
+<td>4</td><td>Simple algorithm which prefers pent+rl over quad+rl, quad+rl over pent, quad over noquad, weapon over no weapon player; cannot be customized</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-mvd_autotrack_1on1">
+  <div class="panel-heading"><div class="panel-title">mvd_autotrack_1on1</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Will be used if mvd_autotrack = 1 and a 1on1 game is played. Its an algorythm for selecting the best player.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>For a full description read the manual.</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-mvd_autotrack_1on1_values">
+  <div class="panel-heading"><div class="panel-title">mvd_autotrack_1on1_values</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Allows you to customize autotrack algoritm. See autotrack manual page for more info.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-mvd_autotrack_2on2">
+  <div class="panel-heading"><div class="panel-title">mvd_autotrack_2on2</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Will be used if mvd_autotrack = 1 and a 2on2 game is played. Its an algorythm for selecting the best player.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>For a full description read the manual.</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-mvd_autotrack_2on2_values">
+  <div class="panel-heading"><div class="panel-title">mvd_autotrack_2on2_values</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Allows you to customize autotrack algoritm. See autotrack manual page for more info.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-mvd_autotrack_4on4">
+  <div class="panel-heading"><div class="panel-title">mvd_autotrack_4on4</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Will be used if mvd_autotrack = 1 and a 4on4 game is played. Its an algorythm for selecting the best player.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>For a full description read the manual.</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-mvd_autotrack_4on4_values">
+  <div class="panel-heading"><div class="panel-title">mvd_autotrack_4on4_values</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Allows you to customize autotrack algoritm. See autotrack manual page for more info.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-mvd_autotrack_custom">
+  <div class="panel-heading"><div class="panel-title">mvd_autotrack_custom</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Will be used if mvd_autotrack = 2.<br /> Its an algorythm for selecting the best player.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>For a full description read the manual.</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-mvd_autotrack_custom_values">
+  <div class="panel-heading"><div class="panel-title">mvd_autotrack_custom_values</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Allows you to customize autotrack algoritm. See autotrack manual page for more info.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-mvd_autotrack_instant">
+  <div class="panel-heading"><div class="panel-title">mvd_autotrack_instant</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Makes mvd_autotrack always find the best player and switch to him instantly.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>In KTPro autotrack tracked player is changed only when some events happen. In instant mvd_autotrack tracked player is changed everytime a better player is found.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>mvd_autotrack will work more like ktpro autotrack</td></tr>
+<tr>
+<td>true</td><td>player change will happen more often</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-mvd_autotrack_lockteam">
+  <div class="panel-heading"><div class="panel-title">mvd_autotrack_lockteam</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>If set to 1, autotrack will keep switching POVs only from players within the same team.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Autotrack will switch between all players.</td></tr>
+<tr>
+<td>true</td><td>Autotrack will stay within one team.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-mvd_info">
+  <div class="panel-heading"><div class="panel-title">mvd_info</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>When watching Multi View Demo (.mvd) you can show a table on the screen with full info about players&#39; status.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>See mvd_info_setup for setting up displayed informations.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Turned OFF</td></tr>
+<tr>
+<td>true</td><td>Turned ON</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-mvd_info_setup">
+  <div class="panel-heading"><div class="panel-title">mvd_info_setup</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-mvd_info_show_header">
+  <div class="panel-heading"><div class="panel-title">mvd_info_show_header</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Will show a line above the mvd_info table telling you wich column is armor/health/location etc.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Turn Off</td></tr>
+<tr>
+<td>true</td><td>Turned ON</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-mvd_info_x">
+  <div class="panel-heading"><div class="panel-title">mvd_info_x</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>You can adjust horizontal placement of Players&#39; info table</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>See scr_mvdinfo and scr_mvdinfo_setup description for more details.</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-mvd_info_y">
+  <div class="panel-heading"><div class="panel-title">mvd_info_y</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>You can adjust vertical placement of Players&#39; info table</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>See scr_mvdinfo and scr_mvdinfo_setup description for more details.</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-mvd_moreinfo">
+  <div class="panel-heading"><div class="panel-title">mvd_moreinfo</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>When playing MultiView Demo (MVD), you can turn on more messages printed in the console, like those you might know from moreinfo command in ktpro. E.g.: Nabbe picked up quad.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Off</td></tr>
+<tr>
+<td>true</td><td>On</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-mvd_multitrack_1">
+  <div class="panel-heading"><div class="panel-title">mvd_multitrack_1</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Will be used if mvd_autotrack = 3 and cl_multiview is enabled.<br />Its an algorythm for selecting the best player on viewport 1</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>For a full description read the manual.</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-mvd_multitrack_1_values">
+  <div class="panel-heading"><div class="panel-title">mvd_multitrack_1_values</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Allows you to customize autotrack algoritm. See autotrack manual page for more info.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-mvd_multitrack_2">
+  <div class="panel-heading"><div class="panel-title">mvd_multitrack_2</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Will be used if mvd_autotrack = 3 and cl_multiview is enabled.<br />Its an algorythm for selecting the best player on viewport 2</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>For a full description read the manual.</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-mvd_multitrack_2_values">
+  <div class="panel-heading"><div class="panel-title">mvd_multitrack_2_values</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Allows you to customize autotrack algoritm. See autotrack manual page for more info.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-mvd_multitrack_3">
+  <div class="panel-heading"><div class="panel-title">mvd_multitrack_3</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Will be used if mvd_autotrack = 3 and cl_multiview is enabled.<br />Its an algorythm for selecting the best player on viewport 3</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>For a full description read the manual.</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-mvd_multitrack_3_values">
+  <div class="panel-heading"><div class="panel-title">mvd_multitrack_3_values</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Allows you to customize autotrack algoritm. See autotrack manual page for more info.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-mvd_multitrack_4">
+  <div class="panel-heading"><div class="panel-title">mvd_multitrack_4</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Will be used if mvd_autotrack = 3 and cl_multiview is enabled.<br />Its an algorythm for selecting the best player on viewport 4</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>For a full description read the manual.</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-mvd_multitrack_4_values">
+  <div class="panel-heading"><div class="panel-title">mvd_multitrack_4_values</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Allows you to customize autotrack algoritm. See autotrack manual page for more info.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-mvd_pc_pent_1">
+  <div class="panel-heading"><div class="panel-title">mvd_pc_pent_1</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Describes the position and viewing angles of the p1 cam.<br />x y z rot_x rot_y</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-mvd_pc_pent_2">
+  <div class="panel-heading"><div class="panel-title">mvd_pc_pent_2</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Describes the position and viewing angles of the p2 cam.<br />x y z rot_x rot_y</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-mvd_pc_pent_3">
+  <div class="panel-heading"><div class="panel-title">mvd_pc_pent_3</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Describes the position and viewing angles of the p3 cam.<br />x y z rot_x rot_y</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-mvd_pc_quad_1">
+  <div class="panel-heading"><div class="panel-title">mvd_pc_quad_1</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Describes the position and viewing angles of the q1 cam.<br />x y z rot_x rot_y</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-mvd_pc_quad_2">
+  <div class="panel-heading"><div class="panel-title">mvd_pc_quad_2</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Describes the position and viewing angles of the q2 cam.<br />x y z rot_x rot_y</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-mvd_pc_quad_3">
+  <div class="panel-heading"><div class="panel-title">mvd_pc_quad_3</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Describes the position and viewing angles of the q3 cam.<br />x y z rot_x rot_y</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-mvd_pc_view_1">
+  <div class="panel-heading"><div class="panel-title">mvd_pc_view_1</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Sets the powerup camera for viewport 1</div></div>
+    <div class="doc-row type"><div>Type:</div><div>enum</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>p1</td><td>mvd_pc_pent_1</td></tr>
+<tr>
+<td>p2</td><td>mvd_pc_pent_2</td></tr>
+<tr>
+<td>p3</td><td>mvd_pc_pent_3</td></tr>
+<tr>
+<td>q1</td><td>mvd_pc_quad_1</td></tr>
+<tr>
+<td>q2</td><td>mvd_pc_quad_2</td></tr>
+<tr>
+<td>q3</td><td>mvd_pc_quad_3</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-mvd_pc_view_2">
+  <div class="panel-heading"><div class="panel-title">mvd_pc_view_2</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Sets the powerup camera for viewport 2</div></div>
+    <div class="doc-row type"><div>Type:</div><div>enum</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>p1</td><td>mvd_pc_pent_1</td></tr>
+<tr>
+<td>p2</td><td>mvd_pc_pent_2</td></tr>
+<tr>
+<td>p3</td><td>mvd_pc_pent_3</td></tr>
+<tr>
+<td>q1</td><td>mvd_pc_quad_1</td></tr>
+<tr>
+<td>q2</td><td>mvd_pc_quad_2</td></tr>
+<tr>
+<td>q3</td><td>mvd_pc_quad_3</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-mvd_pc_view_3">
+  <div class="panel-heading"><div class="panel-title">mvd_pc_view_3</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Sets the powerup camera for viewport 3</div></div>
+    <div class="doc-row type"><div>Type:</div><div>enum</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>p1</td><td>mvd_pc_pent_1</td></tr>
+<tr>
+<td>p2</td><td>mvd_pc_pent_2</td></tr>
+<tr>
+<td>p3</td><td>mvd_pc_pent_3</td></tr>
+<tr>
+<td>q1</td><td>mvd_pc_quad_1</td></tr>
+<tr>
+<td>q2</td><td>mvd_pc_quad_2</td></tr>
+<tr>
+<td>q3</td><td>mvd_pc_quad_3</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-mvd_pc_view_4">
+  <div class="panel-heading"><div class="panel-title">mvd_pc_view_4</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Sets the powerup camera for viewport 4</div></div>
+    <div class="doc-row type"><div>Type:</div><div>enum</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>p1</td><td>mvd_pc_pent_1</td></tr>
+<tr>
+<td>p2</td><td>mvd_pc_pent_2</td></tr>
+<tr>
+<td>p3</td><td>mvd_pc_pent_3</td></tr>
+<tr>
+<td>q1</td><td>mvd_pc_quad_1</td></tr>
+<tr>
+<td>q2</td><td>mvd_pc_quad_2</td></tr>
+<tr>
+<td>q3</td><td>mvd_pc_quad_3</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-mvd_powerup_cam">
+  <div class="panel-heading"><div class="panel-title">mvd_powerup_cam</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Will enable powerupcams, cams will be enabled on every viewport 5 seconds before the powerup spawns.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>For setting up the viewports cams look at <br />mvd_pc_view_1-4<br />and for setting the locations of the cams look at<br />mvd_pc_quad_1-3<br />mvd_pc_pent_1-3<br /></div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Turn OFF</td></tr>
+<tr>
+<td>true</td><td>Turned ON</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-mvd_status">
+  <div class="panel-heading"><div class="panel-title">mvd_status</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Shows information of the player you are currently tracking.<br />Information includes.<br />taken/dropped items and powerups<br />last 3 runs (including the current one) run is from powerup-took/spawn to powerup-end/death</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Turned OFF</td></tr>
+<tr>
+<td>true</td><td>Turned ON</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-mvd_status_x">
+  <div class="panel-heading"><div class="panel-title">mvd_status_x</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Adjusts the horizontal placement of mvd_status table</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-mvd_status_y">
+  <div class="panel-heading"><div class="panel-title">mvd_status_y</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Adjusts the vertical placement of mvd_status table</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+</div>
+        </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+        <footer class="inner">
+            <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+        </footer>
+    </div>
+</body>
+</html>

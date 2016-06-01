@@ -1,0 +1,1713 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="ezQuake: most popular QuakeWorld client for competitive online play">
+    <link rel="stylesheet" href="http://network.quakeworld.nu/bar/style.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="../stylesheets/stylesheet.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <title>ezQuake - QuakeWorld client for competitive online play</title>
+</head>
+<body>
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <div id="qwnetwork">
+            <div id="qwnet_content">
+                <a href="http://nquake.com/" title="nQuake - Download QuakeWorld today!" id="qwnet_nquake"></a>
+                <a href="http://ezquake.github.io/" title="ezQuake - The best QW client" id="qwnet_ezquake" class="qwnet_current"></a>
+                <div class="qwnet_separator">&nbsp;</div>
+                <a href="http://www.quakeworld.nu/" title="QuakeWorld.nu - Your portal to everything Quake" id="qwnet_qwnu"></a>
+                <a href="http://www.quakeworld.nu/forum/" title="QW.nu Forum - Discuss anything QW-related" id="qwnet_forums"></a>
+                <a href="http://qwdrama.quakeworld.nu/" title="qwdrama - News, tutorials, interviews, drama and more" id="qwnet_qwdrama"></a>
+                <div class="qwnet_separator">&nbsp;</div>
+                <a href="http://eql.quakeworld.nu/" title="EQL - European Quake League" id="qwnet_eql"></a>
+                <div class="qwnet_separator">&nbsp;</div>
+                <a href="http://wiki.quakeworld.nu/" title="QuakeWorld Wiki - The open QW encyclopedia" id="qwnet_wiki"></a>
+                <a href="http://www.quakeservers.net/quakeworld/servers/pl=1/so=8/" title="QuakeServers.net - QW server listings and info" id="qwnet_quakeservers"></a>
+                <a href="http://stats.quakeworld.nu/" title="QuakeWorld Statistics - QW statistics, ranking systems and more." id="qwnet_stats"></a>
+                <a href="http://qtv.quakeworld.nu/" title="QuakeTV - Watch QW now!" id="qwnet_qtv"></a>
+                <div class="qwnet_separator">&nbsp;</div>
+                <a href="http://videos.quakeworld.nu/" title="QuakeWorld.nu Videos - Watch QW videos, interviews and more" id="qwnet_videos"></a>
+                <a href="http://gfx.quakeworld.nu/" title="QuakeWorld GFX - Download custom graphics" id="qwnet_gfx"></a>
+                <div id="qwnet_clearer">&nbsp;</div>
+            </div>
+        </div>
+        <header class="inner">
+            <a id="forkme_banner" href="https://github.com/ezQuake/ezQuake-source">View on GitHub</a>
+            <h1 id="project_title">ezQuake</h1>
+            <h2 id="project_tagline"></h2>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+        <section id="main_content" class="inner">
+            <ul class="nav nav-tabs" role="navigation">
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="../about.html">About</a></li>
+                <li><a href="../features.html">Features</a></li>
+                <li><a href="../screenshots.html">Screenshots</a></li>
+                <li><a href="../downloads.html">Downloads</a></li>
+                <li class="active"><a href="../manual.html">Manual</a></li>
+                <li><a href="../contribute.html">Contribute</a></li>
+            </ul>
+            <h3>Obsolete</h3>
+<h4><a id="obsolete" class="anchor" href="#obsolete" aria-hidden="true"><span class="octicon octicon-link"></span></a>Obsolete</h4>
+<div class="doc-group"><div class="cvar panel panel-default" id="cvar-sys_restart_on_error">
+  <div class="panel-heading"><div class="panel-title">sys_restart_on_error</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-sys_select_timeout">
+  <div class="panel-heading"><div class="panel-title">sys_select_timeout</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div></div></div>
+  </div>
+</div>
+</div><h4><a id="obsolete-(2.2)" class="anchor" href="#obsolete-(2.2)" aria-hidden="true"><span class="octicon octicon-link"></span></a>Obsolete (2.2)</h4>
+<div class="doc-group"><div class="cvar panel panel-default" id="cvar-mvd_write_xml">
+  <div class="panel-heading"><div class="panel-title">mvd_write_xml</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Enables dumping of XML stats from a MVD.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td></td></tr>
+<tr>
+<td>true</td><td></td></tr>
+</tbody>
+</table>
+</div>
+</div><h4><a id="obsolete-(2.2)---custom-browser-fields" class="anchor" href="#obsolete-(2.2)---custom-browser-fields" aria-hidden="true"><span class="octicon octicon-link"></span></a>Obsolete (2.2) - Custom Browser Fields</h4>
+<div class="doc-group"><div class="cvar panel panel-default" id="cvar-cfg_browser_democolor">
+  <div class="panel-heading"><div class="panel-title">cfg_browser_democolor</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Color of the demo entries in the cfg browser</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-cfg_browser_dircolor">
+  <div class="panel-heading"><div class="panel-title">cfg_browser_dircolor</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Color of the dir entries in the cfg browser</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-cfg_browser_interline">
+  <div class="panel-heading"><div class="panel-title">cfg_browser_interline</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Size of the space between entries in the cfg browser</div></div>
+    <div class="doc-row type"><div>Type:</div><div>integer</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-cfg_browser_scrollnames">
+  <div class="panel-heading"><div class="panel-title">cfg_browser_scrollnames</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Toggle scrolling of the filenames in the cfg browser</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td></td></tr>
+<tr>
+<td>true</td><td></td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-cfg_browser_selectedcolor">
+  <div class="panel-heading"><div class="panel-title">cfg_browser_selectedcolor</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Color of the selected entries in the cfg browser</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-cfg_browser_showdate">
+  <div class="panel-heading"><div class="panel-title">cfg_browser_showdate</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Toggle the date column in the cfg browser</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td></td></tr>
+<tr>
+<td>true</td><td></td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-cfg_browser_showsize">
+  <div class="panel-heading"><div class="panel-title">cfg_browser_showsize</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Toggle the file size column in the cfg browser</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td></td></tr>
+<tr>
+<td>true</td><td></td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-cfg_browser_showstatus">
+  <div class="panel-heading"><div class="panel-title">cfg_browser_showstatus</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Toggle the display of the status bar in the cfg browser</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td></td></tr>
+<tr>
+<td>true</td><td></td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-cfg_browser_showtime">
+  <div class="panel-heading"><div class="panel-title">cfg_browser_showtime</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Toggle the time column in the cfg browser</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td></td></tr>
+<tr>
+<td>true</td><td></td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-cfg_browser_sortmode">
+  <div class="panel-heading"><div class="panel-title">cfg_browser_sortmode</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Sorting mode in the cfg browser. Each number represents one column. Their order represents the priority of the sorting.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-cfg_browser_stripnames">
+  <div class="panel-heading"><div class="panel-title">cfg_browser_stripnames</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Toggle stripping of the filenames in the cfg browser</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td></td></tr>
+<tr>
+<td>true</td><td></td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-cfg_browser_zipcolor">
+  <div class="panel-heading"><div class="panel-title">cfg_browser_zipcolor</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Color of the zip entries in the cfg browser</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-demo_browser_democolor">
+  <div class="panel-heading"><div class="panel-title">demo_browser_democolor</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Color of the demo entries in the demo browser</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-demo_browser_dircolor">
+  <div class="panel-heading"><div class="panel-title">demo_browser_dircolor</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Color of the dir entries in the demo browser</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-demo_browser_interline">
+  <div class="panel-heading"><div class="panel-title">demo_browser_interline</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Size of the space between entries in the demo browser</div></div>
+    <div class="doc-row type"><div>Type:</div><div>integer</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-demo_browser_scrollnames">
+  <div class="panel-heading"><div class="panel-title">demo_browser_scrollnames</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Toggle scrolling of the filenames in the demo browser</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td></td></tr>
+<tr>
+<td>true</td><td></td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-demo_browser_selectedcolor">
+  <div class="panel-heading"><div class="panel-title">demo_browser_selectedcolor</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Color of the selected entries in the demo browser</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-demo_browser_showdate">
+  <div class="panel-heading"><div class="panel-title">demo_browser_showdate</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Toggle the date column in the demo browser</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td></td></tr>
+<tr>
+<td>true</td><td></td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-demo_browser_showsize">
+  <div class="panel-heading"><div class="panel-title">demo_browser_showsize</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Toggle the file size column in the demo browser</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td></td></tr>
+<tr>
+<td>true</td><td></td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-demo_browser_showstatus">
+  <div class="panel-heading"><div class="panel-title">demo_browser_showstatus</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Toggle the display of the status bar in the demo browser</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td></td></tr>
+<tr>
+<td>true</td><td></td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-demo_browser_showtime">
+  <div class="panel-heading"><div class="panel-title">demo_browser_showtime</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Toggle the time column in the demo browser</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td></td></tr>
+<tr>
+<td>true</td><td></td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-demo_browser_sortmode">
+  <div class="panel-heading"><div class="panel-title">demo_browser_sortmode</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Sorting mode in the demo browser. Each number represents one column. Their order represents the priority of the sorting.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-demo_browser_stripnames">
+  <div class="panel-heading"><div class="panel-title">demo_browser_stripnames</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Toggle stripping of the filenames in the demo browser</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td></td></tr>
+<tr>
+<td>true</td><td></td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-demo_browser_zipcolor">
+  <div class="panel-heading"><div class="panel-title">demo_browser_zipcolor</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Color of the zip entries in the demo browser</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-help_files_dircolor">
+  <div class="panel-heading"><div class="panel-title">help_files_dircolor</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>The RGB color of directories in the help browser.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td></td><td>Example: &quot;255 255 255&quot;</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-help_files_filecolor">
+  <div class="panel-heading"><div class="panel-title">help_files_filecolor</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>The RGB color for files in the help browser.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td></td><td>Example: &quot;255 255 255&quot;</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-help_files_interline">
+  <div class="panel-heading"><div class="panel-title">help_files_interline</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Adjust interlining of file list in /help filebrowser.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-help_files_scrollnames">
+  <div class="panel-heading"><div class="panel-title">help_files_scrollnames</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Should the filenames in the help browser get scrolled if they don&#39;t fit when the file is selected?</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Don&#39;t scroll names</td></tr>
+<tr>
+<td>true</td><td>Scroll names</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-help_files_selectedcolor">
+  <div class="panel-heading"><div class="panel-title">help_files_selectedcolor</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>The RGB color of a selected file in the help browser.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td></td><td>Example: &quot;255 255 255&quot;</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-help_files_showdate">
+  <div class="panel-heading"><div class="panel-title">help_files_showdate</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Shows column displaying file last modification date in /help file browser.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-help_files_showsize">
+  <div class="panel-heading"><div class="panel-title">help_files_showsize</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Shows column displaying file size in /help file browser.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-help_files_showstatus">
+  <div class="panel-heading"><div class="panel-title">help_files_showstatus</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Show quick info about selected help file in /help file browser.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-help_files_showtime">
+  <div class="panel-heading"><div class="panel-title">help_files_showtime</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Shows column displaying file last modification time in /help file browser.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-help_files_sortmode">
+  <div class="panel-heading"><div class="panel-title">help_files_sortmode</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Switches sorting methods of files /help file browser.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-help_files_stripnames">
+  <div class="panel-heading"><div class="panel-title">help_files_stripnames</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Strips filenames of help files.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-skin_browser_democolor">
+  <div class="panel-heading"><div class="panel-title">skin_browser_democolor</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Color of the demo entries in the skin browser</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-skin_browser_dircolor">
+  <div class="panel-heading"><div class="panel-title">skin_browser_dircolor</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Color of the dir entries in the skin browser</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-skin_browser_interline">
+  <div class="panel-heading"><div class="panel-title">skin_browser_interline</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Size of the space between entries in the skin browser</div></div>
+    <div class="doc-row type"><div>Type:</div><div>integer</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-skin_browser_scrollnames">
+  <div class="panel-heading"><div class="panel-title">skin_browser_scrollnames</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Toggle scrolling of the filenames in the skin browser</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td></td></tr>
+<tr>
+<td>true</td><td></td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-skin_browser_selectedcolor">
+  <div class="panel-heading"><div class="panel-title">skin_browser_selectedcolor</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Color of the selected entries in the skin browser</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-skin_browser_showdate">
+  <div class="panel-heading"><div class="panel-title">skin_browser_showdate</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Toggle the date column in the skin browser</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td></td></tr>
+<tr>
+<td>true</td><td></td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-skin_browser_showsize">
+  <div class="panel-heading"><div class="panel-title">skin_browser_showsize</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Toggle the file size column in the skin browser</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td></td></tr>
+<tr>
+<td>true</td><td></td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-skin_browser_showstatus">
+  <div class="panel-heading"><div class="panel-title">skin_browser_showstatus</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Toggle the display of the status bar in the skin browser</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td></td></tr>
+<tr>
+<td>true</td><td></td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-skin_browser_showtime">
+  <div class="panel-heading"><div class="panel-title">skin_browser_showtime</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Toggle the time column in the skin browser</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td></td></tr>
+<tr>
+<td>true</td><td></td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-skin_browser_sortmode">
+  <div class="panel-heading"><div class="panel-title">skin_browser_sortmode</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Sorting mode in the skin browser. Each number represents one column. Their order represents the priority of the sorting.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-skin_browser_stripnames">
+  <div class="panel-heading"><div class="panel-title">skin_browser_stripnames</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Toggle stripping of the filenames in the skin browser</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td></td></tr>
+<tr>
+<td>true</td><td></td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-skin_browser_zipcolor">
+  <div class="panel-heading"><div class="panel-title">skin_browser_zipcolor</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Color of the zip entries in the skin browser</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+</div><h4><a id="obsolete-(3.0)---audio" class="anchor" href="#obsolete-(3.0)---audio" aria-hidden="true"><span class="octicon octicon-link"></span></a>Obsolete (3.0) - Audio</h4>
+<div class="doc-group"><div class="cvar panel panel-default" id="cvar-s_alsa_device">
+  <div class="panel-heading"><div class="panel-title">s_alsa_device</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Sets which device ALSA will be trying to open (when s_driver is set to alsa). Default is: &quot;default&quot;, if that fails it will try &quot;hw&quot; and if that fails too, &quot;plug:hw&quot; will be tried.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-s_alsa_latency">
+  <div class="panel-heading"><div class="panel-title">s_alsa_latency</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Specifies latency for ALSA. If you got distortion in sound, upper the value a bit. If you experience delays, try lowering this value.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-s_alsa_noworkaround">
+  <div class="panel-heading"><div class="panel-title">s_alsa_noworkaround</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>If you are having problems with ALSA you can try to set this var to 1 before you try legacy drivers.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>enum</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>Linux/FreeBSD only.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>0</td><td>Workaround enabled.</td></tr>
+<tr>
+<td>1</td><td>Workaround disabled. Try this if you are having problems with new ALSA driver.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-s_bits">
+  <div class="panel-heading"><div class="panel-title">s_bits</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This defines how many sampling bits should be used, when using 16 bits the interpolation quality will be better.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>enum</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>Linux only.<br />Use s_restart after you change it.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>16</td><td>16 bit sound</td></tr>
+<tr>
+<td>8</td><td>8 bit sound</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-s_device">
+  <div class="panel-heading"><div class="panel-title">s_device</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Allows you to choose from multiple sound devices.<br /></div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>Linux only.<br />Use snd_restart after you change it.<br /><br />For OSS you should use &quot;/dev/dsp&quot;, &quot;/dev/dsp0&quot;, &quot;/dev/dsp1&quot;, etc<br />For ALSA use &quot;default&quot;, &quot;dmix&quot;, etc</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td></td><td>device name</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-s_driver">
+  <div class="panel-heading"><div class="panel-title">s_driver</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Specifices which sounddriver to use: ALSA/OSS or experimental Pulseaudio.<br /></div></div>
+    <div class="doc-row type"><div>Type:</div><div>enum</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>alsa</td><td>Will use ALSA drivers</td></tr>
+<tr>
+<td>oss</td><td>Will use OSS drivers</td></tr>
+<tr>
+<td>pulse</td><td>Will use experimental Pulseaudio drivers (note: have to be set in all loading configs before starting ezQuake to work!)</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-s_linearresample_stream">
+  <div class="panel-heading"><div class="panel-title">s_linearresample_stream</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This variable is no longer used, and has no effect.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>integer</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-s_noalsa">
+  <div class="panel-heading"><div class="panel-title">s_noalsa</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Determinates sound output for linux clients: ALSA (0=default) or OSS.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>enum</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>If you dont know what is ALSA and OSS - leave it at default value.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>0</td><td>Use ALSA sound output</td></tr>
+<tr>
+<td>1</td><td>Use OSS sound output</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-s_oss_device">
+  <div class="panel-heading"><div class="panel-title">s_oss_device</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Specifies which device OSS will try to open. Default is &quot;/dev/dsp&quot;</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-s_pulseaudio_latency">
+  <div class="panel-heading"><div class="panel-title">s_pulseaudio_latency</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Specifies latency for Pulseaudio. If you got distortion in sound, upper the value a bit. If you experience delays, try lowering this value.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-s_stereo">
+  <div class="panel-heading"><div class="panel-title">s_stereo</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Use stereo or mono sound</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>Linux only.<br />Use s_restart after you change it.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>mono</td></tr>
+<tr>
+<td>true</td><td>stereo</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-s_uselegacydrivers">
+  <div class="panel-heading"><div class="panel-title">s_uselegacydrivers</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>If you are having problems with the new ALSA/OSS drivers you can enable this to be able to use legacy sound drivers, as in the ones used before v2.1.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>enum</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>Linux/FreeBSD only.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>0</td><td>Will use new sound drivers for ALSA/OSS</td></tr>
+<tr>
+<td>1</td><td>Will use legacy drivers for ALSA/OSS (as used in versions before 2.1)</td></tr>
+</tbody>
+</table>
+</div>
+</div><h4><a id="obsolete-(3.0)---authentication" class="anchor" href="#obsolete-(3.0)---authentication" aria-hidden="true"><span class="octicon octicon-link"></span></a>Obsolete (3.0) - Authentication</h4>
+<div class="doc-group"><div class="cvar panel panel-default" id="cvar-auth_validate">
+  <div class="panel-heading"><div class="panel-title">auth_validate</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>If you have <br />&#39;auth_warninvalid 1&#39; and someone gives a dirty hash in a version response <br />(because they are using a hacked client that can&#39;t work out the right <br />response), the client will print something like <br />&#39;Warning Invalid Client: playername (userid)&#39; in your console (&#39;auth_warninvalid 0&#39; is default).</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>If you don&#39;t want your client to validate other ezQuake clients.</td></tr>
+<tr>
+<td>true</td><td>which performs the validation (but you need to use &#39;validate_clients&#39;</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-auth_viewcrc">
+  <div class="panel-heading"><div class="panel-title">auth_viewcrc</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>the client hides the authentication CRC in f_version responses.</td></tr>
+<tr>
+<td>true</td><td>the client shows you the authentication CRC in f_version responses.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-auth_warninvalid">
+  <div class="panel-heading"><div class="panel-title">auth_warninvalid</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Check auth_validate.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+</div><h4><a id="obsolete-(3.0)---input-systems" class="anchor" href="#obsolete-(3.0)---input-systems" aria-hidden="true"><span class="octicon octicon-link"></span></a>Obsolete (3.0) - Input Systems</h4>
+<div class="doc-group"><div class="cvar panel panel-default" id="cvar-_windowed_mouse">
+  <div class="panel-heading"><div class="panel-title">_windowed_mouse</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Disable windowed mouse support so you can use the mouse in other applications.</td></tr>
+<tr>
+<td>true</td><td>Enabled windowed mouse support so you can use the mouse in the client.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-cl_showkeycodes">
+  <div class="panel-heading"><div class="panel-title">cl_showkeycodes</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This variable enables/disables the output of informations to the currently pressed and/or released keys.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>enum</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>0</td><td>Switch off output of scancode/keymapping information (Default)</td></tr>
+<tr>
+<td>1</td><td>information about keys will be printed when the keys are pressed.</td></tr>
+<tr>
+<td>2</td><td>information about keys will be printed when releasing the keys.</td></tr>
+<tr>
+<td>3</td><td>information about keys will be printed when the keys are pressed and also when they are released.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-hud_mouserate_align_x">
+  <div class="panel-heading"><div class="panel-title">hud_mouserate_align_x</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Vertical alignment of the mouserate HUD element. See the HUD manual for more info.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-hud_mouserate_align_y">
+  <div class="panel-heading"><div class="panel-title">hud_mouserate_align_y</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Vertical alignment of the mouserate HUD element. See the HUD manual for more info.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-hud_mouserate_frame">
+  <div class="panel-heading"><div class="panel-title">hud_mouserate_frame</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Opacity of the background of the mouserate HUD element</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-hud_mouserate_frame_color">
+  <div class="panel-heading"><div class="panel-title">hud_mouserate_frame_color</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Defines the color of the background of the mouserate HUD element. See HUD manual for more info.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-hud_mouserate_order">
+  <div class="panel-heading"><div class="panel-title">hud_mouserate_order</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This defines the order of drawing the HUD elements. That means you can change will be drawn on top of other elements. See HUD manual for more info</div></div>
+    <div class="doc-row type"><div>Type:</div><div>integer</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-hud_mouserate_place">
+  <div class="panel-heading"><div class="panel-title">hud_mouserate_place</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Placement of the mouserate HUD element. HUD elements can be place into various screen areas or other elements. See HUD manual for more info</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-hud_mouserate_pos_x">
+  <div class="panel-heading"><div class="panel-title">hud_mouserate_pos_x</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Horizontal relative position of the mouserate HUD element</div></div>
+    <div class="doc-row type"><div>Type:</div><div>integer</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-hud_mouserate_pos_y">
+  <div class="panel-heading"><div class="panel-title">hud_mouserate_pos_y</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Vertical relative position of the mouserate HUD element</div></div>
+    <div class="doc-row type"><div>Type:</div><div>integer</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-hud_mouserate_show">
+  <div class="panel-heading"><div class="panel-title">hud_mouserate_show</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Visibility of the mouserate HUD element</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td></td></tr>
+<tr>
+<td>true</td><td></td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-in_di_buffered">
+  <div class="panel-heading"><div class="panel-title">in_di_buffered</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Direct Input: Use Immedia data instead of buffered mode of reading.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>This setting has been added only because Direct Input allows such mode of use. It is not going to decrease input lag, make the mouse responsiveness better, or anything like that. Read the official documentation on Direct Input to know the difference between buffered and immediate mode of use.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Use immediate data</td></tr>
+<tr>
+<td>true</td><td>Use events buffer to process the input data</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-in_di_bufsize">
+  <div class="panel-heading"><div class="panel-title">in_di_bufsize</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Size of the direct input buffer</div></div>
+    <div class="doc-row type"><div>Type:</div><div>integer</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>On some circumstances the default size does not have to be sufficient</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-in_evdevice">
+  <div class="panel-heading"><div class="panel-title">in_evdevice</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Specify device for evdev mouse. Should be absolute path like /dev/input/event0<br />use in_evdevlist command to get lost of devices</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>You should have read access to your device.<br />sudo chmod 644 /dev/input/event* should help you if you have trouble</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td></td><td>absolute path to mouse event device</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-in_m_os_parameters">
+  <div class="panel-heading"><div class="panel-title">in_m_os_parameters</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Allows you to use your system mouse settings in the client</div></div>
+    <div class="doc-row type"><div>Type:</div><div>enum</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>0</td><td>Do not keep any of the system mouse settings</td></tr>
+<tr>
+<td>1</td><td>Keep acceleration settings</td></tr>
+<tr>
+<td>2</td><td>Keep speed settings</td></tr>
+<tr>
+<td>3</td><td>Keep both acceleration and speed settings</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-in_m_smooth">
+  <div class="panel-heading"><div class="panel-title">in_m_smooth</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Enables advanced mouse smoothing. You have to be using Direct Input for this to work.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td></td></tr>
+<tr>
+<td>true</td><td></td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-in_mmt">
+  <div class="panel-heading"><div class="panel-title">in_mmt</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Multithreaded mouse.<br />For most users in_mmt 1 + evdev gives the most smooth input</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>Linux only and evdev (in_mouse 3) only.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Read mouse data in main thread</td></tr>
+<tr>
+<td>true</td><td>Use separate thread for reading mouse data</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-in_mouse">
+  <div class="panel-heading"><div class="panel-title">in_mouse</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Different types of mouse input<br />[OBSOLETE in ezQuake 3.0]</div></div>
+    <div class="doc-row type"><div>Type:</div><div>enum</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>Linux: You have to set in_evdevice to proper value (/dev/input/eventX). Use command in_evdevlist to get the lost of proper values. Also in_mmt makes your mouse more smooth.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>0</td><td>Mouse off</td></tr>
+<tr>
+<td>1</td><td>Windows: standard mouse; Linux: DGA mouse</td></tr>
+<tr>
+<td>2</td><td>Windows: Direct Input; Linux: X Mouse</td></tr>
+<tr>
+<td>3</td><td>Windows: Raw Input; Linux: EVDEV mouse</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-in_raw_allbuttons">
+  <div class="panel-heading"><div class="panel-title">in_raw_allbuttons</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Forces RAW Input handler to treat more incoming signals as mouse buttons. Helps if you cannot get some mouse buttons working in the game.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Only standard set of events is interpreted as mouse buttons</td></tr>
+<tr>
+<td>true</td><td>More events are interpreted as mouse buttons</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-joystick">
+  <div class="panel-heading"><div class="panel-title">joystick</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Toggles usage of joystick device.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Do not use joystick.</td></tr>
+<tr>
+<td>true</td><td>Use joystick input.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-keymap_name">
+  <div class="panel-heading"><div class="panel-title">keymap_name</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This holds the name of the current keymappings; it has (currently) only informational purposes. If no keymapping is active, it will contain the name &quot;Default&quot;. If a keymapping will be active and no name has been set, &quot;Custom&quot; will be used as name. It can easily be set with &quot;keymap_name &lt;layoutname&gt;&quot;</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-m_forcewheel">
+  <div class="panel-heading"><div class="panel-title">m_forcewheel</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Disable.</td></tr>
+<tr>
+<td>true</td><td>If you have problems to get MWHEELUP and MWHEELDOWN working set this to 1.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-m_rate">
+  <div class="panel-heading"><div class="panel-title">m_rate</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This variable should be set to your mouse rate (in Hz).<br />Note: need -m_smooth and -dinput to commandline.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-m_showrate">
+  <div class="panel-heading"><div class="panel-title">m_showrate</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>Note: need -m_smooth and -dinput to commandline.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Disable</td></tr>
+<tr>
+<td>true</td><td>Print current mouse rate</td></tr>
+</tbody>
+</table>
+</div>
+</div><h4><a id="obsolete-(3.0)---invalid" class="anchor" href="#obsolete-(3.0)---invalid" aria-hidden="true"><span class="octicon octicon-link"></span></a>Obsolete (3.0) - Invalid</h4>
+<div class="doc-group"><div class="cvar panel panel-default" id="cvar-hud_fps_decimals">
+  <div class="panel-heading"><div class="panel-title">hud_fps_decimals</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>How many decimal number should the FPS HUD element contain</div></div>
+    <div class="doc-row type"><div>Type:</div><div>integer</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>Code says always three decimals</div></div>
+  </div>
+</div>
+</div><h4><a id="obsolete-(3.0)---software-renderer" class="anchor" href="#obsolete-(3.0)---software-renderer" aria-hidden="true"><span class="octicon octicon-link"></span></a>Obsolete (3.0) - Software Renderer</h4>
+<div class="doc-group"><div class="cvar panel panel-default" id="cvar-d_mipcap">
+  <div class="panel-heading"><div class="panel-title">d_mipcap</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>enum</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>0</td><td>High texture detail.</td></tr>
+<tr>
+<td>1</td><td>Medium texture detail.</td></tr>
+<tr>
+<td>2</td><td>Low texture detail.</td></tr>
+<tr>
+<td>3</td><td>Minimum texture detail.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-d_mipscale">
+  <div class="panel-heading"><div class="panel-title">d_mipscale</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>enum</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>0</td><td>Full object detail</td></tr>
+<tr>
+<td>1</td><td>Some object detail</td></tr>
+<tr>
+<td>2</td><td>Medium object detail</td></tr>
+<tr>
+<td>3</td><td>Low object detail</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-d_subdiv16">
+  <div class="panel-heading"><div class="panel-title">d_subdiv16</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Precise texture mapping (slower, more accurate).</td></tr>
+<tr>
+<td>true</td><td>Perspective correction only every 16 pixels (faster, less accurate).</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-sw_contrast">
+  <div class="panel-heading"><div class="panel-title">sw_contrast</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Change contrast.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-sw_gamma">
+  <div class="panel-heading"><div class="panel-title">sw_gamma</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Change gamma.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+</div><h4><a id="obsolete-(3.0)---video" class="anchor" href="#obsolete-(3.0)---video" aria-hidden="true"><span class="octicon octicon-link"></span></a>Obsolete (3.0) - Video</h4>
+<div class="doc-group"><div class="cvar panel panel-default" id="cvar-_vid_default_mode">
+  <div class="panel-heading"><div class="panel-title">_vid_default_mode</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This variable sets the default video mode that the client uses.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-_vid_default_mode_win">
+  <div class="panel-heading"><div class="panel-title">_vid_default_mode_win</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This variable sets the default video mode that the client uses when windowed.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-block_switch">
+  <div class="panel-heading"><div class="panel-title">block_switch</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Do not block task-switching</td></tr>
+<tr>
+<td>true</td><td>Block task-switching</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-con_particles_alpha">
+  <div class="panel-heading"><div class="panel-title">con_particles_alpha</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Sets the transparency of con_particles_images.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td></td><td>From 0....1. 0 is invisible, 1 is completely solid.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-gl_ztrick">
+  <div class="panel-heading"><div class="panel-title">gl_ztrick</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This variables toggles the use of a trick to prevent the clearning of the <br />z-buffer between frames. When this variable is set to &quot;1&quot;, the game will not <br />clear the z-buffer between frames. This will result in increased performance <br />but might cause problems for some display hardware.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Do not use the z-buffer trick.</td></tr>
+<tr>
+<td>true</td><td>Use the z-buffer trick.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-r_aliastransadj">
+  <div class="panel-heading"><div class="panel-title">r_aliastransadj</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Not much is known about this variable except for that increasing the value will<br />cause the player models to be displayed smaller.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-r_aliastransbase">
+  <div class="panel-heading"><div class="panel-title">r_aliastransbase</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Not much is known about this variable except for that increasing the value will<br />cause the player models to be displayed smaller.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-r_ambient">
+  <div class="panel-heading"><div class="panel-title">r_ambient</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This variable controls the amount of ambient lighting on the map. When this <br />variable is increased the map will become brighter and all walls and objects <br />will be rendered in a lighter color.<br />It was removed in QWCL and has been re-introduced in this client, however it <br />can only be used when the server is running with cheats enabled (for example <br />&quot;qwsv -cheats&quot;), because it could be used as a cheat by making it easier to see<br />players in dark corners when no fullbright skins are used.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-r_clearcolor">
+  <div class="panel-heading"><div class="panel-title">r_clearcolor</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This variable changes the color of the areas outside the map, commonly seen when free floating as a spectator.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-r_draworder">
+  <div class="panel-heading"><div class="panel-title">r_draworder</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Allows you to see through object - for development purposes only.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>Not allowed in multiplayer. See &#39;developer 1&#39; too.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Standard behaviour - first draws object far from you then closer to you.</td></tr>
+<tr>
+<td>true</td><td>First draws closest object, then the more distanced ones.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-r_dspeeds">
+  <div class="panel-heading"><div class="panel-title">r_dspeeds</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Do not display renderer speed statistics.</td></tr>
+<tr>
+<td>true</td><td>Display renderer speed statistics.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-r_graphheight">
+  <div class="panel-heading"><div class="panel-title">r_graphheight</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This variable used to set the number of lines displayed in the &quot;r_timegraph&quot; command.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-r_max_size_1">
+  <div class="panel-heading"><div class="panel-title">r_max_size_1</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>enum</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>0</td><td>Off.</td></tr>
+<tr>
+<td>1</td><td>Blend map textures.</td></tr>
+<tr>
+<td>2</td><td>Blend map textures and bsp entities (ammo, health etc.)</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-r_maxedges">
+  <div class="panel-heading"><div class="panel-title">r_maxedges</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This variable sets the maximum number of plane surface edges to be rendered.<br />Actual default (and minimal) value is 2000.<br />On some new maps you may need to increase this value.<br />See also r_maxsurfs, r_reportedgeout, r_reportsurfout.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-r_maxsurfs">
+  <div class="panel-heading"><div class="panel-title">r_maxsurfs</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This variable sets the maximum number of plane surfaces to be rendered.<br />Actual default (and minimal) value is 2000.<br />On some new maps you may need to increase this value.<br />See also r_maxedges, r_reportedgeout, r_reportsurfout.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-r_numedges">
+  <div class="panel-heading"><div class="panel-title">r_numedges</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Do not print information about the number of edges.</td></tr>
+<tr>
+<td>true</td><td>Print information about the number of edges.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-r_numsurfs">
+  <div class="panel-heading"><div class="panel-title">r_numsurfs</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Do not print information about the number of surfaces.</td></tr>
+<tr>
+<td>true</td><td>Print information about the number of surfaces.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-r_polymodelstats">
+  <div class="panel-heading"><div class="panel-title">r_polymodelstats</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Do not print polygon model statistics.</td></tr>
+<tr>
+<td>true</td><td>Print polygon model statistics.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-r_reportedgeout">
+  <div class="panel-heading"><div class="panel-title">r_reportedgeout</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Do not report when running out of edges.</td></tr>
+<tr>
+<td>true</td><td>Report when running out of edges.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-r_reportsurfout">
+  <div class="panel-heading"><div class="panel-title">r_reportsurfout</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Toggle the display of how many surfaces where not displayed. This<br />shouldn&#39;t happen during normal game play, only when in noclip mode.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-r_timegraph">
+  <div class="panel-heading"><div class="panel-title">r_timegraph</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Do not display the timegraph.</td></tr>
+<tr>
+<td>true</td><td>Display the timegraph.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-r_turbwarp">
+  <div class="panel-heading"><div class="panel-title">r_turbwarp</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>SW only!<br />This variable has the same effect as r_waterwarp in other quake clients. </div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Disable warping of surfaces.</td></tr>
+<tr>
+<td>true</td><td>Enable warping of surfaces.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-r_zgraph">
+  <div class="panel-heading"><div class="panel-title">r_zgraph</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Do not display the z-graph.</td></tr>
+<tr>
+<td>true</td><td>Display the z-graph.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-sb_showcounters">
+  <div class="panel-heading"><div class="panel-title">sb_showcounters</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This toggles whether ezQuake should display the number of servers or players in<br />the status line.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>do not show the server/player counter in the status line</td></tr>
+<tr>
+<td>true</td><td>show the server/player counter in the status line</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-scr_autoid_drawname">
+  <div class="panel-heading"><div class="panel-title">scr_autoid_drawname</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Controls if the player name should be drawn when using scr_autoid &gt;0.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Player name is not drawn above player when scr_autoid &gt;0</td></tr>
+<tr>
+<td>true</td><td>Player name is drawn above player when scr_autoid &gt;0</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-vid_allowextensions">
+  <div class="panel-heading"><div class="panel-title">vid_allowExtensions</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div></div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-vid_depthbits">
+  <div class="panel-heading"><div class="panel-title">vid_depthbits</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div></div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-vid_stencilbits">
+  <div class="panel-heading"><div class="panel-title">vid_stencilbits</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div></div></div>
+  </div>
+</div>
+</div><h4><a id="obsolete-(3.0)---voip" class="anchor" href="#obsolete-(3.0)---voip" aria-hidden="true"><span class="octicon octicon-link"></span></a>Obsolete (3.0) - VOIP</h4>
+<div class="doc-group"><div class="cvar panel panel-default" id="cvar-cl_voip_capturingvol-">
+  <div class="panel-heading"><div class="panel-title">cl_voip_capturingvol </div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Voice (VOIP) support. Volume multiplier applied while capturing, to avoid your audio from being heard by others.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>integer</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-cl_voip_micamp">
+  <div class="panel-heading"><div class="panel-title">cl_voip_micamp</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Amplifies your microphone when using voip.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>integer</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-cl_voip_play">
+  <div class="panel-heading"><div class="panel-title">cl_voip_play</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Enables voip (voice chat) playback.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td></td></tr>
+<tr>
+<td>true</td><td></td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-cl_voip_send">
+  <div class="panel-heading"><div class="panel-title">cl_voip_send</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Enable sending of voice (voip) to the server.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>enum</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>Commands +void / -void emulate toggling this value to 2.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>0</td><td>disabled</td></tr>
+<tr>
+<td>1</td><td>voice-activated</td></tr>
+<tr>
+<td>2</td><td>always activated</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-cl_voip_showmeter">
+  <div class="panel-heading"><div class="panel-title">cl_voip_showmeter</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Shows your speech volume above the at the bottom-left of the screen.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>enum</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>0</td><td>Hide</td></tr>
+<tr>
+<td>1</td><td>Show when transmitting</td></tr>
+<tr>
+<td>2</td><td>Always show (ignore voice-activation)</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-cl_voip_showmeter_x">
+  <div class="panel-heading"><div class="panel-title">cl_voip_showmeter_x</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Adjust horizontal position of the voice volume meter.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>integer</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>See cl_voip_showmeter.</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-cl_voip_showmeter_y">
+  <div class="panel-heading"><div class="panel-title">cl_voip_showmeter_y</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Adjust vertical position of the voice volume meter.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>integer</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>See cl_voip_showmeter.</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-cl_voip_vad_delay">
+  <div class="panel-heading"><div class="panel-title">cl_voip_vad_delay</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Keeps sending voice data for this many seconds after voice activation would normally stop.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-cl_voip_vad_threshhold">
+  <div class="panel-heading"><div class="panel-title">cl_voip_vad_threshhold</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This is the threshhold for voice-activation-detection when sending voip data.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-mumble_enabled">
+  <div class="panel-heading"><div class="panel-title">mumble_enabled</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Turn on mumble positional audio support.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>Requires mumble to be loaded before toggling this on.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td></td></tr>
+<tr>
+<td>true</td><td></td></tr>
+</tbody>
+</table>
+</div>
+</div><h4><a id="obsolete-(commands)" class="anchor" href="#obsolete-(commands)" aria-hidden="true"><span class="octicon octicon-link"></span></a>Obsolete (Commands)</h4>
+<div class="doc-group"><div class="cvar panel panel-default" id="cvar-floodprotmsg">
+  <div class="panel-heading"><div class="panel-title">floodprotmsg</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Sets the message displayed after flood protection is invoked.<br />Example: floodprotmsg &quot;Shut up whiner!&quot;</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-userdir">
+  <div class="panel-heading"><div class="panel-title">userdir</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>userdir [dir [type]]<br />Addition of the given directory to the list searched files</div></div>
+    <div class="doc-row type"><div>Type:</div><div>enum</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>0</td><td>&lt;quake_dir&gt;/&lt;gamedir&gt;/&lt;dir&gt;</td></tr>
+<tr>
+<td>1</td><td>&lt;quake_dir&gt;/&lt;dir&gt;/&lt;gamedir&gt;</td></tr>
+<tr>
+<td>2</td><td>&lt;quake_dir&gt;/qw/&lt;dir&gt;/&lt;gamedir&gt;</td></tr>
+<tr>
+<td>3</td><td>&lt;quake_dir&gt;/qw/&lt;dir&gt;</td></tr>
+<tr>
+<td>4</td><td>&lt;quake_dir&gt;/&lt;dir&gt;</td></tr>
+<tr>
+<td>5</td><td>$HOME/qw/&lt;dir&gt;</td></tr>
+</tbody>
+</table>
+</div>
+</div><h4><a id="obsolete-(server-infokeys)" class="anchor" href="#obsolete-(server-infokeys)" aria-hidden="true"><span class="octicon octicon-link"></span></a>Obsolete (server infokeys)</h4>
+<div class="doc-group"><div class="cvar panel panel-default" id="cvar-pm_bunnyspeedcap">
+  <div class="panel-heading"><div class="panel-title">pm_bunnyspeedcap</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This is experimental code intended to restore class balance in TF. If you set <br />this cvar to something like 1.5 or 2, a solider will not be able to bunnyhop as <br />fast as a scout does :) Note that this cvar is optional and disabled by default, <br />so it will in NO WAY affect gameplay unless you set it explicitly to anything <br />but 0.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-pm_ktjump">
+  <div class="panel-heading"><div class="panel-title">pm_ktjump</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>You can change value of ktjump.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-pm_pground">
+  <div class="panel-heading"><div class="panel-title">pm_pground</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Enables &#39;persistent onground flag&#39; physics tweak.  Its only use is that it makes pm_airstep work better.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>integer</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>This extension makes use of Z_EXT_PF_ONGROUND to ensure correct movement prediction by clients. Prediction errors shouldn&#39;t be very noticeable anyway even with old clients.</div></div>
+  </div>
+</div>
+<div class="cvar panel panel-default" id="cvar-pm_slidefix">
+  <div class="panel-heading"><div class="panel-title">pm_slidefix</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>When set to 1, Upon decsension from a sloped surface, the player doesn&#39;t &quot;drop&quot; (which is a bug in QW), but smoothly slides, as it was in NQ.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Disable</td></tr>
+<tr>
+<td>true</td><td>Enable</td></tr>
+</tbody>
+</table>
+</div>
+<div class="cvar panel panel-default" id="cvar-watervis">
+  <div class="panel-heading"><div class="panel-title">watervis</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This server-side cvar is mirrored to serverinfo as a hint to clients on whether the server is using the so-called watervised maps.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>It&#39;s a bad idea to use watervis 1 if the maps the server is using are not watervised. Liquids will appear &#39;transparent&#39; but you won&#39;t be able to see any items/players/etc through it.  And it is a bad idea anyway because Quake maps were not designed for transparent water (or other liquids); enabling it changes gameplay, decreases fps and produces more network traffic and puts non-GL players at a disadvantage because the software renderer doesn&#39;t support transparent water (yet).<br />Not saved to config with cfg_save command.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>No watervis.</td></tr>
+<tr>
+<td>true</td><td>GLQuake users can see through liquids if they set gl_turbalpha to a value &lt; 1.</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+        </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+        <footer class="inner">
+            <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+        </footer>
+    </div>
+</body>
+</html>
