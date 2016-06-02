@@ -1,0 +1,1237 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="ezQuake - the #1 QuakeWorld client.
+">
+    <link rel="stylesheet" href="http://network.quakeworld.nu/bar/style.css" />
+    <link rel="stylesheet" type="text/css" href="/css/stylesheet.css">
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <title>ezQuake</title>
+    <link rel="canonical" href="http://ezquake.github.io///docs/server.html">
+</head>
+<body>
+
+<div id="header_wrap" class="outer">
+    <div id="qwnetwork">
+        <div id="qwnet_content">
+            <a href="http://nquake.com/" title="nQuake - Download QuakeWorld today!" id="qwnet_nquake"></a>
+            <a href="http://ezquake.github.io/" title="ezQuake - The best QW client" id="qwnet_ezquake" class="qwnet_current"></a>
+            <div class="qwnet_separator">&nbsp;</div>
+            <a href="http://www.quakeworld.nu/" title="QuakeWorld.nu - Your portal to everything Quake" id="qwnet_qwnu"></a>
+            <a href="http://www.quakeworld.nu/forum/" title="QW.nu Forum - Discuss anything QW-related" id="qwnet_forums"></a>
+            <a href="http://qwdrama.quakeworld.nu/" title="qwdrama - News, tutorials, interviews, drama and more" id="qwnet_qwdrama"></a>
+            <div class="qwnet_separator">&nbsp;</div>
+            <a href="http://eql.quakeworld.nu/" title="EQL - European Quake League" id="qwnet_eql"></a>
+            <div class="qwnet_separator">&nbsp;</div>
+            <a href="http://wiki.quakeworld.nu/" title="QuakeWorld Wiki - The open QW encyclopedia" id="qwnet_wiki"></a>
+            <a href="http://www.quakeservers.net/quakeworld/servers/pl=1/so=8/" title="QuakeServers.net - QW server listings and info" id="qwnet_quakeservers"></a>
+            <a href="http://stats.quakeworld.nu/" title="QuakeWorld Statistics - QW statistics, ranking systems and more." id="qwnet_stats"></a>
+            <a href="http://qtv.quakeworld.nu/" title="QuakeTV - Watch QW now!" id="qwnet_qtv"></a>
+            <div class="qwnet_separator">&nbsp;</div>
+            <a href="http://videos.quakeworld.nu/" title="QuakeWorld.nu Videos - Watch QW videos, interviews and more" id="qwnet_videos"></a>
+            <a href="http://gfx.quakeworld.nu/" title="QuakeWorld GFX - Download custom graphics" id="qwnet_gfx"></a>
+            <div id="qwnet_clearer">&nbsp;</div>
+        </div>
+    </div>
+    <header class="inner">
+        <a id="forkme_banner" href="https://github.com/ezQuake/ezQuake-source">View on GitHub</a>
+        <h1 id="project_title">ezQuake</h1>
+        <h2 id="project_tagline"></h2>
+    </header>
+</div>
+
+<div id="main_content_wrap" class="outer">
+    <section id="main_content" class="inner">
+        <ul class="nav nav-tabs" role="navigation">
+    <li ><a href="/">Home</a></li>
+    <li ><a href="/about.html">About</a></li>
+    <li ><a href="/features.html">Features</a></li>
+    <li ><a href="/screenshots.html">Screenshots</a></li>
+    <li ><a href="/downloads.html">Downloads</a></li>
+    <li  class="active" ><a href="/manual.html">Manual</a></li>
+    <li ><a href="/contribute.html">Contribute</a></li>
+</ul>
+
+        <h3>Server</h3>
+<h4><a id="server-settings" class="anchor" href="#server-settings" aria-hidden="true"><span class="octicon octicon-link"></span></a>Server Settings</h4>
+<div class="doc-group"><div class="cvar panel panel-default" id="cvar-allow_download">
+  <div class="panel-heading"><div class="panel-title">allow_download</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Disable.</td></tr>
+<tr>
+<td>true</td><td>Clients can download game data from the server.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-allow_download_demos">
+  <div class="panel-heading"><div class="panel-title">allow_download_demos</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>0</td><td>Disable</td></tr>
+<tr>
+<td>1</td><td>Clients can download demo files from the server.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-allow_download_gfx">
+  <div class="panel-heading"><div class="panel-title">allow_download_gfx</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Enables downloading files from the server from the gfx directory</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>Server-side</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td></td></tr>
+<tr>
+<td>true</td><td></td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-allow_download_maps">
+  <div class="panel-heading"><div class="panel-title">allow_download_maps</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Disable.</td></tr>
+<tr>
+<td>true</td><td>Clients can download .bsp map files from the server.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-allow_download_models">
+  <div class="panel-heading"><div class="panel-title">allow_download_models</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Disable.</td></tr>
+<tr>
+<td>true</td><td>Clients can download .mdl files from the server.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-allow_download_other">
+  <div class="panel-heading"><div class="panel-title">allow_download_other</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Enables downloading files from the server which are not in \&quot;skins\&quot;, \&quot;progs\&quot;, \&quot;sound\&quot;, \&quot;maps\&quot; nor \&quot;gfx\&quot; directories</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>Server-side</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td></td></tr>
+<tr>
+<td>true</td><td></td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-allow_download_pakmaps">
+  <div class="panel-heading"><div class="panel-title">allow_download_pakmaps</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Disable.</td></tr>
+<tr>
+<td>true</td><td>Clients can download map files in paks from the server.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-allow_download_skins">
+  <div class="panel-heading"><div class="panel-title">allow_download_skins</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Disable.</td></tr>
+<tr>
+<td>true</td><td>Clients can download .pcx skin files from the server.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-allow_download_sounds">
+  <div class="panel-heading"><div class="panel-title">allow_download_sounds</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Disable.</td></tr>
+<tr>
+<td>true</td><td>Clients can download .wav sound files from the server.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-auth_timeout">
+  <div class="panel-heading"><div class="panel-title">auth_timeout</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Not currently used.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-coop">
+  <div class="panel-heading"><div class="panel-title">coop</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Whether the next &quot;map&quot; command should start a coop (cooperative) game.<br />Only works when deathmatch var is 0, otherwise coop will be forced off and a deathmatch game will start.<br /><br />You need a file, spprogs.dat, in your quake/qw/ folder for coop games to work.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Disable cooperative.</td></tr>
+<tr>
+<td>true</td><td>Enable cooperative.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-deathmatch">
+  <div class="panel-heading"><div class="panel-title">deathmatch</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Chooses between basic multiplayer gameplay modes; 1 = weapons disappear after pickup (used in 4on4), 2 = weapons stay after pickup, ammo/armor does not (not used), 3 = weapons stay after pickup (used in 1on1), 4 = arena mode (players have all weapons and full health/armor)</div></div>
+    <div class="doc-row type"><div>Type:</div><div>integer</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-download_map_url">
+  <div class="panel-heading"><div class="panel-title">download_map_url</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-filterban">
+  <div class="panel-heading"><div class="panel-title">filterban</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Only IP addresses on the Ban list will be allowed onto the server.</td></tr>
+<tr>
+<td>true</td><td>Only IP addresses NOT on the Ban list will be allowed onto the server.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-frag_log_type">
+  <div class="panel-heading"><div class="panel-title">frag_log_type</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div></div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-fraglimit">
+  <div class="panel-heading"><div class="panel-title">fraglimit</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Amount of frags any player has to reach before the match is over</div></div>
+    <div class="doc-row type"><div>Type:</div><div>integer</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>When set to 0, there won&#39;t be any limit</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-hostname">
+  <div class="panel-heading"><div class="panel-title">hostname</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Server variable, changes the name of the server displayed in server browsers and server lists.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-maxclients">
+  <div class="panel-heading"><div class="panel-title">maxclients</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Highest number of players allowed on the server</div></div>
+    <div class="doc-row type"><div>Type:</div><div>integer</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-maxspectators">
+  <div class="panel-heading"><div class="panel-title">maxspectators</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Highest number of spectators allowed to connect to the server</div></div>
+    <div class="doc-row type"><div>Type:</div><div>integer</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-maxvip_spectators">
+  <div class="panel-heading"><div class="panel-title">maxvip_spectators</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div></div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-not_auth_timeout">
+  <div class="panel-heading"><div class="panel-title">not_auth_timeout</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Not currently used.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>integer</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-password">
+  <div class="panel-heading"><div class="panel-title">password</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Password players have to use to connect to local server</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>Server-side</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-pausable">
+  <div class="panel-heading"><div class="panel-title">pausable</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Disable pause.</td></tr>
+<tr>
+<td>true</td><td>Enable pause.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-pm_airstep">
+  <div class="panel-heading"><div class="panel-title">pm_airstep</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Airstep player-move-extension. Changes the physics of the game and allows to do jumps on stairs.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>Server-side</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td></td></tr>
+<tr>
+<td>true</td><td></td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-qconsole_log_say">
+  <div class="panel-heading"><div class="panel-title">qconsole_log_say</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Log chat messages into the main server console log.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td></td></tr>
+<tr>
+<td>true</td><td></td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-qtv_maxstreams">
+  <div class="panel-heading"><div class="panel-title">qtv_maxstreams</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Maximum number of simultaneous QTV connections.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>integer</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-qtv_password">
+  <div class="panel-heading"><div class="panel-title">qtv_password</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Password required for QTV to connect to the streamport.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-qtv_pendingtimeout">
+  <div class="panel-heading"><div class="panel-title">qtv_pendingtimeout</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Number of seconds to wait before timing out a pending QTV connection.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-qtv_streamport">
+  <div class="panel-heading"><div class="panel-title">qtv_streamport</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Server variable, TCP port on which the server will listen for QTV connections.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>integer</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-qtv_streamtimeout">
+  <div class="panel-heading"><div class="panel-title">qtv_streamtimeout</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Number of seconds to wait before timing out a QTV stream.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-samelevel">
+  <div class="panel-heading"><div class="panel-title">samelevel</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>When enabled, the same level will be played once the match is over</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td></td></tr>
+<tr>
+<td>true</td><td></td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-skill">
+  <div class="panel-heading"><div class="panel-title">skill</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>enum</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>0</td><td>easy level for singleplaying.</td></tr>
+<tr>
+<td>1</td><td>Normal level for singleplaying.</td></tr>
+<tr>
+<td>2</td><td>Hard level for singleplaying.</td></tr>
+<tr>
+<td>3</td><td>Nightmare level for singleplaying.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-spectator_password">
+  <div class="panel-heading"><div class="panel-title">spectator_password</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>A password spectators must use to connect to local server</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_accelerate">
+  <div class="panel-heading"><div class="panel-title">sv_accelerate</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Sets the acceleration value for the player.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_admininfo">
+  <div class="panel-heading"><div class="panel-title">sv_admininfo</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_aim">
+  <div class="panel-heading"><div class="panel-title">sv_aim</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Sets the value for auto-aiming leniency.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_airaccelerate">
+  <div class="panel-heading"><div class="panel-title">sv_airaccelerate</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Sets how quickly the player accelerates in air.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_allowlastscores">
+  <div class="panel-heading"><div class="panel-title">sv_allowlastscores</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div></div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_bigcoords">
+  <div class="panel-heading"><div class="panel-title">sv_bigcoords</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_cheats">
+  <div class="panel-heading"><div class="panel-title">sv_cheats</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Disable cheats.</td></tr>
+<tr>
+<td>true</td><td>Enable cheats. (need map realoading)</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_cpserver">
+  <div class="panel-heading"><div class="panel-title">sv_cpserver</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div></div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_crypt_rcon">
+  <div class="panel-heading"><div class="panel-title">sv_crypt_rcon</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div></div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_cullentities">
+  <div class="panel-heading"><div class="panel-title">sv_cullentities</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div></div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_default_name">
+  <div class="panel-heading"><div class="panel-title">sv_default_name</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_democlearold">
+  <div class="panel-heading"><div class="panel-title">sv_demoClearOld</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div></div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_demodir">
+  <div class="panel-heading"><div class="panel-title">sv_demoDir</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_demoextranames">
+  <div class="panel-heading"><div class="panel-title">sv_demoExtraNames</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div></div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_demofps">
+  <div class="panel-heading"><div class="panel-title">sv_demofps</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div></div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_demoidlefps">
+  <div class="panel-heading"><div class="panel-title">sv_demoIdlefps</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div></div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_demomaxdirsize">
+  <div class="panel-heading"><div class="panel-title">sv_demoMaxDirSize</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div></div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_demomaxsize">
+  <div class="panel-heading"><div class="panel-title">sv_demoMaxSize</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div></div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_demonovis">
+  <div class="panel-heading"><div class="panel-title">sv_demonovis</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div></div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_demopings">
+  <div class="panel-heading"><div class="panel-title">sv_demopings</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div></div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_demoprefix">
+  <div class="panel-heading"><div class="panel-title">sv_demoPrefix</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_demoregexp">
+  <div class="panel-heading"><div class="panel-title">sv_demoRegexp</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_demosuffix">
+  <div class="panel-heading"><div class="panel-title">sv_demoSuffix</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_demotxt">
+  <div class="panel-heading"><div class="panel-title">sv_demotxt</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div></div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_demousecache">
+  <div class="panel-heading"><div class="panel-title">sv_demoUseCache</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div></div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_downloadchunksperframe">
+  <div class="panel-heading"><div class="panel-title">sv_downloadchunksperframe</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Limits the speed of the chunked downloads</div></div>
+    <div class="doc-row type"><div>Type:</div><div></div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>Server-side. Clients can set high amount of chunks per frame allowed and make your data eat connection traffic rapidly. Use this variable to prevent this.</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_enable_cmd_minping">
+  <div class="panel-heading"><div class="panel-title">sv_enable_cmd_minping</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div></div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_enableprofile">
+  <div class="panel-heading"><div class="panel-title">sv_enableprofile</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div></div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_fastconnect">
+  <div class="panel-heading"><div class="panel-title">sv_fastconnect</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>actually no help.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_forcenick">
+  <div class="panel-heading"><div class="panel-title">sv_forcenick</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div></div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_forcenqprogs">
+  <div class="panel-heading"><div class="panel-title">sv_forcenqprogs</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Force loading of NetQuake progs - if progs.dat (typically from Quake 1 sigle player / mods) is present in the gamedir, it will be preferred over qwprogs.dat and spprogs.dat (QW game mods).</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td></td></tr>
+<tr>
+<td>true</td><td></td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_forcespec_onfull">
+  <div class="panel-heading"><div class="panel-title">sv_forcespec_onfull</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div></div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_friction">
+  <div class="panel-heading"><div class="panel-title">sv_friction</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Sets the friction value for the player.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_getrealip">
+  <div class="panel-heading"><div class="panel-title">sv_getrealip</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div></div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_gravity">
+  <div class="panel-heading"><div class="panel-title">sv_gravity</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Sets the global value for the amount of gravity.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_hashpasswords">
+  <div class="panel-heading"><div class="panel-title">sv_hashpasswords</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div></div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_highchars">
+  <div class="panel-heading"><div class="panel-title">sv_highchars</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Disable.</td></tr>
+<tr>
+<td>true</td><td>Enable high character color names for players.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_kicktop">
+  <div class="panel-heading"><div class="panel-title">sv_kicktop</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div></div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_kickuserinfospamcount">
+  <div class="panel-heading"><div class="panel-title">sv_kickuserinfospamcount</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div></div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_kickuserinfospamtime">
+  <div class="panel-heading"><div class="panel-title">sv_kickuserinfospamtime</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div></div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_ktpro_mode">
+  <div class="panel-heading"><div class="panel-title">sv_ktpro_mode</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_loadentfiles">
+  <div class="panel-heading"><div class="panel-title">sv_loadentfiles</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Disable.</td></tr>
+<tr>
+<td>true</td><td>Enable custom map entity file support.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_logdir">
+  <div class="panel-heading"><div class="panel-title">sv_logdir</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_login">
+  <div class="panel-heading"><div class="panel-title">sv_login</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div></div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_mapcheck">
+  <div class="panel-heading"><div class="panel-title">sv_mapcheck</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>Note: A player who has edited his map files to cheat by removing textures <br />from walls will not be able to join the server and play.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Disable.</td></tr>
+<tr>
+<td>true</td><td>Enable map checksumming to check for players who edit maps to cheat.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_maxdownloadrate">
+  <div class="panel-heading"><div class="panel-title">sv_maxdownloadrate</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div></div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_maxlogsize">
+  <div class="panel-heading"><div class="panel-title">sv_maxlogsize</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div></div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_maxpitch">
+  <div class="panel-heading"><div class="panel-title">sv_maxpitch</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>server-side variable for setting maximum of view angles</div></div>
+    <div class="doc-row type"><div>Type:</div><div>integer</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>EZQuake and ZQuake (may be some other) clients understand this physics change, old clients will be clamped at [-70~80] (quakeworld default) view angles.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td></td><td>By default, in quakeworld maximum viewangle is &#39;80&#39;. You can set for example &#39;90&#39; then you will be able look directly to sky. q3 players should like it</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_maxrate">
+  <div class="panel-heading"><div class="panel-title">sv_maxrate</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Maximum rate for clients.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_maxspeed">
+  <div class="panel-heading"><div class="panel-title">sv_maxspeed</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Sets the maximum speed a player can move.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_maxtic">
+  <div class="panel-heading"><div class="panel-title">sv_maxtic</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>The maximum amount of time in seconds before a client a receives an update <br />from the server.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_maxuploadsize">
+  <div class="panel-heading"><div class="panel-title">sv_maxuploadsize</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div></div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_maxvelocity">
+  <div class="panel-heading"><div class="panel-title">sv_maxvelocity</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Sets the maximum velocity an object can travel.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_minping">
+  <div class="panel-heading"><div class="panel-title">sv_minping</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div></div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_minpitch">
+  <div class="panel-heading"><div class="panel-title">sv_minpitch</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>server-side variable for setting minimum of view angles</div></div>
+    <div class="doc-row type"><div>Type:</div><div>integer</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>EZQuake and ZQuake (may be some other) clients understand this physics change, old clients will be clamped at [-70~80] (quakeworld default) view angles.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td></td><td>By default, in quakeworld minimum viewangle is &#39;-70&#39;. You can set for example &#39;-90&#39; then you will be able look directly to floor. q3 players should like it.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_mintic">
+  <div class="panel-heading"><div class="panel-title">sv_mintic</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>The minimum amount of time the server will wait before sending packets to <br />a client.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_mod_msg_file">
+  <div class="panel-heading"><div class="panel-title">sv_mod_msg_file</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_nailhack">
+  <div class="panel-heading"><div class="panel-title">sv_nailhack</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>smoother and point in the right direction.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Disable.</td></tr>
+<tr>
+<td>true</td><td>Allows nails in most cases to uses less bandwidth and to fly around</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_ondemoremove">
+  <div class="panel-heading"><div class="panel-title">sv_onDemoRemove</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_onrecordfinish">
+  <div class="panel-heading"><div class="panel-title">sv_onRecordFinish</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_paused">
+  <div class="panel-heading"><div class="panel-title">sv_paused</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>read-only variable that gives you current pause state (condition).</div></div>
+    <div class="doc-row type"><div>Type:</div><div>enum</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>0</td><td>pause is off</td></tr>
+<tr>
+<td>1</td><td>normal pause that can be set by &#39;pause&#39; command</td></tr>
+<tr>
+<td>2</td><td>auto pause (single player only) when going into menus</td></tr>
+<tr>
+<td>3</td><td>both (normal pause + auto pause)</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_phs">
+  <div class="panel-heading"><div class="panel-title">sv_phs</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>of the map.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Disable.</td></tr>
+<tr>
+<td>true</td><td>Has something to do with the table which is build at the loading time</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_progsname">
+  <div class="panel-heading"><div class="panel-title">sv_progsname</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_progtype">
+  <div class="panel-heading"><div class="panel-title">sv_progtype</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div></div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_qwfwd_port">
+  <div class="panel-heading"><div class="panel-title">sv_qwfwd_port</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div></div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_rconlim">
+  <div class="panel-heading"><div class="panel-title">sv_rconlim</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div></div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_reconnectlimit">
+  <div class="panel-heading"><div class="panel-title">sv_reconnectlimit</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div></div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_registrationinfo">
+  <div class="panel-heading"><div class="panel-title">sv_registrationinfo</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_sayteam_to_spec">
+  <div class="panel-heading"><div class="panel-title">sv_sayteam_to_spec</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div></div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_serverip">
+  <div class="panel-heading"><div class="panel-title">sv_serverip</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_specprint">
+  <div class="panel-heading"><div class="panel-title">sv_specprint</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div></div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_spectalk">
+  <div class="panel-heading"><div class="panel-title">sv_spectalk</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Players can&#39;t hear spectators.</td></tr>
+<tr>
+<td>true</td><td>Players can hear spectators.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_spectatormaxspeed">
+  <div class="panel-heading"><div class="panel-title">sv_spectatormaxspeed</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Sets the maximum speed a spectator can move.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_speedcheck">
+  <div class="panel-heading"><div class="panel-title">sv_speedcheck</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div></div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_stopspeed">
+  <div class="panel-heading"><div class="panel-title">sv_stopspeed</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Sets the value that determines how fast the player should come to a complete stop.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_timeout">
+  <div class="panel-heading"><div class="panel-title">sv_timeout</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Sets the amount of time in seconds before a client is considered disconnected <br />if the server does not receive a packet.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_timestamplen">
+  <div class="panel-heading"><div class="panel-title">sv_timestamplen</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div></div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_unfake">
+  <div class="panel-heading"><div class="panel-title">sv_unfake</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div></div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_use_dns">
+  <div class="panel-heading"><div class="panel-title">sv_use_dns</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div></div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_use_internal_cmd_dl">
+  <div class="panel-heading"><div class="panel-title">sv_use_internal_cmd_dl</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div></div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_wateraccelerate">
+  <div class="panel-heading"><div class="panel-title">sv_wateraccelerate</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Sets the water acceleration value.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sv_waterfriction">
+  <div class="panel-heading"><div class="panel-title">sv_waterfriction</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Sets the water friction value.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-teamplay">
+  <div class="panel-heading"><div class="panel-title">teamplay</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Teamplay mode</div></div>
+    <div class="doc-row type"><div>Type:</div><div>integer</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>Nowadays only value 2 is used; value 1 prevents you from killing your teammates including yourself</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-telnet_log_level">
+  <div class="panel-heading"><div class="panel-title">telnet_log_level</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div></div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-telnet_password">
+  <div class="panel-heading"><div class="panel-title">telnet_password</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Password for login via telnet.  Not currently used.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-timelimit">
+  <div class="panel-heading"><div class="panel-title">timelimit</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Number of minutes the match will take</div></div>
+    <div class="doc-row type"><div>Type:</div><div>integer</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-timeout">
+  <div class="panel-heading"><div class="panel-title">timeout</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div></div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-vip_password">
+  <div class="panel-heading"><div class="panel-title">vip_password</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-vip_values">
+  <div class="panel-heading"><div class="panel-title">vip_values</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-zombietime">
+  <div class="panel-heading"><div class="panel-title">zombietime</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>The number of minutes that the server will keep the character of a player on <br />the map who seems to have disconnected.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>integer</div></div>
+  </div>
+</div>
+
+</div>
+    </section>
+</div>
+    <div id="footer_wrap" class="outer">
+        <footer class="inner">
+            <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+        </footer>
+    </div>
+</body>
+</html>
+

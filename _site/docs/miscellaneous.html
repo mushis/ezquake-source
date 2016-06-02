@@ -1,0 +1,836 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="ezQuake - the #1 QuakeWorld client.
+">
+    <link rel="stylesheet" href="http://network.quakeworld.nu/bar/style.css" />
+    <link rel="stylesheet" type="text/css" href="/css/stylesheet.css">
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <title>ezQuake</title>
+    <link rel="canonical" href="http://ezquake.github.io///docs/miscellaneous.html">
+</head>
+<body>
+
+<div id="header_wrap" class="outer">
+    <div id="qwnetwork">
+        <div id="qwnet_content">
+            <a href="http://nquake.com/" title="nQuake - Download QuakeWorld today!" id="qwnet_nquake"></a>
+            <a href="http://ezquake.github.io/" title="ezQuake - The best QW client" id="qwnet_ezquake" class="qwnet_current"></a>
+            <div class="qwnet_separator">&nbsp;</div>
+            <a href="http://www.quakeworld.nu/" title="QuakeWorld.nu - Your portal to everything Quake" id="qwnet_qwnu"></a>
+            <a href="http://www.quakeworld.nu/forum/" title="QW.nu Forum - Discuss anything QW-related" id="qwnet_forums"></a>
+            <a href="http://qwdrama.quakeworld.nu/" title="qwdrama - News, tutorials, interviews, drama and more" id="qwnet_qwdrama"></a>
+            <div class="qwnet_separator">&nbsp;</div>
+            <a href="http://eql.quakeworld.nu/" title="EQL - European Quake League" id="qwnet_eql"></a>
+            <div class="qwnet_separator">&nbsp;</div>
+            <a href="http://wiki.quakeworld.nu/" title="QuakeWorld Wiki - The open QW encyclopedia" id="qwnet_wiki"></a>
+            <a href="http://www.quakeservers.net/quakeworld/servers/pl=1/so=8/" title="QuakeServers.net - QW server listings and info" id="qwnet_quakeservers"></a>
+            <a href="http://stats.quakeworld.nu/" title="QuakeWorld Statistics - QW statistics, ranking systems and more." id="qwnet_stats"></a>
+            <a href="http://qtv.quakeworld.nu/" title="QuakeTV - Watch QW now!" id="qwnet_qtv"></a>
+            <div class="qwnet_separator">&nbsp;</div>
+            <a href="http://videos.quakeworld.nu/" title="QuakeWorld.nu Videos - Watch QW videos, interviews and more" id="qwnet_videos"></a>
+            <a href="http://gfx.quakeworld.nu/" title="QuakeWorld GFX - Download custom graphics" id="qwnet_gfx"></a>
+            <div id="qwnet_clearer">&nbsp;</div>
+        </div>
+    </div>
+    <header class="inner">
+        <a id="forkme_banner" href="https://github.com/ezQuake/ezQuake-source">View on GitHub</a>
+        <h1 id="project_title">ezQuake</h1>
+        <h2 id="project_tagline"></h2>
+    </header>
+</div>
+
+<div id="main_content_wrap" class="outer">
+    <section id="main_content" class="inner">
+        <ul class="nav nav-tabs" role="navigation">
+    <li ><a href="/">Home</a></li>
+    <li ><a href="/about.html">About</a></li>
+    <li ><a href="/features.html">Features</a></li>
+    <li ><a href="/screenshots.html">Screenshots</a></li>
+    <li ><a href="/downloads.html">Downloads</a></li>
+    <li  class="active" ><a href="/manual.html">Manual</a></li>
+    <li ><a href="/contribute.html">Contribute</a></li>
+</ul>
+
+        <h3>Miscellaneous</h3>
+<h4><a id="config-management" class="anchor" href="#config-management" aria-hidden="true"><span class="octicon octicon-link"></span></a>Config Management</h4>
+<div class="doc-group"><div class="cvar panel panel-default" id="cvar-cfg_backup">
+  <div class="panel-heading"><div class="panel-title">cfg_backup</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>No backup of your config.</td></tr>
+<tr>
+<td>true</td><td>Backs up your old config before overwriting it with cfg_save.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-cfg_legacy_exec">
+  <div class="panel-heading"><div class="panel-title">cfg_legacy_exec</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>enum</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>0</td><td>Do not execute config.cfg and frontend.cfg in gamedir ever.</td></tr>
+<tr>
+<td>1</td><td>Execute config.cfg and frontend.cfg in gamedir (unless gamedir = qw)</td></tr>
+<tr>
+<td>2</td><td>Execute config.cfg and frontend.cfg even if gamedir = qw.</td></tr>
+<tr>
+<td>3</td><td>Execute config.cfg and frontend.cfg even if gamedir = qw. If not found in current gamedir, execute from qw dir.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-cfg_save_aliases">
+  <div class="panel-heading"><div class="panel-title">cfg_save_aliases</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Won&#39;t save aliases.</td></tr>
+<tr>
+<td>true</td><td>cfg_save saves aliases.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-cfg_save_binds">
+  <div class="panel-heading"><div class="panel-title">cfg_save_binds</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Won&#39;t save binds.</td></tr>
+<tr>
+<td>true</td><td>Toggles whether cfg_save saves binds.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-cfg_save_cmdline">
+  <div class="panel-heading"><div class="panel-title">cfg_save_cmdline</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Won&#39;t save command line.</td></tr>
+<tr>
+<td>true</td><td>Writes your command line in configs made with cfg_save (commented out of course)</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-cfg_save_cmds">
+  <div class="panel-heading"><div class="panel-title">cfg_save_cmds</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Won&#39;t save commands.</td></tr>
+<tr>
+<td>true</td><td>Saves commands.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-cfg_save_cvars">
+  <div class="panel-heading"><div class="panel-title">cfg_save_cvars</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Won&#39;t save variables.</td></tr>
+<tr>
+<td>true</td><td>Saves variables.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-cfg_save_onquit">
+  <div class="panel-heading"><div class="panel-title">cfg_save_onquit</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>When enabled, your main configuration (config.cfg) will be saved when you exit the application</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>Configuration will be saved in the main user configuration file, that is config.cfg which can either be placed in the quake/ezquake/configs in your quakedir, or in your home dir in /ezquake, depending on cfg_use_home setting.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Do not save configuration on exit</td></tr>
+<tr>
+<td>true</td><td>Automatically save the configuration on exit</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-cfg_save_sysinfo">
+  <div class="panel-heading"><div class="panel-title">cfg_save_sysinfo</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Not implemented yet.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-cfg_save_unchanged">
+  <div class="panel-heading"><div class="panel-title">cfg_save_unchanged</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>config file.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Makes cfg_save only write variables that are not default valued to the</td></tr>
+<tr>
+<td>true</td><td>Makes cfg_save write all variables to the config file.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-cfg_save_userinfo">
+  <div class="panel-heading"><div class="panel-title">cfg_save_userinfo</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>enum</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>Note: &#39;cfg_save_userinfo 1&#39; is best for teamfortress so you don&#39;t get kicked for changing bottom color. cfg_save will never save the password variable, even though technically it is a userinfo variable.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>0</td><td>Do not save userinfo variables.</td></tr>
+<tr>
+<td>1</td><td>Save all userinfo variables except spectator/name/topcolor/bottomcolor/teamcolor/skin/team/rate/msg/w and b_switch</td></tr>
+<tr>
+<td>2</td><td>Save all userinfo variables</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-cfg_use_gamedir">
+  <div class="panel-heading"><div class="panel-title">cfg_use_gamedir</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>If set &amp; gamedir is not &#39;qw&#39;, configurations will be saved to subdirectory based on gamedir.<br />Useful if configurations differ depending on gametype (e.g. team fortress)</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-cfg_use_home">
+  <div class="panel-heading"><div class="panel-title">cfg_use_home</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>When turned on, configutaion will be saved into user&#39;s profile (home) directory.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>This affects only cfg_save and cfg_load commands.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Save the configuration into &lt;quake&gt;/ezquake/configs</td></tr>
+<tr>
+<td>true</td><td>Save the configuration into user&#39;s home dir</td></tr>
+</tbody>
+</table>
+</div>
+
+</div><h4><a id="irc-client" class="anchor" href="#irc-client" aria-hidden="true"><span class="octicon octicon-link"></span></a>IRC Client</h4>
+<div class="doc-group"><div class="cvar panel panel-default" id="cvar-irc_server_address">
+  <div class="panel-heading"><div class="panel-title">irc_server_address</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>IP address of the IRC server to connect to on irc connect command.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-irc_server_password">
+  <div class="panel-heading"><div class="panel-title">irc_server_password</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Password for IRC server connection.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-irc_server_port">
+  <div class="panel-heading"><div class="panel-title">irc_server_port</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Port number for IRC server connection.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>integer</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-irc_user_nick">
+  <div class="panel-heading"><div class="panel-title">irc_user_nick</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Your nickname used to log-in to the IRC server.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-irc_user_realname">
+  <div class="panel-heading"><div class="panel-title">irc_user_realname</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Real name field used to log-in to the IRC server.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-irc_user_username">
+  <div class="panel-heading"><div class="panel-title">irc_user_username</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Username used to log-in to the IRC server.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+
+</div><h4><a id="menu" class="anchor" href="#menu" aria-hidden="true"><span class="octicon octicon-link"></span></a>Menu</h4>
+<div class="doc-group"><div class="cvar panel panel-default" id="cvar-file_browser_archive_color">
+  <div class="panel-heading"><div class="panel-title">file_browser_archive_color</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Color of archive files when </div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-file_browser_dir_color">
+  <div class="panel-heading"><div class="panel-title">file_browser_dir_color</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Color of directories in the file browser.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-file_browser_file_color">
+  <div class="panel-heading"><div class="panel-title">file_browser_file_color</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Color of files in the file browser.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-file_browser_interline">
+  <div class="panel-heading"><div class="panel-title">file_browser_interline</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Spacing between each row in the file browser.  0-6</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-file_browser_scrollnames">
+  <div class="panel-heading"><div class="panel-title">file_browser_scrollnames</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>If set, the currently selected file will scroll to let you see the full name</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-file_browser_selected_color">
+  <div class="panel-heading"><div class="panel-title">file_browser_selected_color</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Color of the current selection in the file browser.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-file_browser_show_date">
+  <div class="panel-heading"><div class="panel-title">file_browser_show_date</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Toggles whether the file modified date is shown in the file browser</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-file_browser_show_size">
+  <div class="panel-heading"><div class="panel-title">file_browser_show_size</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Toggles whether the filesize is shown in the file browser</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-file_browser_show_status">
+  <div class="panel-heading"><div class="panel-title">file_browser_show_status</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Toggles whether a statusbar is shown in the file browser</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-file_browser_show_time">
+  <div class="panel-heading"><div class="panel-title">file_browser_show_time</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Toggles whether the file modified time is shown in the file browser</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-file_browser_sort_mode">
+  <div class="panel-heading"><div class="panel-title">file_browser_sort_mode</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Determines sort order of files in the file browser.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>1</td><td>name</td></tr>
+<tr>
+<td>2</td><td>size</td></tr>
+<tr>
+<td>3</td><td>date/time</td></tr>
+<tr>
+<td>4</td><td>type</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-file_browser_strip_names">
+  <div class="panel-heading"><div class="panel-title">file_browser_strip_names</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>If set, strips extra spaces from filenames in the file browser.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-menu_advanced">
+  <div class="panel-heading"><div class="panel-title">menu_advanced</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Shows/hides advanced options entries in the Options menu</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Hide advanced options</td></tr>
+<tr>
+<td>true</td><td>Show advanced options</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-menu_ingame">
+  <div class="panel-heading"><div class="panel-title">menu_ingame</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Enables/disables ingame menu - menu that typically appears if you press Esc key during the game.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>in-game menu disabled</td></tr>
+<tr>
+<td>true</td><td>in-game menu enabled</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-menu_marked_bgcolor">
+  <div class="panel-heading"><div class="panel-title">menu_marked_bgcolor</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>The color of the selected entry in options menu.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-menu_marked_fade">
+  <div class="panel-heading"><div class="panel-title">menu_marked_fade</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Speed of menu entry highlight flashing. Zero disables the flashing effect.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-scr_centermenu">
+  <div class="panel-heading"><div class="panel-title">scr_centerMenu</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Off.</td></tr>
+<tr>
+<td>true</td><td>Centers the menu vertically (has no effect if you&#39;re playing in 320x200 mode, same applies to scr_centersbar).</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-scr_cursor_alpha">
+  <div class="panel-heading"><div class="panel-title">scr_cursor_alpha</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Level of transparency of the cursor used in menus and HUD editor.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-scr_cursor_iconoffset_x">
+  <div class="panel-heading"><div class="panel-title">scr_cursor_iconoffset_x</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Offset of the cursor image used in menus and HUD editor.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>integer</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-scr_cursor_iconoffset_y">
+  <div class="panel-heading"><div class="panel-title">scr_cursor_iconoffset_y</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Offset of the cursor image used in menus and HUD editor.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>integer</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-scr_cursor_scale">
+  <div class="panel-heading"><div class="panel-title">scr_cursor_scale</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Size of the cursor image used in menus and HUD editor.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-scr_cursor_sensitivity">
+  <div class="panel-heading"><div class="panel-title">scr_cursor_sensitivity</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Mouse sensitivity for the cursor used in menus and HUD editor.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-scr_scalemenu">
+  <div class="panel-heading"><div class="panel-title">scr_scaleMenu</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Disable scaling.</td></tr>
+<tr>
+<td>true</td><td>Scales the frontend menu to match the resolution you are using.</td></tr>
+</tbody>
+</table>
+</div>
+
+</div><h4><a id="not-settable" class="anchor" href="#not-settable" aria-hidden="true"><span class="octicon octicon-link"></span></a>Not settable</h4>
+<div class="doc-group"><div class="cvar panel panel-default" id="cvar-con_particles_images">
+  <div class="panel-heading"><div class="panel-title">con_particles_images</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Set the number of images you have in /textures/conpart.png.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>integer</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td></td><td>Each image should take up 64x64 pixels.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-gl_strings">
+  <div class="panel-heading"><div class="panel-title">gl_strings</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Read-only variable with info about your OpenGL renderer</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-re_trigger_match_0">
+  <div class="panel-heading"><div class="panel-title">re_trigger_match_0</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Whole matched pattern of the regular expression match.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-re_trigger_match_1">
+  <div class="panel-heading"><div class="panel-title">re_trigger_match_1</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>First matched subpattern of the regexp match.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+
+</div><h4><a id="other" class="anchor" href="#other" aria-hidden="true"><span class="octicon octicon-link"></span></a>Other</h4>
+<div class="doc-group"><div class="cvar panel panel-default" id="cvar-cl_cmdline">
+  <div class="panel-heading"><div class="panel-title">cl_cmdline</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Read-only variable showing you what were the commandline options used to launch the client</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-cl_warncmd">
+  <div class="panel-heading"><div class="panel-title">cl_warncmd</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>Note: Not saved to config with cfg_save command.</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Disable the unknown command messages.</td></tr>
+<tr>
+<td>true</td><td>Enable the uknown command messages.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-developer">
+  <div class="panel-heading"><div class="panel-title">developer</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Enables debug mode which prints more messages into the console than for normal user</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td></td></tr>
+<tr>
+<td>true</td><td></td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-localid">
+  <div class="panel-heading"><div class="panel-title">localid</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-mapname">
+  <div class="panel-heading"><div class="panel-title">mapname</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Contains the name of the current map</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-qport">
+  <div class="panel-heading"><div class="panel-title">qport</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Local port the client uses to connect to servers</div></div>
+    <div class="doc-row type"><div>Type:</div><div>integer</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-rcon_address">
+  <div class="panel-heading"><div class="panel-title">rcon_address</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Address of the server to query with remote console commands</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-rcon_password">
+  <div class="panel-heading"><div class="panel-title">rcon_password</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Password used for remote console communication</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+
+</div><h4><a id="system-settings" class="anchor" href="#system-settings" aria-hidden="true"><span class="octicon octicon-link"></span></a>System Settings</h4>
+<div class="doc-group"><div class="cvar panel panel-default" id="cvar-cl_mediaroot">
+  <div class="panel-heading"><div class="panel-title">cl_mediaroot</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Changes where demos, screenshots and logs are saved, how variables demo_dir, sshot_dir and log_dir are treated.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>enum</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>0</td><td>Treat paths as relative to the Quake dir</td></tr>
+<tr>
+<td>1</td><td>Treat paths as relative to user home dir</td></tr>
+<tr>
+<td>2</td><td>Treat paths as system absolute paths</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-cl_textencoding">
+  <div class="panel-heading"><div class="panel-title">cl_textencoding</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Determines method used to encoding non-standard characters in outgoing messages.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>enum</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>0</td><td>Use KOI8-R encoding (ezQuake 2.2 compatible)</td></tr>
+<tr>
+<td>1</td><td>Use UTF8 encoding (larger range of characters)</td></tr>
+<tr>
+<td>2</td><td>Use FTE&#39;s ^Uxxxx encoding</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-fs_cache">
+  <div class="panel-heading"><div class="panel-title">fs_cache</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Enables Quake File System caching of files lists</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td></td></tr>
+<tr>
+<td>true</td><td></td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sys_disable_alt_enter">
+  <div class="panel-heading"><div class="panel-title">sys_disable_alt_enter</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>alt-enter will toggle full-screen mode</td></tr>
+<tr>
+<td>true</td><td>alt-enter ignored by ezquake</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sys_disablewinkeys">
+  <div class="panel-heading"><div class="panel-title">sys_disableWinKeys</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>Note: Windows keys are now bindable (LWINKEY, RWINKEY, WINKEY, POPUPMENU). Obviously only useful on NT/2K/XP with sys_disableWinKeys 1 (and possibely useful in Linux too!).</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Enable.</td></tr>
+<tr>
+<td>true</td><td>Disable winkeys from alt-tabbing you (only works in NT/2K/XP, and only when the client is in focus).</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sys_highpriority">
+  <div class="panel-heading"><div class="panel-title">sys_highpriority</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>enum</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>0</td><td>Sets process to normal priority.</td></tr>
+<tr>
+<td>1</td><td>Sets process to high priority.</td></tr>
+<tr>
+<td>-1</td><td>Sets process to low priority.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sys_inactivesleep">
+  <div class="panel-heading"><div class="panel-title">sys_inactivesleep</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Prevent freeing of CPU when the client is minimized or not in focus.</td></tr>
+<tr>
+<td>true</td><td>Enable inactive sleeping.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sys_inactivesound">
+  <div class="panel-heading"><div class="panel-title">sys_inactivesound</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Enables sounds when the application is not focused</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td></td></tr>
+<tr>
+<td>true</td><td></td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-sys_yieldcpu">
+  <div class="panel-heading"><div class="panel-title">sys_yieldcpu</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Controls CPU sharing when client is waiting to draw a frame. When disabled, client will run a loop, actively waiting for the time to draw a new frame. When enabled, client will call system sleep function during the waiting, which will cause the thread to be deactivated for a while - leading to significantly lower CPU usage in most cases.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Do not sleep between frames, use CPU as much as possible.</td></tr>
+<tr>
+<td>true</td><td>Sleep between frames, make CPU available for other processes.</td></tr>
+</tbody>
+</table>
+</div>
+
+</div>
+    </section>
+</div>
+    <div id="footer_wrap" class="outer">
+        <footer class="inner">
+            <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+        </footer>
+    </div>
+</body>
+</html>
+

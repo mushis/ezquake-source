@@ -1,0 +1,429 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="ezQuake - the #1 QuakeWorld client.
+">
+    <link rel="stylesheet" href="http://network.quakeworld.nu/bar/style.css" />
+    <link rel="stylesheet" type="text/css" href="/css/stylesheet.css">
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <title>ezQuake</title>
+    <link rel="canonical" href="http://ezquake.github.io///docs/sound.html">
+</head>
+<body>
+
+<div id="header_wrap" class="outer">
+    <div id="qwnetwork">
+        <div id="qwnet_content">
+            <a href="http://nquake.com/" title="nQuake - Download QuakeWorld today!" id="qwnet_nquake"></a>
+            <a href="http://ezquake.github.io/" title="ezQuake - The best QW client" id="qwnet_ezquake" class="qwnet_current"></a>
+            <div class="qwnet_separator">&nbsp;</div>
+            <a href="http://www.quakeworld.nu/" title="QuakeWorld.nu - Your portal to everything Quake" id="qwnet_qwnu"></a>
+            <a href="http://www.quakeworld.nu/forum/" title="QW.nu Forum - Discuss anything QW-related" id="qwnet_forums"></a>
+            <a href="http://qwdrama.quakeworld.nu/" title="qwdrama - News, tutorials, interviews, drama and more" id="qwnet_qwdrama"></a>
+            <div class="qwnet_separator">&nbsp;</div>
+            <a href="http://eql.quakeworld.nu/" title="EQL - European Quake League" id="qwnet_eql"></a>
+            <div class="qwnet_separator">&nbsp;</div>
+            <a href="http://wiki.quakeworld.nu/" title="QuakeWorld Wiki - The open QW encyclopedia" id="qwnet_wiki"></a>
+            <a href="http://www.quakeservers.net/quakeworld/servers/pl=1/so=8/" title="QuakeServers.net - QW server listings and info" id="qwnet_quakeservers"></a>
+            <a href="http://stats.quakeworld.nu/" title="QuakeWorld Statistics - QW statistics, ranking systems and more." id="qwnet_stats"></a>
+            <a href="http://qtv.quakeworld.nu/" title="QuakeTV - Watch QW now!" id="qwnet_qtv"></a>
+            <div class="qwnet_separator">&nbsp;</div>
+            <a href="http://videos.quakeworld.nu/" title="QuakeWorld.nu Videos - Watch QW videos, interviews and more" id="qwnet_videos"></a>
+            <a href="http://gfx.quakeworld.nu/" title="QuakeWorld GFX - Download custom graphics" id="qwnet_gfx"></a>
+            <div id="qwnet_clearer">&nbsp;</div>
+        </div>
+    </div>
+    <header class="inner">
+        <a id="forkme_banner" href="https://github.com/ezQuake/ezQuake-source">View on GitHub</a>
+        <h1 id="project_title">ezQuake</h1>
+        <h2 id="project_tagline"></h2>
+    </header>
+</div>
+
+<div id="main_content_wrap" class="outer">
+    <section id="main_content" class="inner">
+        <ul class="nav nav-tabs" role="navigation">
+    <li ><a href="/">Home</a></li>
+    <li ><a href="/about.html">About</a></li>
+    <li ><a href="/features.html">Features</a></li>
+    <li ><a href="/screenshots.html">Screenshots</a></li>
+    <li ><a href="/downloads.html">Downloads</a></li>
+    <li  class="active" ><a href="/manual.html">Manual</a></li>
+    <li ><a href="/contribute.html">Contribute</a></li>
+</ul>
+
+        <h3>Sound</h3>
+<h4><a id="mp3-settings" class="anchor" href="#mp3-settings" aria-hidden="true"><span class="octicon octicon-link"></span></a>MP3 Settings</h4>
+<div class="doc-group"><div class="cvar panel panel-default" id="cvar-mp3_player">
+  <div class="panel-heading"><div class="panel-title">mp3_player</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Selects the MP3 player that will be controlled within EzQuake.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>Windows - winamp supported<br />Linux - audacious, xmms2, xmms, mpd supported<br />Mac - None</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>audacious</td><td></td></tr>
+<tr>
+<td>mpd</td><td></td></tr>
+<tr>
+<td>winamp</td><td></td></tr>
+<tr>
+<td>xmms</td><td></td></tr>
+<tr>
+<td>xmms2</td><td></td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-mp3_scrolltitle">
+  <div class="panel-heading"><div class="panel-title">mp3_scrolltitle</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Toggles scrolling of the song info in mp3 player control window.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Do not scroll song info text.</td></tr>
+<tr>
+<td>true</td><td>Enable song info scrolling.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-mp3_showtime">
+  <div class="panel-heading"><div class="panel-title">mp3_showtime</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Toggles displaying song time information in mp3 player control window.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>enum</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>0</td><td>Do not display song time information.</td></tr>
+<tr>
+<td>1</td><td>Display song time and total time of currently played song.</td></tr>
+<tr>
+<td>2</td><td>Display remaining time only.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-mp3_winamp_dir">
+  <div class="panel-heading"><div class="panel-title">mp3_winamp_dir</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Tells your client the path where it should look for your external music player.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+
+</div><h4><a id="sound-settings" class="anchor" href="#sound-settings" aria-hidden="true"><span class="octicon octicon-link"></span></a>Sound Settings</h4>
+<div class="doc-group"><div class="cvar panel panel-default" id="cvar-bgmvolume">
+  <div class="panel-heading"><div class="panel-title">bgmvolume</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>This variable sets the volume of the CD music.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-cl_staticsounds">
+  <div class="panel-heading"><div class="panel-title">cl_staticSounds</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Disable static sounds.</td></tr>
+<tr>
+<td>true</td><td>Enable static sounds.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-s_ambientfade">
+  <div class="panel-heading"><div class="panel-title">s_ambientfade</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>How fast the volume of ambient sounds changes as you move around the map.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-s_ambientlevel">
+  <div class="panel-heading"><div class="panel-title">s_ambientlevel</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Volume level of ambient sounds (produced by liquid and sky brushes).</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-s_audiodevice">
+  <div class="panel-heading"><div class="panel-title">s_audiodevice</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Audio device to use.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>integer</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-s_desiredsamples">
+  <div class="panel-heading"><div class="panel-title">s_desiredsamples</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Indicates how large the audio buffer should be, in samples.  If 0, ezQuake will choose a sensible default, based on value of s_khz</div></div>
+    <div class="doc-row type"><div>Type:</div><div>integer</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>This is a suggestion only, the driver is free to choose a different value.  Smaller buffer sizes generally result in lower latency, but higher CPU usage.</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-s_khz">
+  <div class="panel-heading"><div class="panel-title">s_khz</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>The client includes &quot;sound interpolation&quot; which allows it to play sounds at higher frequencies, than the default 11025 Hz with perfect quality. In addition to &quot;s_khz&quot; also &quot;s_bits&quot; (linux only) will have an influence on interpolation quality. This variable allows you to choose the frequency you want to interpolate the sounds to. You will quickly discover, that the shaft sound is different at increased sampling rate. That&#39;s because shaft sounds were recorded at 22050 kHz, so probably that&#39;s how they should sound from the beginning. If you don&#39;t like it, you can always convert them to 11025.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>enum</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>Also you can change it &#39;on fly&#39; - just do snd_restart after you change s_khz</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>11</td><td>11khz sound (default)</td></tr>
+<tr>
+<td>22</td><td>22khz sound</td></tr>
+<tr>
+<td>44</td><td>44khz sound</td></tr>
+<tr>
+<td>48</td><td>48khz sound</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-s_linearresample">
+  <div class="panel-heading"><div class="panel-title">s_linearresample</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Controls whether or not to resample sounds as they are loaded</div></div>
+    <div class="doc-row type"><div>Type:</div><div>enum</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>0</td><td>Do not perform resampling</td></tr>
+<tr>
+<td>1</td><td>Upscale sounds as they are loaded</td></tr>
+<tr>
+<td>2</td><td>Upscale &amp; downscale sounds as they loaded, as appropriate</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-s_loadas8bit">
+  <div class="panel-heading"><div class="panel-title">s_loadas8bit</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>This will give a little performance boost when playing the game at the cost of <br />quality for the sound samples.)</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Off.</td></tr>
+<tr>
+<td>true</td><td>On (The sound samples will be loaded in 8-bit mode thus making them a little smaller.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-s_mixahead">
+  <div class="panel-heading"><div class="panel-title">s_mixahead</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Only affects OSS and legacy ALSA:<br /><br />This variable defines the delay time for sounds. How low you can set your sound<br />mixahead depends on your FPS, when you set it too low, your sound will start <br />crackling. Generally, with 72 FPS you should be able to use a delay of 0.06 seconds.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-s_mm1_file">
+  <div class="panel-heading"><div class="panel-title">s_mm1_file</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>You can specify notification sound for messagemode1 (/messagemode or /say foo) messages.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-s_mm1_volume">
+  <div class="panel-heading"><div class="panel-title">s_mm1_volume</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>You can specify volume of notification sound for messagemode1 (/messagemode or /say foo) messages.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-s_mm2_file">
+  <div class="panel-heading"><div class="panel-title">s_mm2_file</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>You can specify notification sound for messagemode2 (/messagemode2 or /say_team foo) messages.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-s_mm2_volume">
+  <div class="panel-heading"><div class="panel-title">s_mm2_volume</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>You can specify volume of notification sound for messagemode2 (/messagemode2 or /say_team foo) messages.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-s_noextraupdate">
+  <div class="panel-heading"><div class="panel-title">s_noextraupdate</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Makes Quake update its sound buffers more often to avoid choppy sound when your fps is really low (20 or worse)</td></tr>
+<tr>
+<td>true</td><td>Don&#39;t use extra sound updates.  Gives a slight fps boost, but may lead to choppy sound on low-end machines</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-s_nosound">
+  <div class="panel-heading"><div class="panel-title">s_nosound</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Enable the playback of sounds.</td></tr>
+<tr>
+<td>true</td><td>Disable the playback of sounds.  Note that it effectively just resets sound volume to zero, but the sound engine still runs.  If you want disable sound in order to get more fps, use the -nosound command line option instead.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-s_otherchat_file">
+  <div class="panel-heading"><div class="panel-title">s_otherchat_file</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>You can specify notification sound for other messages (than messagemode, messagemode2 and from spectators).</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-s_otherchat_volume">
+  <div class="panel-heading"><div class="panel-title">s_otherchat_volume</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>You can specify volume of notification sound for other messages (than messagemode, messagemode2 and from spectators).</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-s_precache">
+  <div class="panel-heading"><div class="panel-title">s_precache</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Disable automatic sound caching.</td></tr>
+<tr>
+<td>true</td><td>Enable automatic sound caching.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-s_raw_volume">
+  <div class="panel-heading"><div class="panel-title">s_raw_volume</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Controls volume of voice (voip) playback.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>See cl_voip_play.</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-s_show">
+  <div class="panel-heading"><div class="panel-title">s_show</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Toggles displaying how many and/or which sound files are currently being played.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>enum</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>0</td><td>Do not show anything.</td></tr>
+<tr>
+<td>1</td><td>Print the number of sounds playing.</td></tr>
+<tr>
+<td>2</td><td>Print the volume in left/right speakers, name of sound file playing, and number of sounds playing.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-s_spec_file">
+  <div class="panel-heading"><div class="panel-title">s_spec_file</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>You can specify notification sound for spectator messages.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>string</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-s_spec_volume">
+  <div class="panel-heading"><div class="panel-title">s_spec_volume</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>You can specify volume of notification sound for spectator messages.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+  </div>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-s_swapstereo">
+  <div class="panel-heading"><div class="panel-title">s_swapstereo</div></div>
+  <div class="panel-body">
+    <div class="doc-row type"><div>Type:</div><div>boolean</div></div>
+  </div>
+<table class="doc-examples table">
+<thead><tr><th>Value</th><th>Description</th></tr></thead>
+<tbody>
+<tr>
+<td>false</td><td>Off</td></tr>
+<tr>
+<td>true</td><td>Will swap left and right sound channels.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cvar panel panel-default" id="cvar-volume">
+  <div class="panel-heading"><div class="panel-title">volume</div></div>
+  <div class="panel-body">
+    <div class="doc-row description"><div>Description:</div><div>Sets sound volume.</div></div>
+    <div class="doc-row type"><div>Type:</div><div>float</div></div>
+    <div class="doc-row remarks"><div>Remarks:</div><div>Even higher values than 1 are possible, but sound usually gets faithless with them.</div></div>
+  </div>
+</div>
+
+</div>
+    </section>
+</div>
+    <div id="footer_wrap" class="outer">
+        <footer class="inner">
+            <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+        </footer>
+    </div>
+</body>
+</html>
+

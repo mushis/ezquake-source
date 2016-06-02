@@ -1,0 +1,132 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="ezQuake - the #1 QuakeWorld client.
+">
+    <link rel="stylesheet" href="http://network.quakeworld.nu/bar/style.css" />
+    <link rel="stylesheet" type="text/css" href="/css/stylesheet.css">
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <title>ezQuake</title>
+    <link rel="canonical" href="http://ezquake.github.io///docs/guides/upgrade-from-2.2.html">
+</head>
+<body>
+
+<div id="header_wrap" class="outer">
+    <div id="qwnetwork">
+        <div id="qwnet_content">
+            <a href="http://nquake.com/" title="nQuake - Download QuakeWorld today!" id="qwnet_nquake"></a>
+            <a href="http://ezquake.github.io/" title="ezQuake - The best QW client" id="qwnet_ezquake" class="qwnet_current"></a>
+            <div class="qwnet_separator">&nbsp;</div>
+            <a href="http://www.quakeworld.nu/" title="QuakeWorld.nu - Your portal to everything Quake" id="qwnet_qwnu"></a>
+            <a href="http://www.quakeworld.nu/forum/" title="QW.nu Forum - Discuss anything QW-related" id="qwnet_forums"></a>
+            <a href="http://qwdrama.quakeworld.nu/" title="qwdrama - News, tutorials, interviews, drama and more" id="qwnet_qwdrama"></a>
+            <div class="qwnet_separator">&nbsp;</div>
+            <a href="http://eql.quakeworld.nu/" title="EQL - European Quake League" id="qwnet_eql"></a>
+            <div class="qwnet_separator">&nbsp;</div>
+            <a href="http://wiki.quakeworld.nu/" title="QuakeWorld Wiki - The open QW encyclopedia" id="qwnet_wiki"></a>
+            <a href="http://www.quakeservers.net/quakeworld/servers/pl=1/so=8/" title="QuakeServers.net - QW server listings and info" id="qwnet_quakeservers"></a>
+            <a href="http://stats.quakeworld.nu/" title="QuakeWorld Statistics - QW statistics, ranking systems and more." id="qwnet_stats"></a>
+            <a href="http://qtv.quakeworld.nu/" title="QuakeTV - Watch QW now!" id="qwnet_qtv"></a>
+            <div class="qwnet_separator">&nbsp;</div>
+            <a href="http://videos.quakeworld.nu/" title="QuakeWorld.nu Videos - Watch QW videos, interviews and more" id="qwnet_videos"></a>
+            <a href="http://gfx.quakeworld.nu/" title="QuakeWorld GFX - Download custom graphics" id="qwnet_gfx"></a>
+            <div id="qwnet_clearer">&nbsp;</div>
+        </div>
+    </div>
+    <header class="inner">
+        <a id="forkme_banner" href="https://github.com/ezQuake/ezQuake-source">View on GitHub</a>
+        <h1 id="project_title">ezQuake</h1>
+        <h2 id="project_tagline"></h2>
+    </header>
+</div>
+
+<div id="main_content_wrap" class="outer">
+    <section id="main_content" class="inner">
+        <ul class="nav nav-tabs" role="navigation">
+    <li ><a href="/">Home</a></li>
+    <li ><a href="/about.html">About</a></li>
+    <li ><a href="/features.html">Features</a></li>
+    <li ><a href="/screenshots.html">Screenshots</a></li>
+    <li ><a href="/downloads.html">Downloads</a></li>
+    <li  class="active" ><a href="/manual.html">Manual</a></li>
+    <li ><a href="/contribute.html">Contribute</a></li>
+</ul>
+
+        <h3 id="upgrading-from-22-to-30">Upgrading from 2.2 to 3.0</h3>
+
+<p>Some changes &amp; bug fixes made in 3.0 mean configs from 2.2 will require some tweaking - here are some of the most common issues &amp; queries.</p>
+
+<hr />
+
+<h4 id="fov-adjustment">FOV adjustment</h4>
+
+<p>ezQuake 2 requires different <code class="highlighter-rouge">/fov</code> settings for <a href="http://wiki.quakeworld.nu/Widescreen_Guide">different monitors/resolutions</a>.  ezQuake 3 does not - use the same fov value no matter what resolution/monitor, it will look the same.  It also supports 16:9 properly.</p>
+
+<p>If you use a widescreen monitor/resolution, go back to your 4:3 fov.  If you can’t remember your 4:3 fov, use the <code class="highlighter-rouge">/calc_fov</code> command to convert a 2.2 fov to the 4:3 equivalent.</p>
+
+<hr />
+
+<h4 id="video-mode-adjustments">Video mode adjustments</h4>
+
+<p>Video system has been simplified. Currently uses the desktop resolution by default (togglable) since most displays today have one native resolution only. <code class="highlighter-rouge">/vid_mode</code>, <code class="highlighter-rouge">/vid_customwidth</code>, <code class="highlighter-rouge">/vid_customheight</code> etc has been removed or replaced.</p>
+
+<p><code class="highlighter-rouge">/vid_usedesktopres 1</code>. If set to 0 then set resolution with <code class="highlighter-rouge">/vid_width</code> and <code class="highlighter-rouge">/vid_height</code> cvars.</p>
+
+<p>To choose which monitor to use, use <code class="highlighter-rouge">/vid_displaynumber</code></p>
+
+<p>ezQuake now also keeps windowed parameters in different cvars, use <code class="highlighter-rouge">/vid_win_width</code>, <code class="highlighter-rouge">/vid_win_height</code>, <code class="highlighter-rouge">/vid_win_displaynumber</code> instead if using windowed mode.</p>
+
+<hr />
+
+<h4 id="mouse-input">Mouse input</h4>
+
+<p>All <code class="highlighter-rouge">/in_mouse</code> settings have been replaced with a <code class="highlighter-rouge">/in_raw 0/1</code> toggle. Raw input or no raw input. For Windows users using <code class="highlighter-rouge">/in_mouse 2/3</code> in ezQuake 2, nothing should need to be done.</p>
+
+<p>OSX users can finally enjoy raw input with no acceleration!</p>
+
+<p>Linux users no longer have to deal with permissions for evdev or anything like that, it just works™</p>
+
+<p>If you are used to <code class="highlighter-rouge">/in_mouse 1</code> on Windows, then set <code class="highlighter-rouge">/in_raw 0</code>, although we recommend keeping it on for the best input handling.</p>
+
+<hr />
+
+<h4 id="audio">Audio</h4>
+
+<p>3.0 now mixes audio as your soundcard demands it, rather than preparing sound ahead of time.</p>
+
+<p>This should lead to reduced latency between a sound packet arriving and you hearing the noise.</p>
+
+<p><code class="highlighter-rouge">/s_mixahead</code> variable has gone.  Instead use <code class="highlighter-rouge">/s_desiredsamples</code> to suggest a buffersize to the sound driver.  The higher the buffersize, the higher the latency but the likelihood of ‘crackling’ decreases.  You may need to play with this value to get best tradeoff between sound latency and quality.</p>
+
+<hr />
+
+<h4 id="texture-load-order">Texture load order</h4>
+
+<p>2.2 would prioritise the search for textures based on format alone (.tga &gt; .png &gt; .jpg &gt; .pcx).  3.0 keeps the same order, but prioritises individual files over those found inside .pak/pk3 files</p>
+
+<p>This might lead to files in your /textures/ directory suddenly being used after years of being ignored.  Remove or rename the files to get back to previous behaviour.</p>
+
+<hr />
+
+<h4 id="keyboard-mapping">Keyboard mapping</h4>
+
+<p>3.0 uses the same keyboard mapping as your operating system.  <code class="highlighter-rouge">/in_builtinkeymap 1</code> will return standard behaviour (Quake/US keyboard layout)</p>
+
+<p>If writing a config file where the key is important rather than the physical button (‘r’ to toggle radar, for instance), then set <code class="highlighter-rouge">/con_bindphysical 0</code> at the top of the file.</p>
+
+
+    </section>
+</div>
+    <div id="footer_wrap" class="outer">
+        <footer class="inner">
+            <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+        </footer>
+    </div>
+</body>
+</html>
+
