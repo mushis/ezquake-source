@@ -5,6 +5,7 @@ tab: Manual
 
 ### Guides
 
+* [Changelog for 3.0](docs/guides/changelog-3.0.html)
 * [Upgrading from 2.2](docs/guides/upgrade-from-2.2.html)
 
 The documentation for 3.0 is not yet complete, but some old guides are available [here](http://ezquake.sourceforge.net/docs/).  Be warned: some functionality (TCL support, built-in voice communications) are no longer available in 3.0

@@ -1,0 +1,176 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="ezQuake - the #1 QuakeWorld client.
+">
+    <link rel="stylesheet" href="http://network.quakeworld.nu/bar/style.css" />
+    <link rel="stylesheet" type="text/css" href="/ezquake-source/css/stylesheet.css">
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <title>ezQuake</title>
+    <link rel="canonical" href="http://ezquake.github.io//ezquake-source//docs/guides/changelog-3.0.html">
+</head>
+<body>
+
+<div id="header_wrap" class="outer">
+    <div id="qwnetwork">
+        <div id="qwnet_content">
+            <a href="http://nquake.com/" title="nQuake - Download QuakeWorld today!" id="qwnet_nquake"></a>
+            <a href="http://ezquake.github.io/" title="ezQuake - The best QW client" id="qwnet_ezquake" class="qwnet_current"></a>
+            <div class="qwnet_separator">&nbsp;</div>
+            <a href="http://www.quakeworld.nu/" title="QuakeWorld.nu - Your portal to everything Quake" id="qwnet_qwnu"></a>
+            <a href="http://www.quakeworld.nu/forum/" title="QW.nu Forum - Discuss anything QW-related" id="qwnet_forums"></a>
+            <a href="http://qwdrama.quakeworld.nu/" title="qwdrama - News, tutorials, interviews, drama and more" id="qwnet_qwdrama"></a>
+            <div class="qwnet_separator">&nbsp;</div>
+            <a href="http://eql.quakeworld.nu/" title="EQL - European Quake League" id="qwnet_eql"></a>
+            <div class="qwnet_separator">&nbsp;</div>
+            <a href="http://wiki.quakeworld.nu/" title="QuakeWorld Wiki - The open QW encyclopedia" id="qwnet_wiki"></a>
+            <a href="http://www.quakeservers.net/quakeworld/servers/pl=1/so=8/" title="QuakeServers.net - QW server listings and info" id="qwnet_quakeservers"></a>
+            <a href="http://stats.quakeworld.nu/" title="QuakeWorld Statistics - QW statistics, ranking systems and more." id="qwnet_stats"></a>
+            <a href="http://qtv.quakeworld.nu/" title="QuakeTV - Watch QW now!" id="qwnet_qtv"></a>
+            <div class="qwnet_separator">&nbsp;</div>
+            <a href="http://videos.quakeworld.nu/" title="QuakeWorld.nu Videos - Watch QW videos, interviews and more" id="qwnet_videos"></a>
+            <a href="http://gfx.quakeworld.nu/" title="QuakeWorld GFX - Download custom graphics" id="qwnet_gfx"></a>
+            <div id="qwnet_clearer">&nbsp;</div>
+        </div>
+    </div>
+    <header class="inner">
+        <a id="forkme_banner" href="https://github.com/ezQuake/ezQuake-source">View on GitHub</a>
+        <h1 id="project_title">ezQuake</h1>
+        <h2 id="project_tagline"></h2>
+    </header>
+</div>
+
+<div id="main_content_wrap" class="outer">
+    <section id="main_content" class="inner">
+        <ul class="nav nav-tabs" role="navigation">
+    <li ><a href="/ezquake-source/">Home</a></li>
+    <li ><a href="/ezquake-source/about.html">About</a></li>
+    <li ><a href="/ezquake-source/features.html">Features</a></li>
+    <li ><a href="/ezquake-source/screenshots.html">Screenshots</a></li>
+    <li ><a href="/ezquake-source/downloads.html">Downloads</a></li>
+    <li  class="active" ><a href="/ezquake-source/manual.html">Manual</a></li>
+    <li ><a href="/ezquake-source/contribute.html">Contribute</a></li>
+</ul>
+
+        <h2 id="changes-in-30">Changes in 3.0</h2>
+
+<h3 id="general">General</h3>
+
+<ul>
+  <li>Major overhaul of backend code - now using SDL2 library for all three platforms.  Linux &amp; OSX versions in particular are now much improved.</li>
+  <li>fov was calculated at 4:3 or 16:10 aspect ratios.  Now use 4:3 <code class="highlighter-rouge">/fov</code> value and ezQuake will adjust for your resolution</li>
+  <li>Added ruleset ‘thunderdome’, a less restrictive version of smackdown, allowing <code class="highlighter-rouge">cl_rollalpha</code> and particle effects during game</li>
+  <li>Added ruleset ‘qcon`, a more restrictive version of smackdown for tournament play</li>
+  <li>Added AFK status on scoreboard (see <code class="highlighter-rouge">/scr_scoreboard_afk</code> and <code class="highlighter-rouge">/scr_scoreboard_afk_style</code>)</li>
+  <li>Added support for ‘new’ player model by CapnBub (passes f_modified)</li>
+  <li>Added <code class="highlighter-rouge">/gender</code> to control gender of player in messages.  Requires server support for streak messages to be correct</li>
+  <li>Added <code class="highlighter-rouge">/con_fragmessages 2</code> option to show frag messages in the console, but not in the notification area</li>
+  <li>Added <code class="highlighter-rouge">/con_mm2_only</code> option to hide all messages which are not mm2 (<code class="highlighter-rouge">/say_team</code>) from the notification area during game</li>
+  <li>Added <code class="highlighter-rouge">/lg_color</code> command &amp; <code class="highlighter-rouge">gl_custom_lg_color_enabled</code> to allow lg bolt color to be set without replacing texture</li>
+  <li>Added ability for all all mm2 codes to have fixed widths and alignments set.  For example <code class="highlighter-rouge">say_team %&lt;10r&gt;l</code> will print the player location, but fixed-width 10 characters, aligned right.  Defaults can be set by (e.g.) <code class="highlighter-rouge">/set tp_length_l 10; /set tp_align_l r</code></li>
+  <li>Added <code class="highlighter-rouge">/tp_tooktimeout</code> &amp; <code class="highlighter-rouge">/tp_pointtimeout</code> to customise time before last taken/pointed item is blanked</li>
+  <li>Added <code class="highlighter-rouge">/cl_textencoding</code> to control outgoing formatting of unicode characters.  FTE’s ^U encoding now supported</li>
+  <li>Added <code class="highlighter-rouge">/hud_score_bar</code> options to allow player/team names to stay in the same order, regardless of current tracked player</li>
+  <li>Bugfix: server browser should be more stable</li>
+  <li>Bugfix: scoreboard would not appear in auto-screenshot if console was down at match end</li>
+  <li>Bugfix: <code class="highlighter-rouge">/cl_delay_packet</code> could cause packet loss</li>
+  <li>Bugfix: extended uptime led to jerky player prediction</li>
+  <li>Bugfix: starting client direct from qw:// url could lead to viewsize, fakeshaft having incorrect settings</li>
+  <li>Bugfix: where chat icons &amp; player identifications were shown during intermission</li>
+  <li>Fixed bug in downloading from FTE servers</li>
+  <li>Bug where <code class="highlighter-rouge">/setinfo rsnd 0</code> caused pickups to not be detected correctly… not fully fixed, but should happen less often</li>
+  <li>Removed <code class="highlighter-rouge">/vid_wideaspect</code> - use <code class="highlighter-rouge">/calc_fov</code> to work from your 2.2 <code class="highlighter-rouge">/fov</code> value back to the original 4:3</li>
+</ul>
+
+<h3 id="input">Input</h3>
+
+<ul>
+  <li>ezQuake now uses operating system keyboard layout by default.  <code class="highlighter-rouge">/in_builtinkeymap 1</code> switches back to Quake/American default</li>
+  <li><code class="highlighter-rouge">/sys_inactivesound 2</code> will play sounds when out of focus but not minimised</li>
+  <li>Mouse acceleration replaced with <a href="http://www.quakeworld.nu/forum/topic/6488">povohat’s method</a>.  Added <code class="highlighter-rouge">/m_accel_power</code>, <code class="highlighter-rouge">/m_accel_senscap</code>, <code class="highlighter-rouge">/m_accel_offset</code></li>
+  <li><code class="highlighter-rouge">/in_release_mouse_modes</code> cvar controls when the mouse cursor is released by the application when in windowed mode</li>
+  <li><code class="highlighter-rouge">/in_mouse</code> removed, instead use <code class="highlighter-rouge">/in_raw</code> toggle.  Raw input is enabled by default</li>
+  <li>Removed <code class="highlighter-rouge">/m_showrate</code></li>
+</ul>
+
+<h3 id="audio">Audio</h3>
+
+<ul>
+  <li>Lower latency audio - audio is now mixed in its own thread</li>
+  <li>Added <code class="highlighter-rouge">/s_desired_samples</code> to suggest a buffersize to audio thread</li>
+  <li>Added <code class="highlighter-rouge">/s_listdrivers</code> to print sound drivers supported (SDL information)</li>
+  <li>Added <code class="highlighter-rouge">/s_audiodevice</code> to set which audio device to use (<code class="highlighter-rouge">/s_audiodevicelist</code> gives list)</li>
+  <li>Removed <code class="highlighter-rouge">/s_mixahead</code></li>
+</ul>
+
+<h3 id="video-settings">Video settings</h3>
+
+<ul>
+  <li>Game runs at desktop resolution by default (<code class="highlighter-rouge">/vid_usedesktopres 0</code> to disable)</li>
+  <li>Alt-enter toggles fullscreen on all platforms (<code class="highlighter-rouge">/sys_disable_alt_enter 1</code> to disable)</li>
+  <li>Added <code class="highlighter-rouge">/vid_conscale</code> to be used to calculate <code class="highlighter-rouge">/vid_conwidth</code> &amp; <code class="highlighter-rouge">/vid_conheight</code> based on resolution</li>
+  <li>Added <code class="highlighter-rouge">/vid_displaynumber</code>, to choose which display to run on</li>
+  <li>Added <code class="highlighter-rouge">/vid_win_width</code>, <code class="highlighter-rouge">/vid_win_displaynumber</code>, <code class="highlighter-rouge">/vid_win_width</code>, <code class="highlighter-rouge">/vid_win_height</code> to store windowed resolution independently of fullscreen</li>
+  <li>Added <code class="highlighter-rouge">/vid_win_save_pos</code>, <code class="highlighter-rouge">/vid_win_save_size</code> to control saving of window position</li>
+  <li>Added <code class="highlighter-rouge">/vid_24bit_depth</code> to control using 24-bit z-buffer (on by default)</li>
+  <li>Removed <code class="highlighter-rouge">/vid_mode</code>, <code class="highlighter-rouge">/vid_customwidth</code>, <code class="highlighter-rouge">/vid_customheight</code></li>
+</ul>
+
+<h3 id="qtv">QTV</h3>
+
+<ul>
+  <li><code class="highlighter-rouge">/join</code> command will work when spectating via QTV</li>
+  <li><code class="highlighter-rouge">/qtv &lt;server&gt;</code> command will spectate <code class="highlighter-rouge">&lt;server&gt;</code> through QTV (requires that server is listed on <a href="qtv.quakeworld.nu">QTV website</a>)</li>
+  <li><code class="highlighter-rouge">/find &lt;name&gt;</code> will return all players matching <code class="highlighter-rouge">&lt;name&gt;</code> (requires that server is listed on <a href="qtv.quakeworld.nu">QTV website</a>)</li>
+  <li><code class="highlighter-rouge">/qtv_fixuser</code> command allows you to fix player userinfo strings on older versions of QTV</li>
+  <li>Bugfix: muzzle flashes no longer appear in incorrect positions</li>
+  <li>Bugfix: stop <code class="highlighter-rouge">/cl_demospeed</code> from causing frozen explosion effects (can re-enable with <code class="highlighter-rouge">/qtv_allow_pause</code>)</li>
+</ul>
+
+<h3 id="demo-playback">Demo playback</h3>
+
+<ul>
+  <li>New hud element ‘static_text’.  Enabled only when spectating or playing, allows custom, multi-line text area on screen</li>
+  <li>Added support for playback of .qwd demos from QW 2.1 and up (protocol versions 24/25)</li>
+  <li><code class="highlighter-rouge">/cam_pos</code> now stops tracking player.  Rewinding with <code class="highlighter-rouge">/demo_jump</code> doesn’t lose camera position</li>
+  <li>Added <code class="highlighter-rouge">/cl_demoteamplay</code> to let you view standard QW <code class="highlighter-rouge">+showteamscores</code> when watching NQ (.dem) demos.  Players with -99 frags will appear as spectators</li>
+  <li>Bugfix: <code class="highlighter-rouge">/demo_jump</code> - works on .dem files, doesn’t break prediction of players in .qwd files</li>
+  <li>Bugfix: <code class="highlighter-rouge">/playdemo x.mvd</code> will not attempt to play x.qwd then x.mvd</li>
+  <li>Bugfix: .dem playback - player colors set, particle trails, textures, third-person cameras and .lit files should work as normal.</li>
+  <li>Bugfix: Spectator scoreboard now obeys <code class="highlighter-rouge">/teamlock</code> (current player can have enemy color)</li>
+  <li>Bugfix: .avi file would be corrupt if too large.  <code class="highlighter-rouge">/demo_capture_max_vid_len</code> controls splitting of output over multiple files.</li>
+  <li>Bugfix: Player prediction enabled on .qwd playback, should be much smoother</li>
+</ul>
+
+<h3 id="other">Other</h3>
+
+<ul>
+  <li>Console variables can have “auto” values supplied, so the user can see the value being used by the engine rather than just the default values &amp; currently set</li>
+  <li>Added <code class="highlighter-rouge">/con_bindphysical</code> to toggle <code class="highlighter-rouge">/bind &lt;key&gt;</code> interpretting <code class="highlighter-rouge">&lt;key&gt;</code> as based on OS or Quake layout.  Defaults to 1 at start of every configuration file and is reset afterwards.</li>
+  <li>Added <code class="highlighter-rouge">/f_focusgained</code> trigger</li>
+  <li>Added <code class="highlighter-rouge">/batteryinfo</code> command</li>
+  <li>Set limit of 10 seconds on console notification times.</li>
+  <li>When searching for textures, precedence given to individual files over those found in .pak or .pk3 files</li>
+  <li>Can associate client directly with URLs in browser (i.e. <code class="highlighter-rouge">ezquake-gl.exe qw://&lt;serverip&gt;</code>)</li>
+  <li>Command and variable documentation is now stored in .json files and compiled into the executable</li>
+  <li>Single makefile to make all platforms</li>
+  <li>Repo now uses Travis CI and Docker</li>
+  <li>Removed: plugin system, software renderer, assembly code, security module, TCL scripting, FTE2 voice chat</li>
+</ul>
+
+
+    </section>
+</div>
+    <div id="footer_wrap" class="outer">
+        <footer class="inner">
+            <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+        </footer>
+    </div>
+</body>
+</html>
+
