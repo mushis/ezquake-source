@@ -1,11 +1,16 @@
 language: c
 
+env:
+  global:
+  - ENCRYPTION_LABEL: "194a9834d427"
+  - COMMIT_AUTHOR_EMAIL: "meag@acm.org"
+
 matrix:
   include:
     - os: linux
       dist: trusty
       sudo: required
-      compiler: gcc    
+      compiler: gcc
     - os: linux
       dist: trusty
       sudo: required
@@ -14,6 +19,9 @@ matrix:
     - os: osx
       osx_image: xcode7.2
       compiler: gcc
+      addons:
+        ssh_known_hosts:
+        - github.com
 
 before_install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get -qq update; fi
@@ -23,4 +31,4 @@ before_install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install sdl2 sdl2_net sdl2_image sdl2_gfx sdl2_mixer pcre jansson; fi
 
 script:
-  - make
+  - bash ./misc/travis-build/deploy.sh
