@@ -99,6 +99,7 @@ p {
 
 footer p {
   color: #f2f2f2;
+  font-size: 9pt;
 }
 
 a {
@@ -463,15 +464,11 @@ div.dl-table > div.dl-row > span:nth-child(4) { display: block; float: left; }
 div.dl-table > div.dl-row > span:nth-child(5) { display: block; float: left; }
 div.dl-table { margin-bottom: 1em }
 
-div.dl-table.cols5 > div.dl-row > span:first-child  { width: 20%; }
-div.dl-table.cols5 > div.dl-row > span:nth-child(2) { width: 10%; }
-div.dl-table.cols5 > div.dl-row > span:nth-child(3) { width: 10%; }
-div.dl-table.cols5 > div.dl-row > span:nth-child(4) { width: 20%; }
+div.dl-table.cols5 > div.dl-row > span:first-child  { width: 10%; }
+div.dl-table.cols5 > div.dl-row > span:nth-child(2) { width: 15%; }
+div.dl-table.cols5 > div.dl-row > span:nth-child(3) { width: 20%; }
+div.dl-table.cols5 > div.dl-row > span:nth-child(4) { width: 15%; }
 div.dl-table.cols5 > div.dl-row > span:nth-child(5) { width: 15%; }
-
-div.dl-table.cols3 > div.dl-row > span:first-child  { width: 20%; }
-div.dl-table.cols3 > div.dl-row > span:nth-child(2) { width: 45%; }
-div.dl-table.cols3 > div.dl-row > span:nth-child(3) { width: 15%; }
 
 /* screenshots */
 div#picModal img {

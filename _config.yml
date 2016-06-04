@@ -1,10 +1,10 @@
 # Welcome to Jekyll!
 # Site settings
-title: ezQuake
+title: "ezQuake - the #1 Quakeworld client"
 description: > # this means to ignore newlines until "baseurl:"
-  ezQuake - the #1 QuakeWorld client.
-baseurl: "/ezquake-source/" # the subpath of your site - / for final deployment, /ezquake-source/ otherwise
-url: "http://ezquake.github.io/" # the base hostname & protocol for your site
+  ezQuake
+baseurl: "/ezquake-source/" # the subpath of your site - blank for final deployment, /ezquake-source/ otherwise
+url: "http://meag.github.io" # the base hostname & protocol for your site
 github_username:  ezquake
 
 # Build settings

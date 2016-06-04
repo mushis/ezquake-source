@@ -91,9 +91,9 @@ tab: Manual
 * Upper limit of 10 seconds on console notification times.
 * When searching for textures, precedence given to individual files over those found in .pak or .pk3 files
 * Can associate client directly with URLs in browser (i.e. `ezquake-gl.exe qw://<serverip>`)
-* Command and variable documentation is now stored in .json files and compiled into the executable
+* Command and variable documentation is now compiled into the executable
 * Single makefile to make all platforms
-* Repo now uses Travis CI and Docker
+* Scripts to build using Travis CI and Docker
 * Removed: plugin system, software renderer, assembly code, security module, TCL scripting, FTE2 voice chat
 
 
