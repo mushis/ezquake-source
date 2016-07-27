@@ -6,7 +6,7 @@ set -e
 #   FIXME: to prevent data loss, upload with unique name, delete old, rename new?
 function gitDeleteAsset #(assetId, authentication)
 {
-	curl -u "$2:" -# -XDELETE $APIURL/assets/$1
+	curl -u "$2:" -# -XDELETE $APIURL/assets/$1 -o misc/travis-build/.deleteasset.json
 }
 
 # Upload an asset to a release (if asset exists, will be overwritten)
@@ -46,10 +46,11 @@ if [ ! $TAGNAME ]; then
 	fi
 fi
 
+ARCHIVEFILE=ezquake-$AUTOBUILD_SUFFIX-$TAGNAME
+
 # Find release details from github
 echo "Looking for tag $APIURL/tags/$TAGNAME"
 curl -u "$AUTHTOKEN:" "$APIURL/tags/$TAGNAME" -o misc/travis-build/.release.json
-cat misc/travis-build/.release.json
 RELEASE_ID=`cat misc/travis-build/.release.json | jq -r '.id'` || true
 if [ "$RELEASE_ID" = "null" -o ! "$RELEASE_ID" ]; then
 	echo "No release called '$TAGNAME' - performing simple build"
@@ -66,18 +67,18 @@ if [ "$TRAVIS_OS_NAME" = "osx" ]; then
     make strip
     echo "Creating OSX archive..."
     sh misc/install/create_osx_bundle.sh
-    mv ezquake.zip osx.zip
-    ARCHIVEFILE=osx.zip
+    mv ezquake.zip $ARCHIVEFILE.zip
+    ARCHIVEFILE=$ARCHIVEFILE.zip
 elif [ "$EZ_CONFIG_FILE" == ".config_windows" ]; then
     make strip
     echo "Creating Windows archive..."
-    zip windows.zip ezquake.exe LICENSE
-    ARCHIVEFILE=windows.zip
+    zip $ARCHIVEFILE.zip ezquake.exe LICENSE
+    ARCHIVEFILE=$ARCHIVEFILE.zip
 else
     make strip
     echo "Creating Linux archive..."
-    tar -cvzf linux.tar.gz ezquake-*-* LICENSE
-    ARCHIVEFILE=linux.tar.gz
+    ARCHIVEFILE=$ARCHIVEFILE.tar.gz
+    tar -cvzf $ARCHIVEFILE ezquake-*-* LICENSE
 fi
 
 # Deploy to github releases...
@@ -87,5 +88,3 @@ gitUploadAsset "$RELEASE_ID" "$ARCHIVEFILE" "$ARCHIVEFILE" "$AUTHTOKEN"
 
 # tidy up
 rm $ARCHIVEFILE
-
-

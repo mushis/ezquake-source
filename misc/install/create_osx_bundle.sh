@@ -28,6 +28,7 @@ mkdir -p $BUNDLE_NAME/Contents/Resources/id1
 cp $BINARY $BUNDLE_NAME/Contents/MacOS/.
 cp $(dirname $0)/$ICON_FILE $BUNDLE_NAME/Contents/Resources/.
 touch $BUNDLE_NAME/Contents/Resources/id1/Copy\ your\ pak0.pak\ and\ pak1.pak\ files\ here.txt
+cp LICENSE $BUNDLE_NAME/Contents/Resources/
 
 echo '#!/bin/sh' > $BUNDLE_NAME/Contents/MacOS/ezquake
 echo '' >> $BUNDLE_NAME/Contents/MacOS/ezquake
