@@ -337,7 +337,7 @@ void SCR_HUD_DrawTracking(hud_t *hud)
 {
 	int x = 0, y = 0, width = 0, height = 0;
 	char track_string[MAX_TRACKING_STRING];
-	int player = CL_MultiviewNextPlayer ();
+	int player = spec_track;
 
 	static cvar_t *hud_tracking_format = NULL,
 		      *hud_tracking_scale;
@@ -6934,8 +6934,17 @@ void SCR_HUD_DrawStaticText(hud_t *hud)
 // Run before HUD elements are drawn.
 // Place stuff that is common for HUD elements here.
 //
+static int old_spec_track = -1;
+
 void HUD_BeforeDraw(void)
 {
+	// HUD is drawn when CURRVIEW == 1, when spec_track is the last view rendered
+	//   temporarily switch spec_track back to original view for HUD rendering
+	old_spec_track = spec_track;
+	if (cls.mvdplayback && cls.mvdplayback) {
+		spec_track = CL_MultiviewNextPlayer ();
+	}
+
 	// Only sort once per draw.
 	HUD_Sort_Scoreboard (HUD_SCOREBOARD_ALL);
 }
@@ -6946,6 +6955,8 @@ void HUD_BeforeDraw(void)
 //
 void HUD_AfterDraw(void)
 {
+	// Reinstate incase we changed
+	spec_track = old_spec_track;
 }
 
 // ----------------
