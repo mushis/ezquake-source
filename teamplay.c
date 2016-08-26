@@ -1713,26 +1713,34 @@ void MV_UpdateSkins(void)
 	// There has been no skin force yet and we're not tracking a team
 	// so we need to set all players colors.
 	//
+	Con_Printf ("MV_UpdateSkins(%s,%s)\n", mv_skinsforced ? "forced" : "not-forced", trackingteam ? tracked_team : "?");
 	if(!mv_skinsforced && !trackingteam)
 	{
 		// Only set the colors for all the players once, because
 		// we're tracking multiple people... We can't know who's
 		// a team member or an enemy.
 
-		i = 0;
-
-		// Pick the first team as the "team"-team. (uses teamcolor).
-		while(!friendlyteam[0] && cl.players[i].team[0])
-		{
-			strlcpy(friendlyteam, cl.players[i].team, sizeof(friendlyteam));
-			i++;
+		if (cl_multiview.integer == 2 && cl_mvinset.value) {
+			// Yes we do - treat the main view (which dictates sound) as the home team
+			skinforcing_team = TP_SkinForcingTeam ();
+			Con_Printf ("> %s\n", skinforcing_team ? skinforcing_team : "?");
 		}
+		else {
+			i = 0;
+			// Pick the first team as the "team"-team. (uses teamcolor).
+			while(!friendlyteam[0] && cl.players[i].team[0])
+			{
+				strlcpy(friendlyteam, cl.players[i].team, sizeof(friendlyteam));
+				i++;
+			}
 
-		skinforcing_team = friendlyteam;
+			skinforcing_team = friendlyteam;
+		}
 	}
 	else if(trackingteam)
 	{
 		skinforcing_team = tracked_team;
+		Con_Printf ("> %s\n", skinforcing_team);
 	}
 
 	// Set the colors based on team.
@@ -1787,10 +1795,15 @@ void TP_UpdateSkins(void)
 
 	if(cls.mvdplayback && cl_multiview.value)
 	{
+		if (CURRVIEW != 1)
+			return;
+
 		// Need to threat multiview completly different
 		// since we are tracking more than one player
 		// at once.
 		MV_UpdateSkins();
+
+		need_skin_refresh = false;
 	}
 	else
 	{
@@ -1802,9 +1815,9 @@ void TP_UpdateSkins(void)
 				cl.players[slot].skin_refresh = false;
 			}
 		}
-	}
 
-	need_skin_refresh = false;
+		need_skin_refresh = false;
+	}
 }
 
 qbool TP_NeedRefreshSkins(void)
@@ -1879,6 +1892,8 @@ void OnChangeSkinForcing(cvar_t *var, char *string, qbool *cancel)
 		else
 			Cbuf_AddText("say Not forcing enemy skins\n");
 	}
+
+	mv_skinsforced = false;
 
 	if (cls.state == ca_active) {
 		float oldskins;
