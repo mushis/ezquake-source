@@ -122,6 +122,17 @@ static qbool Sbar_IsStandardBar(void) {
 	return cl_sbar.value || scr_viewsize.value < 100;
 }
 
+static qbool Sbar_ShowScoreboardIndicator (void)
+{
+	if (!cls.mvdplayback || !cl_multiview.value)
+		return true;
+
+	if (cl_multiview.integer == 1 || (cl_multiview.integer == 2 && cl_mvinset.integer))
+		return true;
+
+	return false;
+}
+
 /********************************** CONTROL **********************************/
 
 //Tab key down
@@ -422,10 +433,14 @@ int teamsort[MAX_CLIENTS];
 int scoreboardteams;
 
 static __inline int Sbar_PlayerNum(void) {
-	int mynum;
+	int mynum = cl.playernum;
 
-	if (!cl.spectator || (mynum = Cam_TrackNum()) == -1)
-		mynum = cl.playernum;
+	if (cl.spectator) {
+		mynum = (cls.mvdplayback && cl_multiview.integer ? CL_MultiviewNextPlayer () : Cam_TrackNum ());
+
+		if (mynum < 0)
+			mynum = cl.playernum;
+	}
 
 	return mynum;
 }
@@ -1447,7 +1462,7 @@ static void Sbar_DeathmatchOverlay (int start) {
 			Draw_ColoredString(x + stats_xoffset - 9 * 8, y, scorerow, 0);
 		}
 
-		if (!cls.mvdplayback || !cl_multiview.value) {
+		if (Sbar_ShowScoreboardIndicator()) {
 			if (k == mynum) {
 				Draw_Character (x + 40 - ((fragsint < 1000 && fragsint > -100) ? 0 : 8), y, 16);
 				Draw_Character (x + 40 + 32, y, 17);
@@ -1567,7 +1582,7 @@ static void Sbar_TeamOverlay (void) {
 		snprintf (num, sizeof(num), "%5i", tm->players);
 		Draw_String (x + 104 + 88, y, num);
 
-		if (!cls.mvdplayback || !cl_multiview.value) {
+		if (Sbar_ShowScoreboardIndicator()) {
 			if (tm->myteam) {
 				Draw_Character (x + 104 - 8, y, 16);
 				Draw_Character (x + 104 + 32, y, 17);
@@ -1652,7 +1667,7 @@ static void Sbar_MiniDeathmatchOverlay (void) {
 		Draw_Character (x + 16, y, num[1]);
 		Draw_Character (x + 24, y, num[2]);
 
-		if (!cls.mvdplayback || !cl_multiview.value)
+		if (Sbar_ShowScoreboardIndicator())
 		{
 			if (k == mynum)
 			{
@@ -1839,6 +1854,9 @@ void Sbar_Draw(void) {
 
 		return;
 	}
+
+	if (cls.mvdplayback && cl_multiview.integer && CURRVIEW != 1)
+		return;
 
 	scr_copyeverything = 1;
 
