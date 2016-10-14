@@ -115,7 +115,7 @@ cvar_t	scr_scoreboard_fillcolored = {"scr_scoreboard_fillcolored", "2"};
 
 
 // VFrags: only draw the frags for the first player when using mvinset
-#define MULTIVIEWTHISPOV() ((!cl_multiview.value) || (cl_mvinset.value && CURRVIEW == 1))
+#define MULTIVIEWTHISPOV() ((!cl_multiview.value) || (cl_mvinset.value && CL_MultiviewCurrentView() == 1))
 
 static qbool Sbar_IsStandardBar(void) {
 	// Old status bar is turned on, or the screen size is less than full width
@@ -436,7 +436,7 @@ static __inline int Sbar_PlayerNum(void) {
 	int mynum = cl.playernum;
 
 	if (cl.spectator) {
-		mynum = (cls.mvdplayback && cl_multiview.integer ? CL_MultiviewNextPlayer () : Cam_TrackNum ());
+		mynum = Cam_TrackNum ();
 
 		if (mynum < 0)
 			mynum = cl.playernum;
@@ -1835,7 +1835,7 @@ static void Sbar_DrawTrackingString(void) {
 		{
 			Sbar_DrawString(0, y_coordinate, st);
 		}
-		else if (CURRVIEW == 1 && cl_mvinset.value)
+		else if (CL_MultiviewCurrentView() == 1 && cl_mvinset.value)
 		{
 			Sbar_DrawString(0, y_coordinate, st);
 		}
@@ -1854,9 +1854,6 @@ void Sbar_Draw(void) {
 
 		return;
 	}
-
-	if (cls.mvdplayback && cl_multiview.integer && CURRVIEW != 1)
-		return;
 
 	scr_copyeverything = 1;
 

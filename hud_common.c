@@ -3562,7 +3562,7 @@ void SCR_HUD_DrawTeamFrags(hud_t *hud)
 				}
 			}
 
-			if (cl_multiview.value && CURRVIEW != 1 )  // Only draw bracket for first view, might make todo below unnecessary
+			if (cl_multiview.value && CL_MultiviewCurrentView() != 1 )  // Only draw bracket for first view, might make todo below unnecessary
 			{
 				// TODO: Check if "track team" is set, if it is then draw brackets around that team.
 				//cl.players[nPlayernum]
@@ -4642,7 +4642,7 @@ void SCR_HUD_DrawTeamInfo(hud_t *hud)
 	}
 
 	// Don't update hud item unless first view is beeing displayed
-	if ( CURRVIEW != 1 && CURRVIEW != 0)
+	if ( CL_MultiviewCurrentView() != 1 && CL_MultiviewCurrentView() != 0)
 		return;
 
 	if (cls.mvdplayback)
@@ -6860,17 +6860,8 @@ void SCR_HUD_DrawStaticText(hud_t *hud)
 // Run before HUD elements are drawn.
 // Place stuff that is common for HUD elements here.
 //
-static int old_spec_track = -1;
-
 void HUD_BeforeDraw(void)
 {
-	// HUD is drawn when CURRVIEW == 1, when spec_track is the last view rendered
-	//   temporarily switch spec_track back to original view for HUD rendering
-	old_spec_track = spec_track;
-	if (cls.mvdplayback && cls.mvdplayback) {
-		spec_track = CL_MultiviewNextPlayer ();
-	}
-
 	// Only sort once per draw.
 	HUD_Sort_Scoreboard (HUD_SCOREBOARD_ALL);
 }
@@ -6881,8 +6872,6 @@ void HUD_BeforeDraw(void)
 //
 void HUD_AfterDraw(void)
 {
-	// Reinstate incase we changed
-	spec_track = old_spec_track;
 }
 
 // ----------------

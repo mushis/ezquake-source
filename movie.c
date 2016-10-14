@@ -337,7 +337,7 @@ void Movie_FinishFrame(void)
 	// in multiview mode. Otherwise always.
 	if (cl_multiview.value && cls.mvdplayback) 
 	{
-		if (CURRVIEW == 1)
+		if (CL_MultiviewCurrentView() == 1)
 		{
 			SCR_Movieshot(fname);
 		}
@@ -358,7 +358,7 @@ void Movie_FinishFrame(void)
 	// in multiview mode. (Instead of counting one for each view that is drawn).
 	if (cl_multiview.value && cls.mvdplayback) 
 	{
-		if (CURRVIEW == 1)
+		if (CL_MultiviewCurrentView() == 1)
 		{
 			movie_frame_count++;
 		}
