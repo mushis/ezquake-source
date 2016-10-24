@@ -37,11 +37,10 @@ static void WAVCaptureStart (void);
 void SCR_Movieshot (char *);	//joe: capturing to avi
 
 //joe: capturing audio
-#ifdef _WIN32
 // Variables for buffering audio
-short capture_audio_samples[44100];	// big enough buffer for 1fps at 44100Hz
-int captured_audio_samples;
-#endif
+static short capture_audio_samples[44100];	// big enough buffer for 1fps at 44100Hz
+static int captured_audio_samples;
+static qbool frame_has_sound = false;
 
 extern cvar_t scr_sshot_type;
 
@@ -57,8 +56,8 @@ cvar_t   movie_vid_maxlen   = {"demo_capture_vid_maxlen", "0"};
 static char movie_avi_filename[MAX_OSPATH];	// Stores the user's requested filename
 static void Movie_Start_AVI_Capture(qbool split);
 static int avi_number = 0;
-static unsigned char aviSoundBuffer[4096] = { 0 };
 #endif
+static unsigned char aviSoundBuffer[4096] = { 0 }; // Static buffer for mixing
 
 static volatile qbool movie_is_capturing = false;
 static double movie_start_time, movie_len;
@@ -378,8 +377,6 @@ void Movie_FinishFrame(void)
 
 //joe: capturing audio
 #ifdef _WIN32
-static qbool frame_has_sound = false;
-
 qbool Movie_IsCapturingAVI(void) {
 	return movie_is_avi && Movie_IsCapturing();
 }
@@ -405,11 +402,11 @@ static void WAVCaptureStart (void)
 #ifdef _WIN32
 	snprintf (fname, sizeof (fname), "%s/capture_%02d-%02d-%04d_%02d-%02d-%02d/audio.wav",
 		movie_dir.string, movie_start_date.wDay, movie_start_date.wMonth, movie_start_date.wYear,
-		movie_start_date.wHour, movie_start_date.wMinute, movie_start_date.wSecond, movie_frame_count);
+		movie_start_date.wHour, movie_start_date.wMinute, movie_start_date.wSecond);
 #else
 	snprintf (fname, sizeof (fname), "%s/capture_%02d-%02d-%04d_%02d-%02d-%02d/audio.wav",
 		movie_dir.string, movie_start_date.tm_mday, movie_start_date.tm_mon, movie_start_date.tm_year,
-		movie_start_date.tm_hour, movie_start_date.tm_min, movie_start_date.tm_sec, movie_frame_count);
+		movie_start_date.tm_hour, movie_start_date.tm_min, movie_start_date.tm_sec);
 #endif
 	if (!(wav_output = FS_OpenVFS (fname, "wb", FS_NONE_OS))) {
 		FS_CreatePath (fname);
