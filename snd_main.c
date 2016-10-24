@@ -29,9 +29,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define SELF_SOUND_ENTITY 0xFFEFFFFF // [EZH] Fan told me 0xFFEFFFFF is damn cool value for it :P
 #define PLAY_SOUND_ENTITY 0xFFEFFFFE // /play or /playvol command, take distance & direction into account
 
-#ifdef _WIN32
-#include "movie.h" //joe: capturing audio
-#endif
+#include "movie.h" // /demo_capture
 
 extern qbool ActiveApp, Minimized;
 extern cvar_t sys_inactivesound;

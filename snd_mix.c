@@ -23,9 +23,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "quakedef.h"
 #include "qsound.h"
-#ifdef _WIN32
-#include "movie.h" //joe: capturing audio
-#endif
+#include "movie.h" // /demo_capture
 
 
 #define PAINTBUFFER_SIZE 512
