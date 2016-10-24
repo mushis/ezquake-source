@@ -155,13 +155,11 @@ static void S_SoundInfo_f (void)
 
 static void S_SDL_callback(void *userdata, Uint8 *stream, int len)
 {
-#ifdef _WIN32
-	// Mixer is run in main thread when creating .avi, play silence instead
-	if (Movie_IsCapturingAVI()) {
+	// Mixer is run in main thread when capturing, play silence instead
+	if (Movie_IsCapturing()) {
 		SDL_memset(stream, 0, len);
 		return;
 	}
-#endif
 
 	S_LockMixer();
 	shw->buffer = stream;
@@ -912,11 +910,9 @@ void S_Update (vec3_t origin, vec3_t forward, vec3_t right, vec3_t up)
 		}
 	}
 
-#ifdef _WIN32
-	if (Movie_IsCapturingAVI()) {
+	if (Movie_IsCapturing()) {
 		Movie_MixFrameSound(S_Update_);
 	}
-#endif
 
 	S_UnlockMixer();
 }
