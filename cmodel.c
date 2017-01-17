@@ -44,6 +44,10 @@ typedef struct cleaf_s {
 
 
 
+static void CM_CalculateMapChecksums(dheader_t* header);
+static qbool CM_FixMapErrors(char* name, dheader_t* header);
+
+
 static char			loadname[32];	// for hunk tags
 
 static char			map_name[MAX_QPATH];
@@ -996,15 +1000,9 @@ cmodel_t *CM_LoadMap (char *name, qbool clientload, unsigned *checksum, unsigned
 		((int *)header)[i] = LittleLong(((int *)header)[i]);
 
 	// checksum all of the map, except for entities
-	map_checksum = map_checksum2 = 0;
-	for (i = 0; i < HEADER_LUMPS; i++) {
-		if (i == LUMP_ENTITIES)
-			continue;
-		map_checksum ^= LittleLong(Com_BlockChecksum(cmod_base + header->lumps[i].fileofs, header->lumps[i].filelen));
-
-		if (i == LUMP_VISIBILITY || i == LUMP_LEAFS || i == LUMP_NODES)
-			continue;
-		map_checksum2 ^= LittleLong(Com_BlockChecksum(cmod_base + header->lumps[i].fileofs, header->lumps[i].filelen));
+	CM_CalculateMapChecksums(header);
+	if (CM_FixMapErrors(name, header)) {
+		CM_CalculateMapChecksums(header);
 	}
 	if (checksum)
 		*checksum = map_checksum;
@@ -1030,6 +1028,35 @@ cmodel_t *CM_LoadMap (char *name, qbool clientload, unsigned *checksum, unsigned
 	return &map_cmodels[0];
 }
 
+static void CM_CalculateMapChecksums(dheader_t* header)
+{
+	int i;
+	map_checksum = map_checksum2 = 0;
+	for (i = 0; i < HEADER_LUMPS; i++) {
+		if (i == LUMP_ENTITIES)
+			continue;
+		map_checksum ^= LittleLong(Com_BlockChecksum(cmod_base + header->lumps[i].fileofs, header->lumps[i].filelen));
+
+		if (i == LUMP_VISIBILITY || i == LUMP_LEAFS || i == LUMP_NODES)
+			continue;
+		map_checksum2 ^= LittleLong(Com_BlockChecksum(cmod_base + header->lumps[i].fileofs, header->lumps[i].filelen));
+	}
+}
+
+static qbool CM_FixMapErrors(char* name, dheader_t* header)
+{
+	if (!strcmp(name, "maps/skull.bsp") && map_checksum2 == -1518401826) {
+		unsigned char* face_data = cmod_base + header->lumps[LUMP_FACES].fileofs;
+
+		if (header->lumps[LUMP_FACES].filelen > 914 && face_data[914] == 255) {
+			face_data[914] = 0;
+			return true;
+		}
+	}
+
+	return false;
+}
+
 cmodel_t *CM_InlineModel (char *name)
 {
 	int num;
@@ -1049,3 +1076,4 @@ void CM_Init (void)
 //	memset (map_novis, 0xff, sizeof(map_novis));
 	CM_InitBoxHull ();
 }
+
