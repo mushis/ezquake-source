@@ -1023,3 +1023,22 @@ void S_Voip_Ignore (unsigned int slot, qbool ignore);
 #define KTX_RACING_PLAYER_MIN_DISTANCE 24.0f
 #define KTX_RACING_PLAYER_MAX_DISTANCE 256.0f
 #define KTX_RACING_PLAYER_ALPHA_SCALE  512.0f
+
+// Screenshot queue
+typedef enum image_format_s {IMAGE_PCX, IMAGE_TGA, IMAGE_JPEG, IMAGE_PNG} image_format_t;
+
+typedef struct scr_sshot_target_s {
+	char fileName[128];
+	byte* buffer;
+	qbool freeMemory;
+	int width;
+	int height;
+	image_format_t format;
+} scr_sshot_target_t;
+
+int SCR_ScreenshotWrite(scr_sshot_target_t* target_params);
+
+qbool Movie_BackgroundCapture(scr_sshot_target_t* params);
+byte* Movie_TempBuffer(int width, int height);
+qbool Movie_BackgroundInitialise(void);
+void Movie_BackgroundShutdown(void);
