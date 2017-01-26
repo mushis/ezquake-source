@@ -3632,7 +3632,7 @@ static char *Sshot_SshotDirectory(void) {
 
 extern unsigned short ramps[3][256];
 //applies hwgamma to RGB data
-static void applyHWGamma(byte *buffer, int size) {
+void applyHWGamma(byte *buffer, int size) {
 	int i;
 
 	if (vid_hwgamma_enabled) {
@@ -3940,58 +3940,6 @@ void SCR_AutoScreenshot(char *matchname)
 		scr_autosshot_countdown = vid.numpages;
 		strlcpy(auto_matchname, matchname, sizeof(auto_matchname));
 	}
-}
-
-// Capturing to avi.
-void SCR_Movieshot(char *name)
-{
-#ifdef _WIN32
-	if (Movie_IsCapturingAVI())
-	{
-		int size = 0;
-		// Capturing a movie.
-		int i;
-		byte *buffer, temp;
-
-		// Set buffer size to fit RGB data for the image.
-		size = glwidth * glheight * 3;
-
-		// Allocate the RGB buffer, get the pixels from GL and apply the gamma.
-		buffer = (byte *) Q_malloc (size);
-		glReadPixels (glx, gly, glwidth, glheight, GL_RGB, GL_UNSIGNED_BYTE, buffer);
-		applyHWGamma (buffer, size);
-
-		// We now have a byte buffer with RGB values, but
-		// before we write it to the file, we need to swap
-		// them to GBR instead, which windows DIBs uses.
-		// (There's a GL Extension that allows you to use
-		// BGR_EXT instead of GL_RGB in the glReadPixels call
-		// instead, but there is no real speed gain using it).
-		for (i = 0; i < size; i += 3)
-		{
-			// Swap RGB => GBR
-			temp = buffer[i];
-			buffer[i] = buffer[i+2];
-			buffer[i+2] = temp;
-		}
-
-		// Write the buffer to video.
-		Capture_WriteVideo (buffer, size);
-
-		Q_free (buffer);
-	}
-	else
-	{
-		// We're just capturing images.
-		SCR_Screenshot (name);
-	}
-
-#else // _WIN32
-
-	// Capturing to avi only supported in windows yet.
-	SCR_Screenshot (name);
-
-#endif // _WIN32
 }
 
 mpic_t *SCR_LoadCursorImage(char *cursorimage)

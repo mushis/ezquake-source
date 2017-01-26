@@ -187,7 +187,7 @@ void COM_DefaultExtension (char *path, char *extension);
 void COM_ForceExtension (char *path, char *extension);
 // If path doesn't have an extension or has a different extension, append(!) specified extension.
 // a bit extended version of COM_ForceExtension(), we suply size of path, so append safe, sure if u provide right path size
-void COM_ForceExtensionEx (char *path, char *extension, size_t path_size);
+void COM_ForceExtensionEx (char *path, const char *extension, size_t path_size);
 int COM_GetTempDir(char *buf, int bufsize);
 int COM_GetUniqueTempFilename (char *path, char *filename, int filename_size, qbool verify_exists);
 qbool COM_FileExists (char *path);

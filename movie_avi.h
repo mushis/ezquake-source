@@ -23,10 +23,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define __MOVIE_AVI_H_
 
 void Capture_InitAVI (void);
-void Capture_InitACM (void);
-qbool Capture_Open (char *filename);
-void Capture_WriteVideo (byte *pixel_buffer, int size);
+qbool Capture_Open (void);
 void Capture_WriteAudio (int samples, byte *sample_buffer);
 void Capture_Close (void);
+void Capture_Shutdown (void);
+void Capture_Stop(void);
+qbool Capture_StartCapture(char* fileName);
+void Capture_FinishFrame(void);
 
 #endif

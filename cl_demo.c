@@ -3132,7 +3132,7 @@ void CL_StopPlayback (void)
 
 	// Capturing to avi/images, stop that.
 	if (Movie_IsCapturing())
-		Movie_Stop(false);
+		Movie_Stop();
 
 	// Close the playback file.
 	if (playbackfile)

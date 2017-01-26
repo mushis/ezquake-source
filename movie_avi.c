@@ -19,21 +19,73 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 // movie_avi.c
 
+#define USE_MEDIA_FOUNDATION
+
 #include "quakedef.h"
 #include <windows.h>
 #include <vfw.h>
 #include <msacm.h>
 #include <mmreg.h>
 #include <mmsystem.h>
+#ifdef USE_MEDIA_FOUNDATION
+#include <mfapi.h>
+#include <mfidl.h>
+#include <Mfreadwrite.h>
+#include <mferror.h>
+#include <Codecapi.h>
+#include <Strmif.h>
+#include <Wmcodecdsp.h>
+#pragma comment(lib, "mf")
+#pragma comment(lib, "strmiids")
+#pragma comment(lib, "mfreadwrite")
+#pragma comment(lib, "mfplat")
+#pragma comment(lib, "mfuuid")
+#endif
+#include "movie.h"
 #include "movie_avi.h"
 #include "qsound.h"
 #include "gl_model.h"
 #include "gl_local.h"
+#include "utils.h"
 
 #ifndef ACMAPI // mingw hax
 #define ACMAPI WINAPI
 #endif
 
+static void OnChange_movie_codec(cvar_t *var, char *string, qbool *cancel);
+static char movie_avi_filename[MAX_OSPATH]; // Stores the user's requested filename
+static qbool Movie_Start_AVI_Capture(void);
+static int avi_number = 0;                  // .avi files can lose sync/corrupt at 2GB/4GB, so we split into parts
+
+//joe: capturing to avi
+static qbool movie_avi_loaded = false;
+static qbool movie_acm_loaded = false;
+static char avipath[256];
+
+enum {
+	movieFormatAVI = 0,
+	movieFormatWMV = 1,
+	movieFormatH264 = 2
+};
+
+extern cvar_t   movie_fps;
+
+static cvar_t   movie_codec          = {"demo_capture_codec", "0", 0, OnChange_movie_codec };	// Capturing to avi
+static cvar_t   movie_mp3            = {"demo_capture_mp3", "0"};
+static cvar_t   movie_mp3_kbps       = {"demo_capture_mp3_kbps", "128"};
+static cvar_t   movie_vid_maxlen     = {"demo_capture_vid_maxlen", "0"};
+#ifdef USE_MEDIA_FOUNDATION
+static cvar_t   movie_format         = {"demo_capture_format", "0", 0, OnChange_movie_codec };
+static cvar_t   movie_format_hwaccel = {"demo_capture_hwaccel", "0", 0, OnChange_movie_codec };
+static cvar_t   movie_bitrate        = {"demo_capture_bitrate", "0", 0, OnChange_movie_codec };
+static cvar_t   movie_bframes        = {"demo_capture_bframes", "0", 0, OnChange_movie_codec };
+static cvar_t   movie_iframes_only   = {"demo_capture_iframes_only", "1", 0, OnChange_movie_codec };
+#endif
+static const char* formatExtensions[] = {
+	".avi", ".wmv", ".mp4"
+};
+
+// 
 static void (CALLBACK *qAVIFileInit)(void);
 static HRESULT (CALLBACK *qAVIFileOpen)(PAVIFILE *, LPCTSTR, UINT, LPCLSID);
 static HRESULT (CALLBACK *qAVIFileCreateStream)(PAVIFILE, PAVISTREAM *, AVISTREAMINFO *);
@@ -58,33 +110,32 @@ static MMRESULT (ACMAPI *qacmDriverClose)(HACMDRIVER, DWORD);
 
 static HINSTANCE handle_avi = NULL, handle_acm = NULL;
 
-PAVIFILE	m_file;
-PAVISTREAM	m_uncompressed_video_stream;
-PAVISTREAM	m_compressed_video_stream;
-PAVISTREAM	m_audio_stream;
+static PAVIFILE	m_file;
+static PAVISTREAM	m_uncompressed_video_stream;
+static PAVISTREAM	m_compressed_video_stream;
+static PAVISTREAM	m_audio_stream;
 
-unsigned long	m_codec_fourcc;
-int		m_video_frame_counter;
-int		m_video_frame_size;
+static unsigned long	m_codec_fourcc;
+static int		m_video_frame_counter;
+static int		m_video_frame_size;
 
-qbool	m_audio_is_mp3;
-int		m_audio_frame_counter;
-WAVEFORMATEX	m_wave_format;
-MPEGLAYER3WAVEFORMAT mp3_format;
-qbool	mp3_driver;
-HACMDRIVER	had;
-HACMSTREAM	hstr;
-ACMSTREAMHEADER	strhdr;
-LONG bytesWritten;
+static qbool	m_audio_is_mp3;
+static int		m_audio_frame_counter;
+static WAVEFORMATEX	m_wave_format;
+static MPEGLAYER3WAVEFORMAT mp3_format;
+static qbool	mp3_driver;
+static HACMDRIVER	had;
+static HACMSTREAM	hstr;
+static ACMSTREAMHEADER	strhdr;
+static LONG bytesWritten;
 
-
-extern qbool movie_avi_loaded, movie_acm_loaded;
-extern	cvar_t	movie_codec, movie_fps, movie_mp3, movie_mp3_kbps;
+// Allocate video buffer at start, to save malloc()/free() calls every frame
+static byte* videoBuffer = NULL;
 
 #define AVI_GETFUNC(f) (qAVI##f = (void *)GetProcAddress(handle_avi, "AVI" #f))
 #define ACM_GETFUNC(f) (qacm##f = (void *)GetProcAddress(handle_acm, "acm" #f))
 
-void Capture_InitAVI (void)
+static void AVIFile_Capture_InitAVI (void)
 {
 	movie_avi_loaded = false;
 
@@ -125,7 +176,7 @@ fail:
 	}
 }
 
-void Capture_InitACM (void)
+static void AVIFile_Capture_InitACM (void)
 {
 	movie_acm_loaded = false;
 
@@ -169,7 +220,7 @@ fail:
 	}
 }
 
-PAVISTREAM Capture_VideoStream (void)
+static PAVISTREAM Capture_VideoStream (void)
 {
 	return m_codec_fourcc ? m_compressed_video_stream : m_uncompressed_video_stream;
 }
@@ -198,7 +249,7 @@ PAVISTREAM Capture_VideoStream (void)
 #define ACMERR_CANCELED     (ACMERR_BASE + 3)
 #endif
 
-BOOL CALLBACK acmDriverEnumCallback (HACMDRIVERID hadid, DWORD_PTR dwInstance, DWORD fdwSupport)
+static BOOL CALLBACK acmDriverEnumCallback (HACMDRIVERID hadid, DWORD_PTR dwInstance, DWORD fdwSupport)
 {
 	if (fdwSupport & ACMDRIVERDETAILS_SUPPORTF_CODEC)
 	{
@@ -232,7 +283,7 @@ BOOL CALLBACK acmDriverEnumCallback (HACMDRIVERID hadid, DWORD_PTR dwInstance, D
 	return true;
 }
 
-qbool Capture_Open (char *filename)
+static qbool AVIFile_Capture_Open (char *filename)
 {
 	HRESULT				hr;
 	BITMAPINFOHEADER	bitmap_info_header;
@@ -283,7 +334,7 @@ qbool Capture_Open (char *filename)
 	hr = qAVIFileCreateStream (m_file, &m_uncompressed_video_stream, &stream_header);
 	if (FAILED(hr))
 	{
-		Com_Printf ("ERROR: Couldn't create video stream\n");
+		Com_Printf ("ERROR: Couldn't create video stream (%X)\n", hr);
 		Capture_Close ();
 		return false;
 	}
@@ -300,7 +351,7 @@ qbool Capture_Open (char *filename)
 		hr = qAVIMakeCompressedStream (&m_compressed_video_stream, m_uncompressed_video_stream, &opts, NULL);
 		if (FAILED(hr))
 		{
-			Com_Printf ("ERROR: Couldn't make compressed video stream\n");
+			Com_Printf ("ERROR: Couldn't make compressed video stream (%X)\n", hr);
 			Capture_Close ();
 			return false;
 		}
@@ -309,7 +360,7 @@ qbool Capture_Open (char *filename)
 	hr = qAVIStreamSetFormat (Capture_VideoStream(), 0, &bitmap_info_header, bitmap_info_header.biSize);
 	if (FAILED(hr))
 	{
-		Com_Printf ("ERROR: Couldn't set video stream format\n");
+		Com_Printf ("ERROR: Couldn't set video stream format (%X)\n", hr);
 		Capture_Close ();
 		return false;
 	}
@@ -410,7 +461,7 @@ qbool Capture_Open (char *filename)
 	return true;
 }
 
-void Capture_Close (void)
+static void AVIFile_Capture_Close (void)
 {
 	if (m_uncompressed_video_stream) {
 		qAVIStreamRelease (m_uncompressed_video_stream);
@@ -439,7 +490,7 @@ void Capture_Close (void)
 	qAVIFileExit ();
 }
 
-void Capture_WriteVideo (byte *pixel_buffer, int size)
+static void AVIFile_Capture_WriteVideo (byte *pixel_buffer, int size)
 {
 	HRESULT	hr;
 	LONG frameBytesWritten;
@@ -478,7 +529,7 @@ void Capture_WriteVideo (byte *pixel_buffer, int size)
 #define ACM_STREAMCONVERTF_END          0x00000020
 #endif
 
-void Capture_WriteAudio (int samples, byte *sample_buffer)
+static void AVIFile_Capture_WriteAudio (int samples, byte *sample_buffer)
 {
 	HRESULT        hr = E_UNEXPECTED;
 	LONG           frameBytesWritten;
@@ -547,12 +598,12 @@ void Capture_WriteAudio (int samples, byte *sample_buffer)
 	}
 }
 
-LONG Movie_CurrentLength (void)
+static LONG Movie_CurrentLength (void)
 {
 	return bytesWritten;
 }
 
-qbool ValidateMovieCodec (char* name)
+static qbool ValidateMovieCodec (char* name)
 {
 	HKEY registryKey;
 	int valueIndex;
@@ -590,8 +641,686 @@ qbool ValidateMovieCodec (char* name)
 	return false;
 }
 
-void OnChange_movie_codec (cvar_t *var, char *string, qbool *cancel)
+static void OnChange_movie_codec(cvar_t *var, char *string, qbool *cancel)
 {
+	if (Movie_IsCapturingAVI()) {
+		Con_Printf("Cannot change '%s' whilst capture in progress\n", var->name);
+		*cancel = true;
+		return;
+	}
+
 	// Print warning if codec specified isn't installed
-	ValidateMovieCodec (string);
+	if (var == &movie_codec) {
+		ValidateMovieCodec(string);
+	}
+}
+
+
+
+
+
+#ifdef USE_MEDIA_FOUNDATION
+
+static UINT64 Pack2UINT32AsUINT64(UINT32 unHigh, UINT32 unLow)
+{
+	return ((UINT64)unHigh << 32) | unLow;
+}
+
+#define MFSetAttributeSize(pAttributes,guidKey,unWidth,unHeight) pAttributes->lpVtbl->SetUINT64(pAttributes, guidKey, Pack2UINT32AsUINT64(unWidth, unHeight))
+#define MFSetAttributeRatio(pAttributes,guidKey,unNumerator,unDenominator) pAttributes->lpVtbl->SetUINT64(pAttributes, guidKey, Pack2UINT32AsUINT64(unNumerator, unDenominator))
+#define SafeRelease(x) \
+	if (*x) { \
+		(*x)->lpVtbl->Release((*x)); \
+		*x = NULL; \
+	}
+#define HR_CHECK(x) \
+	if (SUCCEEDED(hr)) { \
+		hr = x; \
+		if (FAILED(hr)) { \
+			Con_Printf("%s = %X (%d)\n", #x, hr, __LINE__); \
+		} \
+	}
+
+// Parameters for encoding, set as capture starts
+// FIXME: Move to struct
+static UINT32 videoWidth = 0;
+static UINT32 videoHeight = 0;
+static UINT32 videoFps = 30;
+static qbool flipImageData = false;
+static qbool useHardwareAcceleration = false;
+static GUID videoEncodingFormat;
+static GUID videoInputFormat;
+static UINT32 mpeg2Profile = 0;
+static UINT32 requestedBitRate = 0;
+static qbool setRateControl = false;
+static qbool setPrioritiseQuality = false;
+static qbool allSamplesIndependent = true;
+static int videoBFrameCount = 0;
+
+// 
+static IMFSinkWriter *pSinkWriter = NULL;
+static DWORD videoStream = 0;
+static DWORD audioStream = 0;
+static LONGLONG videoTimestamp = 0;
+static LONGLONG audioTimestamp = 0;
+static qbool mediaFoundationInitialised = false;
+
+static HRESULT CreateSinkWriter (const char* requestedName, IMFSinkWriter **ppWriter)
+{
+	extern cvar_t movie_dir;
+
+	WCHAR           wideFilePath[192];
+	HRESULT         hr            = 0;
+	IMFAttributes   *pAttributes  = NULL;
+	IMFSinkWriter   *pWriter      = NULL;
+
+	// Convert to URL
+	mbstowcs(wideFilePath, requestedName, sizeof(wideFilePath) / sizeof(wideFilePath[0]));
+
+	*ppWriter = NULL;
+	if (useHardwareAcceleration) {
+		HR_CHECK(MFCreateAttributes(&pAttributes, 4));
+		HR_CHECK(pAttributes->lpVtbl->SetUINT32(pAttributes, &MF_READWRITE_ENABLE_HARDWARE_TRANSFORMS, TRUE));
+		HR_CHECK(MFCreateSinkWriterFromURL(wideFilePath, NULL, pAttributes, &pWriter));
+	}
+	else {
+		HR_CHECK(MFCreateSinkWriterFromURL(wideFilePath, NULL, pAttributes, &pWriter));
+	}
+	if (SUCCEEDED(hr)) {
+		*ppWriter = pWriter;
+	}
+	SafeRelease(&pAttributes);
+	return hr;
+}
+
+static HRESULT InitializeSinkWriter(IMFSinkWriter **ppWriter, DWORD *pStreamIndex, DWORD *pAudioStreamIndex, const char* fileName)
+{
+	IMFSinkWriter   *pSinkWriter = NULL;
+	IMFMediaType    *pMediaTypeOut = NULL;
+	IMFMediaType    *pMediaTypeIn = NULL;
+	IMFMediaType    *pAudioTypeOut = NULL;
+	IMFMediaType    *pAudioTypeIn = NULL;
+	HRESULT         hr = 0;
+	DWORD           streamIndex = 0;
+	DWORD           audioStream = 0;
+	UINT32          defaultBitRate = 4000000;
+
+	*ppWriter = NULL;
+	*pStreamIndex = 0;
+
+	// Create attributes
+	HR_CHECK (CreateSinkWriter(fileName, &pSinkWriter))
+
+	// Set the output media type.
+	HR_CHECK (MFCreateMediaType (&pMediaTypeOut))
+	HR_CHECK (pMediaTypeOut->lpVtbl->SetGUID(pMediaTypeOut, &MF_MT_MAJOR_TYPE, &MFMediaType_Video))
+	HR_CHECK (pMediaTypeOut->lpVtbl->SetGUID(pMediaTypeOut, &MF_MT_SUBTYPE, &videoEncodingFormat))
+	HR_CHECK (pMediaTypeOut->lpVtbl->SetUINT32(pMediaTypeOut, &MF_MT_AVG_BITRATE, requestedBitRate))
+	HR_CHECK (pMediaTypeOut->lpVtbl->SetUINT32(pMediaTypeOut, &MF_MT_INTERLACE_MODE, MFVideoInterlace_Progressive))
+	HR_CHECK (MFSetAttributeSize(pMediaTypeOut, &MF_MT_FRAME_SIZE, videoWidth, videoHeight))
+	HR_CHECK (MFSetAttributeRatio(pMediaTypeOut, &MF_MT_FRAME_RATE, videoFps, 1))
+	HR_CHECK (MFSetAttributeRatio(pMediaTypeOut, &MF_MT_PIXEL_ASPECT_RATIO, 1, 1))
+
+	if (videoBFrameCount) {
+		HR_CHECK(pMediaTypeOut->lpVtbl->SetUINT32(pMediaTypeOut, &CODECAPI_AVEncMPVDefaultBPictureCount, videoBFrameCount));
+	}
+	if (movie_format.integer == movieFormatH264) {
+		HR_CHECK (MFSetAttributeRatio(pMediaTypeOut, &MF_MT_FRAME_RATE_RANGE_MAX, videoFps, 1))
+		HR_CHECK (MFSetAttributeRatio(pMediaTypeOut, &MF_MT_FRAME_RATE_RANGE_MIN, videoFps / 2, 1))
+		HR_CHECK (pMediaTypeOut->lpVtbl->SetUINT32(pMediaTypeOut, &MF_MT_ALL_SAMPLES_INDEPENDENT, allSamplesIndependent))
+		//pMediaTypeOut->lpVtbl->SetUINT32(pMediaTypeOut, &MF_MT_FIXED_SIZE_SAMPLES, 1);
+		//pMediaTypeOut->lpVtbl->SetUINT32(pMediaTypeOut, &MF_MT_SAMPLE_SIZE, videoWidth * videoHeight * 4);
+		HR_CHECK (pMediaTypeOut->lpVtbl->SetUINT32(pMediaTypeOut, &MF_MT_MPEG2_PROFILE, mpeg2Profile))
+	}
+	HR_CHECK (pSinkWriter->lpVtbl->AddStream(pSinkWriter, pMediaTypeOut, &streamIndex)) 
+
+	// Set the input media type.
+	HR_CHECK (MFCreateMediaType(&pMediaTypeIn))
+	HR_CHECK (pMediaTypeIn->lpVtbl->SetGUID(pMediaTypeIn, &MF_MT_MAJOR_TYPE, &MFMediaType_Video))
+	HR_CHECK (pMediaTypeIn->lpVtbl->SetGUID(pMediaTypeIn, &MF_MT_SUBTYPE, &videoInputFormat)) 
+	HR_CHECK (pMediaTypeIn->lpVtbl->SetUINT32(pMediaTypeIn, &MF_MT_INTERLACE_MODE, MFVideoInterlace_Progressive))
+	HR_CHECK (MFSetAttributeSize(pMediaTypeIn, &MF_MT_FRAME_SIZE, videoWidth, videoHeight))
+	HR_CHECK (MFSetAttributeRatio(pMediaTypeIn, &MF_MT_FRAME_RATE, videoFps, 1))
+	HR_CHECK (MFSetAttributeRatio(pMediaTypeIn, &MF_MT_PIXEL_ASPECT_RATIO, 1, 1))
+	HR_CHECK (pSinkWriter->lpVtbl->SetInputMediaType(pSinkWriter, streamIndex, pMediaTypeIn, NULL))
+
+	// Create audio stream
+	HR_CHECK (MFCreateMediaType(&pAudioTypeOut))
+	HR_CHECK (pAudioTypeOut->lpVtbl->SetGUID(pAudioTypeOut, &MF_MT_MAJOR_TYPE, &MFMediaType_Audio))
+	HR_CHECK (pAudioTypeOut->lpVtbl->SetGUID(pAudioTypeOut, &MF_MT_SUBTYPE, &MFAudioFormat_AAC))
+	HR_CHECK (pAudioTypeOut->lpVtbl->SetUINT32 (pAudioTypeOut, &MF_MT_AUDIO_BITS_PER_SAMPLE, 16))  // "must be 16"
+	HR_CHECK (pAudioTypeOut->lpVtbl->SetUINT32 (pAudioTypeOut, &MF_MT_AUDIO_SAMPLES_PER_SECOND, shw ? shw->khz : 0))  // "must match the input type"
+	HR_CHECK (pAudioTypeOut->lpVtbl->SetUINT32 (pAudioTypeOut, &MF_MT_AUDIO_NUM_CHANNELS, 2))  // "must match the input type"
+	HR_CHECK (pAudioTypeOut->lpVtbl->SetUINT32 (pAudioTypeOut, &MF_MT_AUDIO_AVG_BYTES_PER_SECOND, 12000))  // "following values are supported: 12000, 16000, 20000, 24000"
+	// HR_CHECK (pAudioTypeOut->lpVtbl->SetUINT32 (pAudioTypeOut, &MF_MT_AUDIO_BLOCK_ALIGNMENT, 1))
+	// HR_CHECK (pAudioTypeOut->lpVtbl->SetUINT32 (pAudioTypeOut, &MF_MT_AAC_AUDIO_PROFILE_LEVEL_INDICATION, 0x29))
+	HR_CHECK (pSinkWriter->lpVtbl->AddStream(pSinkWriter, pAudioTypeOut, &audioStream))
+
+	// Set audio output type
+	HR_CHECK (MFCreateMediaType(&pAudioTypeIn))
+	HR_CHECK (pAudioTypeIn->lpVtbl->SetGUID(pAudioTypeIn, &MF_MT_MAJOR_TYPE, &MFMediaType_Audio))
+	HR_CHECK (pAudioTypeIn->lpVtbl->SetGUID(pAudioTypeIn, &MF_MT_SUBTYPE, &MFAudioFormat_PCM))
+	HR_CHECK (pAudioTypeIn->lpVtbl->SetUINT32 (pAudioTypeIn, &MF_MT_AUDIO_BITS_PER_SAMPLE, 16))
+	HR_CHECK (pAudioTypeIn->lpVtbl->SetUINT32 (pAudioTypeIn, &MF_MT_AUDIO_SAMPLES_PER_SECOND, shw ? shw->khz : 0))
+	HR_CHECK (pAudioTypeIn->lpVtbl->SetUINT32 (pAudioTypeIn, &MF_MT_AUDIO_NUM_CHANNELS, 2))
+	HR_CHECK (pAudioTypeIn->lpVtbl->SetUINT32 (pAudioTypeIn, &MF_MT_AUDIO_AVG_BYTES_PER_SECOND, (shw ? shw->khz : 0) * (16/8 * 2)))
+	HR_CHECK (pAudioTypeIn->lpVtbl->SetUINT32 (pAudioTypeIn, &MF_MT_AUDIO_BLOCK_ALIGNMENT, 4 /* 2 channels * (16 bits per sample / 8) */))
+	HR_CHECK (pAudioTypeIn->lpVtbl->SetUINT32 (pAudioTypeIn, &MF_MT_ALL_SAMPLES_INDEPENDENT, 1))
+	HR_CHECK (pSinkWriter->lpVtbl->SetInputMediaType(pSinkWriter, audioStream, pAudioTypeIn, NULL))
+
+	// Tell the sink writer to start accepting data.
+	HR_CHECK (pSinkWriter->lpVtbl->BeginWriting(pSinkWriter))
+
+	if (SUCCEEDED (hr)) {
+		// Set quality setting
+		ICodecAPI* pCodecApi = NULL;
+
+		hr = pSinkWriter->lpVtbl->GetServiceForStream (pSinkWriter, streamIndex, &GUID_NULL, &IID_ICodecAPI, (LPVOID*)&pCodecApi);
+
+		// Meag: Not really sure about these, trying to get the quality up
+		if (SUCCEEDED (hr)) {
+			VARIANT qualityTradeoff;
+			VARIANT quality;
+			VARIANT rateControl;
+			GUID qualityVsSpeed  = CODECAPI_AVEncCommonQualityVsSpeed;
+			GUID rateControlGUID = CODECAPI_AVEncCommonRateControlMode;
+			GUID qualityGUID     = CODECAPI_AVEncCommonQuality;
+
+			if (setPrioritiseQuality) {
+				VariantInit(&qualityTradeoff);
+				qualityTradeoff.vt = VT_UI4;
+				qualityTradeoff.uintVal = 100;
+				HR_CHECK(pCodecApi->lpVtbl->SetValue(pCodecApi, &qualityVsSpeed, &qualityTradeoff))
+			}
+
+			if (setRateControl) {
+				VariantInit (&rateControl);
+				rateControl.vt = VT_UI4;
+				rateControl.uintVal = eAVEncCommonRateControlMode_Quality;  // Use CBR?
+
+				HR_CHECK (pCodecApi->lpVtbl->SetValue (pCodecApi, &rateControlGUID, &rateControl))
+
+				if (SUCCEEDED (hr)) {
+					VariantInit (&quality);
+					quality.vt = VT_UI4;
+					quality.uintVal = 100;
+
+					HR_CHECK (pCodecApi->lpVtbl->SetValue (pCodecApi, &qualityGUID, &quality))
+				}
+			}
+		}
+
+		// Success for these is optional, carry on
+		hr = 0;
+	}
+
+	// Return the pointer to the caller.
+	if (SUCCEEDED(hr)) {
+		*ppWriter = pSinkWriter;
+		(*ppWriter)->lpVtbl->AddRef(*ppWriter);
+		*pStreamIndex = streamIndex;
+		*pAudioStreamIndex = audioStream;
+	}
+
+	SafeRelease(&pSinkWriter);
+	SafeRelease(&pMediaTypeOut);
+	SafeRelease(&pMediaTypeIn);
+	SafeRelease(&pAudioTypeOut);
+	SafeRelease(&pAudioTypeIn);
+	return hr;
+}
+
+static HRESULT WriteFrame(
+	IMFSinkWriter *pWriter,
+	DWORD streamIndex,
+	const LONGLONG* timeStamp,
+	byte *buffer,
+	DWORD buffer_length,
+	LONGLONG frameDuration,
+	qbool isVideoFrame
+)
+{
+	IMFSample *pSample = NULL;
+	IMFMediaBuffer *pBuffer = NULL;
+	LONG cbWidth = 3 * videoWidth;
+	BYTE *pData = NULL;
+	HRESULT hr = 0;
+
+	// Create a new memory buffer.
+	HR_CHECK (MFCreateMemoryBuffer (buffer_length, &pBuffer))
+	if (FAILED (hr)) {
+		Con_Printf ("MFCreateMemoryBuffer has failed, length = %d\n", buffer_length);
+	}
+
+	// Lock the buffer and copy the data to the buffer.
+	HR_CHECK (pBuffer->lpVtbl->Lock(pBuffer, &pData, NULL, NULL))
+
+	if (SUCCEEDED(hr)) {
+
+		if (isVideoFrame) {
+			BYTE* first_row = (BYTE*)buffer;
+			LONG stride = cbWidth;
+
+			if (flipImageData) {
+				// Image will be flipped in memory so start at end and use negative stride for wmv
+				first_row = (BYTE*)buffer + (videoHeight - 1) * cbWidth;
+				stride = -stride;
+			}
+
+			HR_CHECK( MFCopyImage (
+				pData,                      // Destination buffer.
+				cbWidth,                    // Destination stride.
+				first_row,                  // First row in source image.
+				stride,                     // Source stride.
+				cbWidth,                    // Image width in bytes.
+				videoHeight                 // Image height in pixels.
+			) )
+		}
+		else {
+			// Audio: straight copy
+			memcpy (pData, buffer, buffer_length);
+		}
+	}
+	if (pBuffer) {
+		HRESULT temp = pBuffer->lpVtbl->Unlock(pBuffer);
+		if (FAILED (temp)) {
+			Con_Printf ("->Unlock() failed (%X)", temp);
+		}
+	}
+
+	// Set the data length of the buffer.
+	HR_CHECK (pBuffer->lpVtbl->SetCurrentLength(pBuffer, buffer_length))
+
+	// Create a media sample and add the buffer to the sample.
+	HR_CHECK (MFCreateSample(&pSample))
+	HR_CHECK (pSample->lpVtbl->AddBuffer(pSample, pBuffer))
+
+	// Set the time stamp and the duration.
+	HR_CHECK (pSample->lpVtbl->SetSampleTime(pSample, *timeStamp))
+	HR_CHECK (pSample->lpVtbl->SetSampleDuration(pSample, frameDuration))
+
+	// Send the sample to the Sink Writer.
+	HR_CHECK (pWriter->lpVtbl->WriteSample(pWriter, streamIndex, pSample))
+
+	SafeRelease(&pSample);
+	SafeRelease(&pBuffer);
+	return hr;
+}
+
+static qbool MediaFoundation_Capture_InitAVI (void)
+{
+	mediaFoundationInitialised = false;
+
+	HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
+	if (SUCCEEDED (hr)) {
+		hr = MFStartup (MF_VERSION, MFSTARTUP_FULL);
+		if (SUCCEEDED (hr)) {
+			mediaFoundationInitialised = true;
+		}
+		else {
+			CoUninitialize ();
+		}
+	}
+
+	return mediaFoundationInitialised;
+}
+
+static void MediaFoundation_Capture_InitACM (void)
+{
+	// Does nothing, sound initialised in Capture_InitAVI
+	movie_acm_loaded = true;
+}
+
+static qbool MediaFoundation_Capture_Open (char *filename)
+{
+	HRESULT hr;
+
+	if (!mediaFoundationInitialised) {
+		Con_Printf ("Error: Media Foundation library not initialised\n");
+		return false;
+	}
+
+	videoFps = movie_fps.integer;
+	videoWidth = glwidth;
+	videoHeight = glheight;
+	videoBuffer = (byte *)Q_malloc(videoWidth * videoHeight * 3);
+	videoInputFormat = MFVideoFormat_RGB24;
+	videoBFrameCount = movie_bframes.integer;
+	allSamplesIndependent = movie_iframes_only.integer;
+
+	if (movie_format.integer == movieFormatWMV) {
+		useHardwareAcceleration = movie_format_hwaccel.integer;
+		flipImageData = true;
+		videoEncodingFormat = MFVideoFormat_WVC1;
+		if (movie_bitrate.integer < 0) {
+			requestedBitRate = videoWidth * videoHeight * 3 * 8 * videoFps;
+		}
+		else if (movie_bitrate.integer == 0) {
+			requestedBitRate = videoWidth * videoHeight * 3 * 8 * videoFps / 250;
+		}
+		else {
+			requestedBitRate = movie_bitrate.integer;
+		}
+		setRateControl = false;
+		setPrioritiseQuality = false;
+	}
+	else if (movie_format.integer == movieFormatH264) {
+		useHardwareAcceleration = movie_format_hwaccel.integer;
+		flipImageData = false;
+		videoEncodingFormat = MFVideoFormat_H264;
+		mpeg2Profile = eAVEncH264VProfile_Main;
+		if (movie_bitrate.integer < 0) {
+			requestedBitRate = 24000000;
+		}
+		else if (movie_bitrate.integer == 0) {
+			requestedBitRate = videoWidth * videoHeight * 3 * 8 * videoFps / 250;
+		}
+		else {
+			requestedBitRate = movie_bitrate.integer;
+		}
+		setRateControl = true;
+		setPrioritiseQuality = true;
+	}
+
+	hr = InitializeSinkWriter (&pSinkWriter, &videoStream, &audioStream, filename);
+	// Con_Printf ("InitializeSinkWriter = %X, stream = %d, audioStream = %d\n", hr, videoStream, audioStream);
+
+	audioTimestamp = videoTimestamp = 0;
+
+	return SUCCEEDED (hr);
+}
+
+static void MediaFoundation_Capture_Stop (qbool success)
+{
+	if (pSinkWriter && success) {
+		HRESULT hr = pSinkWriter->lpVtbl->Finalize (pSinkWriter);
+
+		if (FAILED (hr)) {
+			Con_Printf ("Finalize failed %X\n", hr);
+		}
+	}
+	SafeRelease(&pSinkWriter);
+}
+
+static void MediaFoundation_Capture_WriteVideo (byte *pixel_buffer, int size)
+{
+	// This is set in 100-nanosecond units... which is 10m/second
+	LONGLONG duration = 10 * 1000 * 1000 / videoFps;
+	HRESULT hr;
+
+	if (pSinkWriter == NULL)
+		return;
+
+	if (size != videoWidth * videoHeight * 3) {
+		MediaFoundation_Capture_Stop (false);
+		return;
+	}
+
+	hr = WriteFrame (pSinkWriter, videoStream, &videoTimestamp, pixel_buffer, size, duration, true);
+	videoTimestamp += duration;
+
+	if (FAILED (hr)) {
+		Con_Printf ("WriteVideoFrame failed %X\n", hr);
+		MediaFoundation_Capture_Stop (false);
+	}
+}
+
+static void MediaFoundation_Capture_WriteAudio (int samples, byte *sample_buffer)
+{
+	// This is set in 100-nanosecond units... which is 10m/second
+	LONGLONG duration       = 10 * 1000 * 1000 / videoFps;
+	ULONG    sample_bufsize = samples * 4;
+	HRESULT  hr;
+
+	if (pSinkWriter == NULL)
+		return;
+
+	hr = WriteFrame (pSinkWriter, audioStream, &audioTimestamp, sample_buffer, sample_bufsize, duration, false);
+	audioTimestamp += duration;
+
+	if (FAILED (hr)) {
+		Con_Printf ("WriteAudioFrame failed %X\n", hr);
+		MediaFoundation_Capture_Stop (false);
+	}
+}
+
+static void MediaFoundation_Capture_Close (void)
+{
+	MediaFoundation_Capture_Stop (true);
+}
+
+static void MediaFoundation_Capture_Shutdown (void)
+{
+	if (mediaFoundationInitialised) {
+		MFShutdown ();
+		CoUninitialize ();
+	}
+}
+
+static void MovieEnumMFTs(void)
+{
+	HRESULT hr = 0;
+	IMFActivate** mfts = NULL;
+	UINT32 mftCount;
+
+	if (!MediaFoundation_Capture_InitAVI()) {
+		Com_Printf("Error: Failed to initialise Media Foundation\n");
+		return;
+	}
+
+	HR_CHECK(MFTEnumEx(MFT_CATEGORY_VIDEO_ENCODER, MFT_ENUM_FLAG_TRANSCODE_ONLY, NULL, NULL, &mfts, &mftCount))
+	if (SUCCEEDED(hr) && mfts) {
+		UINT i;
+		GUID friendlyNameGUID = MFT_FRIENDLY_NAME_Attribute;
+		WCHAR value[128];
+
+		for (i = 0; i < mftCount; ++i) {
+			HRESULT hr2 = mfts[i]->lpVtbl->GetString(mfts[i], &friendlyNameGUID, value, sizeof(value) / sizeof(value[0]), NULL);
+			if (SUCCEEDED(hr2)) {
+				Com_Printf("> %S\n", value);
+			}
+		}
+		CoTaskMemFree(mfts);
+	}
+}
+
+#endif // USE_MEDIA_FOUNDATION
+
+void Capture_InitAVI (void)
+{
+	AVIFile_Capture_InitAVI ();
+#ifdef USE_MEDIA_FOUNDATION
+	MediaFoundation_Capture_InitAVI ();
+#endif
+
+	if (!movie_avi_loaded)
+		return;
+
+	Cvar_SetCurrentGroup(CVAR_GROUP_DEMO);
+	Cvar_Register(&movie_codec);
+	Cvar_Register(&movie_vid_maxlen);
+	Cvar_Register(&movie_format);
+	Cvar_Register(&movie_format_hwaccel);
+	Cvar_Register(&movie_bitrate);
+	Cvar_Register(&movie_bframes);
+	Cvar_Register(&movie_iframes_only);
+	Cvar_ResetCurrentGroup();
+
+	Cmd_AddCommand("movie_enum_mfts", MovieEnumMFTs);
+
+	AVIFile_Capture_InitACM ();
+	if (!movie_acm_loaded)
+		return;
+
+	Cvar_SetCurrentGroup(CVAR_GROUP_DEMO);
+	Cvar_Register(&movie_mp3);
+	Cvar_Register(&movie_mp3_kbps);
+	Cvar_ResetCurrentGroup();
+}
+
+qbool Capture_Open (void)
+{
+#ifdef USE_MEDIA_FOUNDATION
+	if (movie_format.integer) {
+		return MediaFoundation_Capture_Open (avipath);
+	}
+#endif
+	return AVIFile_Capture_Open (avipath);
+}
+
+void Capture_WriteAudio (int samples, byte *sample_buffer)
+{
+#ifdef USE_MEDIA_FOUNDATION
+	if (movie_format.integer) {
+		MediaFoundation_Capture_WriteAudio (samples, sample_buffer);
+		return;
+	}
+#endif
+	AVIFile_Capture_WriteAudio (samples, sample_buffer);
+}
+
+void Capture_Close (void)
+{
+	S_StopAllSounds();
+
+#ifdef USE_MEDIA_FOUNDATION
+	if (movie_format.integer) {
+		MediaFoundation_Capture_Close ();
+	}
+	else
+#endif
+	{
+		AVIFile_Capture_Close();
+	}
+}
+
+void Capture_Shutdown (void)
+{
+#ifdef USE_MEDIA_FOUNDATION
+	MediaFoundation_Capture_Shutdown ();
+#endif
+	if (videoBuffer) {
+		Q_free(videoBuffer);
+	}
+}
+
+void Capture_Stop(void)
+{
+	if (videoBuffer) {
+		Q_free(videoBuffer);
+	}
+	Capture_Close ();
+}
+
+// Called whenever a new file needs to be opened (start of capture, or .avi splitting)
+static qbool Movie_Start_AVI_Capture(void)
+{
+	extern cvar_t movie_dir;
+	char aviname[MAX_OSPATH];
+	FILE* avifile = NULL;
+
+	++avi_number;
+
+	// If we're going to break up the movie, append number
+	if (avi_number > 1) {
+		snprintf (aviname, sizeof (aviname), "%s-%03d", movie_avi_filename, avi_number);
+	}
+	else {
+		strlcpy (aviname, movie_avi_filename, sizeof (aviname));
+	}
+
+	if (movie_format.integer < 0 || movie_format.integer >= sizeof (formatExtensions) / sizeof (formatExtensions[0])) {
+		Con_Printf ("Invalid movie_format value\n");
+		return false;
+	}
+
+	if (!(Util_Is_Valid_Filename(aviname))) {
+		Com_Printf(Util_Invalid_Filename_Msg(aviname));
+		return false;
+	}
+
+	COM_ForceExtensionEx (aviname, formatExtensions[movie_format.integer], sizeof (aviname));
+	snprintf (avipath, sizeof(avipath), "%s/%s/%s", com_basedir, movie_dir.string, aviname);
+	if (!(avifile = fopen(avipath, "wb"))) {
+		FS_CreatePath (avipath);
+		if (!(avifile = fopen(avipath, "wb"))) {
+			Com_Printf("Error: Couldn't open %s\n", aviname);
+			return false;
+		}
+	}
+	fclose (avifile);
+	avifile = NULL;
+	return true;
+}
+
+void Capture_FinishFrame(void)
+{
+	int size = 0;
+	int i;
+	byte temp;
+	extern void applyHWGamma(byte *buffer, int size);
+
+	if (videoBuffer == NULL || glwidth != videoWidth || glheight != videoHeight) {
+		Capture_Close();
+		return;
+	}
+
+	// Split up if we're over the time limit for each segment
+	if (movie_vid_maxlen.integer && Movie_CurrentLength() >= movie_vid_maxlen.value * 1024 * 1024 && movie_format.integer == 0) {
+		// Close, advance filename, re-open
+		Capture_Close();
+		Movie_Start_AVI_Capture();
+		Capture_Open();
+	}
+
+	// Capture
+	// Set buffer size to fit RGB data for the image.
+	size = glwidth * glheight * 3;
+
+	// Allocate the RGB buffer, get the pixels from GL and apply the gamma.
+	glReadPixels (glx, gly, glwidth, glheight, GL_RGB, GL_UNSIGNED_BYTE, videoBuffer);
+	applyHWGamma (videoBuffer, size);
+
+	// We now have a byte buffer with RGB values, but
+	// before we write it to the file, we need to swap
+	// them to GBR instead, which windows DIBs uses.
+	// (There's a GL Extension that allows you to use
+	// BGR_EXT instead of GL_RGB in the glReadPixels call
+	// instead, but there is no real speed gain using it).
+	for (i = 0; i < size; i += 3)
+	{
+		// Swap RGB => GBR
+		temp = videoBuffer[i];
+		videoBuffer[i] = videoBuffer[i+2];
+		videoBuffer[i+2] = temp;
+	}
+
+	// Write the buffer to video.
+#ifdef USE_MEDIA_FOUNDATION
+	if (movie_format.integer) {
+		MediaFoundation_Capture_WriteVideo(videoBuffer, size);
+	}
+	else
+#endif
+	{
+		AVIFile_Capture_WriteVideo(videoBuffer, size);
+	}
+}
+
+qbool Capture_StartCapture(char* fileName)
+{
+	strlcpy(movie_avi_filename, fileName, sizeof(movie_avi_filename)-10);		// Store user's requested filename
+	if (!movie_avi_loaded) {
+		Com_Printf_State (PRINT_FAIL, "Avi capturing not initialized\n");
+		return false;
+	}
+
+	if (movie_format.integer && s_khz.integer < 44) {
+		Com_Printf("Set s_khz to 44 beforing saving in .wmv or .mp4\n");
+		return false;
+	}
+
+	// Start capture
+	avi_number = 0;
+	return Movie_Start_AVI_Capture();
 }
