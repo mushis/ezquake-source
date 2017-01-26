@@ -278,12 +278,12 @@ void COM_ForceExtension (char *path, char *extension)
 
 // If path doesn't have an extension or has a different extension, append(!) specified extension
 // a bit extended version of COM_ForceExtension(), we suply size of path, so append safe, sure if u provide right path size
-void COM_ForceExtensionEx (char *path, char *extension, size_t path_size)
+void COM_ForceExtensionEx (char *path, const char *extension, size_t path_size)
 {
 	char *src;
 
 	if (path_size < 1 || path_size <= strlen (extension)) // too small buffer, can't even theoreticaly append extension
-		Sys_Error("COM_ForceExtensionEx: internall error"); // this is looks like a bug, be fatal then
+		Sys_Error("COM_ForceExtensionEx: internal error"); // this is looks like a bug, be fatal then
 
 	src = path + strlen (path) - strlen (extension);
 	if (src >= path && !strcmp (src, extension))
