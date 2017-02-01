@@ -707,6 +707,14 @@ extern "C" {
  */
 #define SDL_HINT_RPI_VIDEO_LAYER           "SDL_RPI_VIDEO_LAYER"
 
+ /*
+ * \brief Tells SDL to calculate assume write cursor is moving forward with read cursor
+ *
+ * Fixes glitchy audio when driver doesn't update write cursor often enough.
+ * SDL will take worst-case of the returned write cursor, and read cursor + this value
+ */
+#define SDL_HINT_DSOUND_MIN_HW_BUFFER "SDL_DSOUND_MIN_HW_BUFFER"
+
 /**
  *  \brief  An enumeration of hint priorities
  */

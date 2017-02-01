@@ -36,6 +36,10 @@ extern cvar_t sys_inactivesound;
 
 static void OnChange_s_khz (cvar_t *var, char *string, qbool *cancel);
 static void OnChange_s_desiredsamples (cvar_t *var, char *string, qbool *cancel);
+#ifdef _WIN32
+static void OnChange_s_minhwbuffer(cvar_t* var, char* string, qbool *cancel);
+static void S_SetMinHWBufferHint(float value);
+#endif
 static void S_Play_f (void);
 static void S_MuteSound_f (void);
 static void S_SoundList_f (void);
@@ -98,6 +102,9 @@ cvar_t s_linearresample_stream = {"s_linearresample_stream", "0"};
 cvar_t s_khz = {"s_khz", "11", CVAR_NONE, OnChange_s_khz}; // If > 11, default sounds are noticeably different.
 cvar_t s_desiredsamples = {"s_desiredsamples", "0", CVAR_AUTO, OnChange_s_desiredsamples };
 cvar_t s_audiodevice = {"s_audiodevice", "0", CVAR_LATCH};
+#ifdef _WIN32
+cvar_t s_minhwbuffer = { "s_minhwbuffer", "0", 0, OnChange_s_minhwbuffer };
+#endif
 
 SDL_mutex *smutex;
 soundhw_t *shw;
@@ -299,6 +306,10 @@ static qbool S_SDL_Init(void)
 
 	shw = shw_tmp;
 
+#ifdef _WIN32
+	S_SetMinHWBufferHint(s_minhwbuffer.value);
+#endif
+
 	Com_Printf("Using SDL audio driver: %s @ %d Hz\n", SDL_GetCurrentAudioDriver(), obtained.freq);
 
 	SDL_PauseAudioDevice(audiodevid, 0);
@@ -396,8 +407,10 @@ static void S_Restart_f (void)
 	int i;
 
 	Com_DPrintf("Restarting sound system....\n");
+	SDL_LogSetAllPriority(SDL_LOG_PRIORITY_VERBOSE);
 	S_Shutdown();
 	S_Startup();
+	SDL_LogSetAllPriority(SDL_LOG_PRIORITY_CRITICAL);
 
 	CL_InitTEnts();
 	for (i=1; i < MAX_SOUNDS; i++) {
@@ -437,6 +450,9 @@ static void S_Register_RegularCvarsAndCommands(void)
 	Cvar_Register(&s_swapstereo);
 	Cvar_Register(&s_linearresample_stream);
 	Cvar_Register(&s_desiredsamples);
+#ifdef _WIN32
+	Cvar_Register(&s_minhwbuffer);
+#endif
 
 	Cvar_ResetCurrentGroup();
 
@@ -1376,3 +1392,20 @@ void S_RawAudio(int sourceid, byte *data, unsigned int speed, unsigned int sampl
 
 	S_UnlockMixer();
 }
+
+#ifdef _WIN32
+static void S_SetMinHWBufferHint(float value)
+{
+	char temp[10];
+
+	value = max(value, 0);
+	snprintf(temp, sizeof(temp), "%d", (int)(value * shw->khz * shw->numchannels * (shw->samplebits / 8)));
+
+	SDL_SetHintWithPriority(SDL_HINT_DSOUND_MIN_HW_BUFFER, temp, SDL_HINT_OVERRIDE);
+}
+
+static void OnChange_s_minhwbuffer(cvar_t* var, char* string, qbool *cancel)
+{
+	S_SetMinHWBufferHint(atof(string));
+}
+#endif

@@ -11652,14 +11652,20 @@
     "s_loadas8bit": {
       "group-id": "45",
       "remarks": "This will give a little performance boost when playing the game at the cost of \nquality for the sound samples.)",
-      "type": "boolean",
+      "type": "integer",
       "values": [
-        { "name": "false", "description": "Off." },
-        { "name": "true", "description": "On (The sound samples will be loaded in 8-bit mode thus making them a little smaller." }
+        { "name": "0", "description": "No ." },
+        { "name": "1", "description": "On (The sound samples will be loaded in 8-bit mode thus making them a little smaller." }
       ]
     },
-    "s_mixahead": {
+    "s_minhwbuffer": {
       "group-id": "45",
+      "desc": "Fix for crackling audio on some DirectSound drivers.\nSpecifies minimum hardware buffer length in seconds.",
+      "remarks": "Recommended values: 0.04-0.06",
+      "type": "float"
+    },
+    "s_mixahead": {
+      "group-id": "26",
       "desc": "Only affects OSS and legacy ALSA:\n\nThis variable defines the delay time for sounds. How low you can set your sound\nmixahead depends on your FPS, when you set it too low, your sound will start \ncrackling. Generally, with 72 FPS you should be able to use a delay of 0.06 seconds.",
       "type": "float"
     },
