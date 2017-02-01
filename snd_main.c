@@ -98,6 +98,7 @@ cvar_t s_linearresample_stream = {"s_linearresample_stream", "0"};
 cvar_t s_khz = {"s_khz", "11", CVAR_NONE, OnChange_s_khz}; // If > 11, default sounds are noticeably different.
 cvar_t s_desiredsamples = {"s_desiredsamples", "0", CVAR_AUTO, OnChange_s_desiredsamples };
 cvar_t s_audiodevice = {"s_audiodevice", "0", CVAR_LATCH};
+cvar_t s_buffermethod = { "s_buffermethod", "0", CVAR_LATCH };
 
 SDL_mutex *smutex;
 soundhw_t *shw;
@@ -162,6 +163,18 @@ static void S_SoundInfo_f (void)
 	Com_Printf("%5u total_channels\n", total_channels);
 }
 
+#define CAPTURE_PACKETS 1024
+
+typedef struct s_capture_packet_s {
+	Uint8 packet[512];
+} s_capture_packet_t;
+
+s_capture_packet_t captured_packet_data[CAPTURE_PACKETS];
+int captured_packets = 0;
+int playback_packet = 0;
+qbool capturing = false;
+qbool playingback = false;
+
 static void S_SDL_callback(void *userdata, Uint8 *stream, int len)
 {
 	// Mixer is run in main thread when capturing, play silence instead
@@ -175,6 +188,19 @@ static void S_SDL_callback(void *userdata, Uint8 *stream, int len)
 	shw->samples = len / shw->numchannels;
 	S_Update_();
 	shw->snd_sent += len;
+	if (playingback && captured_packets == CAPTURE_PACKETS && len == 512) {
+		memcpy(stream, captured_packet_data[playback_packet].packet, len);
+		++playback_packet;
+		playback_packet %= CAPTURE_PACKETS;
+	}
+	else if (capturing && captured_packets < CAPTURE_PACKETS && len == 512) {
+		memcpy(captured_packet_data[captured_packets].packet, stream, len);
+		SDL_memset(stream, 0, len);
+		++captured_packets;
+	}
+	if (capturing && captured_packets >= CAPTURE_PACKETS) {
+		capturing = false;
+	}
 	S_UnlockMixer();
 
 	// Implicit Minimized in first case
@@ -261,6 +287,14 @@ static qbool S_SDL_Init(void)
 		requested_device = SDL_GetAudioDeviceName(s_audiodevice.integer - 1, 0);
 	}
 
+	if (s_buffermethod.integer > 0) {
+		SDL_SetHint("SDL_WINDOWS_FILL_AUDIO_BUFFER", s_buffermethod.string);
+	}
+	else {
+		SDL_SetHint("SDL_WINDOWS_FILL_AUDIO_BUFFER", "0");
+	}
+
+	SDL_Log("s_buffermethod.integer = %d\n", s_buffermethod.integer);
 	if ((audiodevid = SDL_OpenAudioDevice(requested_device, 0, &desired, &obtained, 0)) <= 0) {
 		Com_Printf("sound: couldn't open SDL audio: %s\n", SDL_GetError());
 		if (requested_device != NULL) {
@@ -396,8 +430,10 @@ static void S_Restart_f (void)
 	int i;
 
 	Com_DPrintf("Restarting sound system....\n");
+	SDL_LogSetAllPriority(SDL_LOG_PRIORITY_VERBOSE);
 	S_Shutdown();
 	S_Startup();
+	SDL_LogSetAllPriority(SDL_LOG_PRIORITY_CRITICAL);
 
 	CL_InitTEnts();
 	for (i=1; i < MAX_SOUNDS; i++) {
@@ -407,6 +443,43 @@ static void S_Restart_f (void)
 		cl.sound_precache[i] = S_PrecacheSound(cl.sound_name[i]);
 	}
 
+}
+
+static void S_DebugCapture(void)
+{
+	if (playingback) {
+		Com_Printf("Cannot capture during playback\n");
+		return;
+	}
+
+	if (capturing) {
+		capturing = false;
+		Com_Printf("Capturing cancelled\n");
+		return;
+	}
+
+	captured_packets = playback_packet = 0;
+	capturing = true;
+	Com_Printf("Capturing started...\n");
+}
+
+static void S_DebugPlayback(void)
+{
+	if (capturing) {
+		Com_Printf("Cannot playback while capturing\n");
+		return;
+	}
+
+	if (playingback) {
+		playingback = false;
+		playback_packet = 0;
+		Com_Printf("Playback stopped\n");
+		return;
+	}
+
+	playback_packet = 0;
+	playingback = true;
+	Com_Printf("Playback started\n");
 }
 
 static void OnChange_s_khz (cvar_t *var, char *string, qbool *cancel) {
@@ -457,6 +530,8 @@ static void S_Register_RegularCvarsAndCommands(void)
 	Cmd_AddCommand("soundlist", S_SoundList_f);
 	Cmd_AddCommand("soundinfo", S_SoundInfo_f);
 	Cmd_AddCommand("s_listdrivers", S_ListDrivers);
+	Cmd_AddCommand("s_debug_capture", S_DebugCapture);
+	Cmd_AddCommand("S_debug_playback", S_DebugPlayback);
 
 	/* Naming it like this to be seen together with s_audiodevice cvar */
 	Cmd_AddCommand("s_audiodevicelist", S_ListAudioDevices);
@@ -472,6 +547,7 @@ static void S_Register_LatchCvars(void)
 
 	Cvar_Register(&s_linearresample);
 	Cvar_Register(&s_audiodevice);
+	Cvar_Register(&s_buffermethod);
 
 	Cvar_ResetCurrentGroup();
 }
