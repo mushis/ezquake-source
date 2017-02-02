@@ -406,5 +406,7 @@ static void OnChange_movie_dir(cvar_t *var, char *string, qbool *cancel) {
 
 void Movie_Shutdown (void)
 {
+#ifdef _WIN32
 	Capture_Shutdown ();
+#endif
 }

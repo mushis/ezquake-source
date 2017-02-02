@@ -30,11 +30,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifdef USE_MEDIA_FOUNDATION
 #include <mfapi.h>
 #include <mfidl.h>
-#include <Mfreadwrite.h>
+#include <mfreadwrite.h>
 #include <mferror.h>
-#include <Codecapi.h>
-#include <Strmif.h>
-#include <Wmcodecdsp.h>
+#include <codecapi.h>
+#include <strmif.h>
+#include <wmcodecdsp.h>
 #pragma comment(lib, "mf")
 #pragma comment(lib, "strmiids")
 #pragma comment(lib, "mfreadwrite")
