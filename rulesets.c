@@ -55,7 +55,7 @@ qbool RuleSets_DisallowModelOutline(struct model_s *mod)
 {
 	if (mod == NULL) {
 		// World model - only allow in default ruleset, cheats enabled
-		return !(r_refdef2.allow_cheats && rulesetDef.ruleset == rs_default);
+		return !(cls.demoplayback || (r_refdef2.allow_cheats && rulesetDef.ruleset == rs_default));
 	}
 
 	switch (mod->modhint) {

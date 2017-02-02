@@ -1105,11 +1105,16 @@ void R_DrawFlat (model_t *model) {
 	vec3_t n;
 	byte w[3], f[3];
 	qbool draw_caustics = underwatertexture && gl_caustics.value;
-	float shade = min(max(r_drawflat_shade.value, 0), 1);
+	float shade = r_drawflat_shade.integer == 2 ? -1 : min(max(r_drawflat_shade.value, 0), 1);
+	float color_diff[3];
 
 	memcpy(w, r_wallcolor.color, 3);
 	memcpy(f, r_floorcolor.color, 3);
-	
+
+	color_diff[0] = (int)f[0] - (int)w[0];
+	color_diff[1] = (int)f[1] - (int)w[1];
+	color_diff[2] = (int)f[2] - (int)w[2];
+
 	GL_DisableMultitexture();
 
 	// START shaman BUG /fog not working with /r_drawflat {
@@ -1140,54 +1145,59 @@ void R_DrawFlat (model_t *model) {
 				// r_drawflat 2 == Solid floor/ceiling only
 				// r_drawflat 3 == Solid walls only
 
-				if (n[2] < -0.5 || n[2] > 0.5) // floor or ceiling
-				{
-					if (r_drawflat.integer == 2 || r_drawflat.integer == 1)
-					{
-						if (shade)
-						{
-							float colors[3] = { f[0] / 256.0f, f[1] / 256.0f, f[2] / 256.0f };
-							float mult = (1 - shade) + (fabs(n[2]) - 0.5) * 2 * shade;
+				if (shade < 0) {
+					// blend between the two based on normal
+					float scale = fabs(n[2]);
+					vec3_t colors;
 
-							colors[0] = colors[0] * mult;
-							colors[1] = colors[1] * mult;
-							colors[2] = colors[2] * mult;
+					colors[0] = (w[0] + scale * color_diff[0]) / 255.0f;
+					colors[1] = (w[1] + scale * color_diff[1]) / 255.0f;
+					colors[2] = (w[2] + scale * color_diff[2]) / 255.0f;
 
-							glColor3fv(colors);
-						}
-						else
-						{
-							glColor3ubv(f);
-						}
-					}
-					else
-					{
-						continue;
-					}
+					glColor3fv(colors);
 				}
-				else										// walls
-				{
-					if (r_drawflat.integer == 3 || r_drawflat.integer == 1)
+				else {
+					if (n[2] < -0.5 || n[2] > 0.5) // floor or ceiling
 					{
-						if (shade)
-						{
-							float colors[3] = { w[0] / 256.0f, w[1] / 256.0f, w[2] / 256.0f };
-							float mult = (1 - shade) + fabs(n[0]) * shade;
+						if (r_drawflat.integer == 2 || r_drawflat.integer == 1) {
+							if (shade) {
+								float colors[3] = { f[0] / 256.0f, f[1] / 256.0f, f[2] / 256.0f };
+								float mult = (1 - shade) + (fabs(n[2]) - 0.5) * 2 * shade;
 
-							colors[0] = colors[0] * mult;
-							colors[1] = colors[1] * mult;
-							colors[2] = colors[2] * mult;
+								colors[0] = colors[0] * mult;
+								colors[1] = colors[1] * mult;
+								colors[2] = colors[2] * mult;
 
-							glColor3fv(colors);
+								glColor3fv(colors);
+							}
+							else {
+								glColor3ubv(f);
+							}
 						}
-						else
-						{
-							glColor3ubv(w);
+						else {
+							continue;
 						}
 					}
-					else
-					{
-						continue;
+					else {
+						// walls
+						if (r_drawflat.integer == 3 || r_drawflat.integer == 1) {
+							if (shade) {
+								float colors[3] = { w[0] / 256.0f, w[1] / 256.0f, w[2] / 256.0f };
+								float mult = (1 - shade) + (fabs(n[2]) - 0.5) * shade;
+
+								colors[0] = colors[0] * mult;
+								colors[1] = colors[1] * mult;
+								colors[2] = colors[2] * mult;
+
+								glColor3fv(colors);
+							}
+							else {
+								glColor3ubv(w);
+							}
+						}
+						else {
+							continue;
+						}
 					}
 				}
 
@@ -1219,20 +1229,37 @@ void R_DrawFlat (model_t *model) {
 
 static void R_DrawMapOutline (model_t *model) {
 	extern cvar_t gl_outline_width;
+	extern cvar_t r_floorcolor;
+	extern cvar_t r_wallcolor;
+
+	vec3_t f = { r_floorcolor.color[0], r_floorcolor.color[1], r_floorcolor.color[2] };
+	vec3_t w = { r_wallcolor.color[0], r_wallcolor.color[1], r_wallcolor.color[2] };
 	msurface_t *s;
 	int waterline, i, k;
 	float *v;
 	vec3_t n;
+	float shade;
+	float color_diff[3];
 
-	GL_PolygonOffset(1, 1);
-	glColor3f (1.0f, 1.0f, 1.0f);
+	color_diff[0] = (int)f[0] - (int)w[0];
+	color_diff[1] = (int)f[1] - (int)w[1];
+	color_diff[2] = (int)f[2] - (int)w[2];
+
 	glLineWidth (bound(0.1, gl_outline_width.value, 3.0));
 
 	glPushAttrib(GL_ENABLE_BIT);
-	glDisable (GL_DEPTH_TEST);
-	glDisable (GL_CULL_FACE);
-	glDisable (GL_TEXTURE_2D);
+	if (!cls.demoplayback) {
+		glDisable(GL_DEPTH_TEST);
+		glDisable(GL_CULL_FACE);
+	}
+	else {
+		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_CULL_FACE);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	}
+	glDisable(GL_TEXTURE_2D);
 
+	shade = r_drawflat_shade.integer == 2 ? -1 : min(max(r_drawflat_shade.value, 0), 1);
 	for (i = 0; i < model->numtextures; i++) {
 		if (!model->textures[i] || (!model->textures[i]->texturechain[0] && !model->textures[i]->texturechain[1]))
 			continue;
@@ -1245,8 +1272,52 @@ static void R_DrawMapOutline (model_t *model) {
 				GL_Bind (lightmap_textures + s->lightmaptexturenum);
 
 				v = s->polys->verts[0];
-				VectorCopy(s->plane->normal, n);
-				VectorNormalize(n);
+				if (r_drawflat.integer && shade) {
+					VectorCopy(s->plane->normal, n);
+					VectorNormalize(n);
+
+					if (shade < 0) {
+						// blend between the two based on normal
+						float scale = fabs(n[2]);
+						vec3_t colors;
+
+						colors[0] = (w[0] + scale * color_diff[0]) / 512;
+						colors[1] = (w[1] + scale * color_diff[1]) / 512;
+						colors[2] = (w[2] + scale * color_diff[2]) / 512;
+
+						glColor3fv(colors);
+					}
+					else if ((n[2] < -0.5 || n[2] > 0.5) && (r_drawflat.integer == 2 || r_drawflat.integer == 1))
+					{
+						// floor or ceiling
+						float colors[3] = { f[0] / 256.0f, f[1] / 256.0f, f[2] / 256.0f };
+						float mult = (1 - shade) + (fabs(n[2]) - 0.5) * 1.25 * shade;
+
+						colors[0] = colors[0] * mult;
+						colors[1] = colors[1] * mult;
+						colors[2] = colors[2] * mult;
+
+						glColor3fv(colors);
+					}
+					else if (!(n[2] < -0.5 || n[2] > 0.5) && (r_drawflat.integer == 3 || r_drawflat.integer == 1))
+					{
+						// walls
+						float colors[3] = { w[0] / 256.0f, w[1] / 256.0f, w[2] / 256.0f };
+						float mult = (1 - shade) + fabs(n[0]) * 0.5 * shade;
+
+						colors[0] = colors[0] * mult;
+						colors[1] = colors[1] * mult;
+						colors[2] = colors[2] * mult;
+
+						glColor3fv(colors);
+					}
+					else {
+						glColor3f(1.0f, 1.0f, 1.0f);
+					}
+				}
+				else {
+					glColor3f(1.0f, 1.0f, 1.0f);
+				}
 
 				glBegin(GL_LINE_LOOP);
 				for (k = 0; k < s->polys->numverts; k++, v += VERTEXSIZE) {
@@ -1261,6 +1332,7 @@ static void R_DrawMapOutline (model_t *model) {
 
 	glColor3f(1.0f, 1.0f, 1.0f);
 	GL_PolygonOffset(0, 0);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
 void OnChange_r_drawflat (cvar_t *var, char *value, qbool *cancel) {
@@ -1289,6 +1361,7 @@ void R_DrawBrushModel (entity_t *e) {
 	mplane_t *pplane;
 	model_t *clmodel;
 	qbool rotated;
+	qbool drawing_outline = (gl_outline.integer & 2) && e->model->isworldmodel && !RuleSets_DisallowModelOutline(NULL);
 
 	currententity = e;
 	currenttexture = -1;
@@ -1390,23 +1463,27 @@ void R_DrawBrushModel (entity_t *e) {
 	// START shaman FIX for no simple textures on world brush models {
 	//draw the textures chains for the model
 	R_RenderAllDynamicLightmaps(clmodel);
-	if (r_drawflat.value != 0 && clmodel->isworldmodel)
-		if(r_drawflat.integer==1)
-		{
+	if (drawing_outline) {
+		GL_PolygonOffset(1, 1);
+	}
+	if (r_drawflat.value != 0 && clmodel->isworldmodel) {
+		if (r_drawflat.integer == 1) {
 			R_DrawFlat(clmodel);
 		}
-		else
-		{
-			DrawTextureChains (clmodel,(TruePointContents(e->origin)));//R00k added contents point for underwater bmodels
+		else {
+			DrawTextureChains(clmodel, (TruePointContents(e->origin)));//R00k added contents point for underwater bmodels
 			R_DrawFlat(clmodel);
 		}
+	}
 	else
 	{
 		DrawTextureChains (clmodel,(TruePointContents(e->origin)));//R00k added contents point for underwater bmodels
 	}
 	// } END shaman FIX for no simple textures on world brush models
 
-	if ((gl_outline.integer & 2) && clmodel->isworldmodel && !RuleSets_DisallowModelOutline(NULL)) {
+	if (drawing_outline) {
+		GL_PolygonOffset(0, 0);
+
 		R_DrawMapOutline (clmodel);
 	}
 
@@ -1511,6 +1588,7 @@ void R_DrawWorld (void)
 {
 	entity_t ent;
 	extern cvar_t gl_outline;
+	qbool drawing_outline = (gl_outline.integer & 2) && !RuleSets_DisallowModelOutline(NULL);
 
 	memset (&ent, 0, sizeof(ent));
 	ent.model = cl.worldmodel;
@@ -1531,6 +1609,9 @@ void R_DrawWorld (void)
 	R_DrawEntitiesOnList (&cl_firstpassents);
 
 	//draw the world
+	if (drawing_outline) {
+		GL_PolygonOffset(1, 1);
+	}
 	R_RenderAllDynamicLightmaps(cl.worldmodel);
 	if (r_drawflat.value)
 	{
@@ -1549,7 +1630,9 @@ void R_DrawWorld (void)
 		DrawTextureChains (cl.worldmodel, 0);
 	}
 
-	if ((gl_outline.integer & 2) && !RuleSets_DisallowModelOutline(NULL)) {
+	if (drawing_outline) {
+		GL_PolygonOffset(0, 0);
+
 		R_DrawMapOutline (cl.worldmodel);
 	}
 
