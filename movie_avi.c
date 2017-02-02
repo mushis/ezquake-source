@@ -661,10 +661,72 @@ static void OnChange_movie_codec(cvar_t *var, char *string, qbool *cancel)
 
 #ifdef USE_MEDIA_FOUNDATION
 
+// mingw64's .h files are strange - even though they support Win7 MF_SDK_VERSION, other files don't include Win7 definitions...
+#ifdef MINGW_MF_WIN7_SUPPORT
+// Include files in latest packages didn't seem to have newer properties for Windows 7 and up
+EXTERN_GUID( MF_READWRITE_ENABLE_HARDWARE_TRANSFORMS, 0xa634a91c, 0x822b, 0x41b9, 0xa4, 0x94, 0x4d, 0xe4, 0x64, 0x36, 0x12, 0xb0);
+DEFINE_CODECAPI_GUIDNAMED( AVEncMPVDefaultBPictureCount )
+DEFINE_CODECAPI_GUIDNAMED( CODECAPI_AVEncCommonQualityVsSpeed )
+DEFINE_CODECAPI_GUIDNAMED( CODECAPI_AVEncCommonRateControlMode )
+DEFINE_CODECAPI_GUIDNAMED( CODECAPI_AVEncCommonQuality )
+
+enum eAVEncCommonRateControlMode
+{
+	eAVEncCommonRateControlMode_CBR                = 0,
+	eAVEncCommonRateControlMode_PeakConstrainedVBR = 1,
+	eAVEncCommonRateControlMode_UnconstrainedVBR   = 2,
+	eAVEncCommonRateControlMode_Quality            = 3,
+
+	eAVEncCommonRateControlMode_LowDelayVBR        = 4,
+	eAVEncCommonRateControlMode_GlobalVBR          = 5,
+	eAVEncCommonRateControlMode_GlobalLowDelayVBR  = 6
+};
+
+enum eAVEncH264VProfile
+{
+	eAVEncH264VProfile_unknown  = 0,
+	eAVEncH264VProfile_Simple   = 66,
+	eAVEncH264VProfile_Base     = 66,
+	eAVEncH264VProfile_Main     = 77,
+	eAVEncH264VProfile_High     = 100,
+	eAVEncH264VProfile_422      = 122,
+	eAVEncH264VProfile_High10   = 110,
+	eAVEncH264VProfile_444      = 144,
+	eAVEncH264VProfile_Extended = 88,
+
+	// UVC 1.2 H.264 extension
+	eAVEncH264VProfile_ScalableBase                     = 83,
+	eAVEncH264VProfile_ScalableHigh                     = 86,
+	eAVEncH264VProfile_MultiviewHigh                    = 118,
+	eAVEncH264VProfile_StereoHigh                       = 128,
+	eAVEncH264VProfile_ConstrainedBase                  = 256,
+	eAVEncH264VProfile_UCConstrainedHigh                = 257,
+	eAVEncH264VProfile_UCScalableConstrainedBase        = 258,
+	eAVEncH264VProfile_UCScalableConstrainedHigh        = 259
+};
+
+enum _MFT_ENUM_FLAG
+{
+	MFT_ENUM_FLAG_SYNCMFT                       = 0x00000001,   // Enumerates V1 MFTs. This is default.
+	MFT_ENUM_FLAG_ASYNCMFT                      = 0x00000002,   // Enumerates only software async MFTs also known as V2 MFTs
+	MFT_ENUM_FLAG_HARDWARE                      = 0x00000004,   // Enumerates V2 hardware async MFTs
+	MFT_ENUM_FLAG_FIELDOFUSE                    = 0x00000008,   // Enumerates MFTs that require unlocking
+	MFT_ENUM_FLAG_LOCALMFT                      = 0x00000010,   // Enumerates Locally (in-process) registered MFTs
+	MFT_ENUM_FLAG_TRANSCODE_ONLY                = 0x00000020,   // Enumerates decoder MFTs used by transcode only
+	MFT_ENUM_FLAG_SORTANDFILTER                 = 0x00000040,   // Apply system local, do not use and preferred sorting and filtering
+	MFT_ENUM_FLAG_SORTANDFILTER_APPROVED_ONLY   = 0x000000C0,   // Similar to MFT_ENUM_FLAG_SORTANDFILTER, but apply a local policy of: MF_PLUGIN_CONTROL_POLICY_USE_APPROVED_PLUGINS
+	MFT_ENUM_FLAG_SORTANDFILTER_WEB_ONLY        = 0x00000140,   // Similar to MFT_ENUM_FLAG_SORTANDFILTER, but apply a local policy of: MF_PLUGIN_CONTROL_POLICY_USE_WEB_PLUGINS
+	MFT_ENUM_FLAG_ALL                           = 0x0000003F    // Enumerates all MFTs including SW and HW MFTs and applies filtering
+};
+#endif
+
+// Inline functions not included if not C++
+#ifndef __cplusplus
 static UINT64 Pack2UINT32AsUINT64(UINT32 unHigh, UINT32 unLow)
 {
 	return ((UINT64)unHigh << 32) | unLow;
 }
+#endif
 
 #define MFSetAttributeSize(pAttributes,guidKey,unWidth,unHeight) pAttributes->lpVtbl->SetUINT64(pAttributes, guidKey, Pack2UINT32AsUINT64(unWidth, unHeight))
 #define MFSetAttributeRatio(pAttributes,guidKey,unNumerator,unDenominator) pAttributes->lpVtbl->SetUINT64(pAttributes, guidKey, Pack2UINT32AsUINT64(unNumerator, unDenominator))
@@ -1139,14 +1201,18 @@ void Capture_InitAVI (void)
 	Cvar_SetCurrentGroup(CVAR_GROUP_DEMO);
 	Cvar_Register(&movie_codec);
 	Cvar_Register(&movie_vid_maxlen);
+#ifdef USE_MEDIA_FOUNDATION
 	Cvar_Register(&movie_format);
 	Cvar_Register(&movie_format_hwaccel);
 	Cvar_Register(&movie_bitrate);
 	Cvar_Register(&movie_bframes);
 	Cvar_Register(&movie_iframes_only);
+#endif
 	Cvar_ResetCurrentGroup();
 
+#ifdef USE_MEDIA_FOUNDATION
 	Cmd_AddCommand("movie_enum_mfts", MovieEnumMFTs);
+#endif
 
 	AVIFile_Capture_InitACM ();
 	if (!movie_acm_loaded)
