@@ -663,9 +663,10 @@ static void OnChange_movie_codec(cvar_t *var, char *string, qbool *cancel)
 EXTERN_GUID(MF_READWRITE_ENABLE_HARDWARE_TRANSFORMS, 0xa634a91c, 0x822b, 0x41b9, 0xa4, 0x94, 0x4d, 0xe4, 0x64, 0x36, 0x12, 0xb0);
 EXTERN_GUID(CODECAPI_AVEncCommonQualityVsSpeed, 0x98332df8, 0x03cd, 0x476b, 0x89, 0xfa, 0x3f, 0x9e, 0x44, 0x2d, 0xec, 0x9f);
 EXTERN_GUID(CODECAPI_AVEncMPVDefaultBPictureCount, 0x8d390aac, 0xdc5c, 0x4200, 0xb5, 0x7f, 0x81, 0x4d, 0x04, 0xba, 0xba, 0xb2);
-EXTERN_GUID(CODECAPI_AVEncCommonQualityVsSpeed, 0x98332df8, 0x03cd, 0x476b, 0x89, 0xfa, 0x3f, 0x9e, 0x44, 0x2d, 0xec, 0x9f);
 EXTERN_GUID(CODECAPI_AVEncCommonRateControlMode, 0x1c0608e9, 0x370c, 0x4710, 0x8a, 0x58, 0xcb, 0x61, 0x81, 0xc4, 0x24, 0x23);
 EXTERN_GUID(CODECAPI_AVEncCommonQuality, 0xfcbf57a3, 0x7ea5, 0x4b0c, 0x96, 0x44, 0x69, 0xb4, 0x0c, 0x39, 0xc3, 0x91);
+DEFINE_GUID(MF_MT_FRAME_RATE_RANGE_MIN, 0xd2e7558c, 0xdc1f, 0x403f, 0x9a, 0x72, 0xd2, 0x8b, 0xb1, 0xeb, 0x3b, 0x5e);
+DEFINE_GUID(MF_MT_FRAME_RATE_RANGE_MAX, 0xe3371d41, 0xb4cf, 0x4a05, 0xbd, 0x4e, 0x20, 0xb8, 0x8b, 0xb2, 0xc4, 0xd6);
 
 enum eAVEncCommonRateControlMode
 {
@@ -677,29 +678,6 @@ enum eAVEncCommonRateControlMode
 	eAVEncCommonRateControlMode_LowDelayVBR        = 4,
 	eAVEncCommonRateControlMode_GlobalVBR          = 5,
 	eAVEncCommonRateControlMode_GlobalLowDelayVBR  = 6
-};
-
-enum eAVEncH264VProfile
-{
-	eAVEncH264VProfile_unknown  = 0,
-	eAVEncH264VProfile_Simple   = 66,
-	eAVEncH264VProfile_Base     = 66,
-	eAVEncH264VProfile_Main     = 77,
-	eAVEncH264VProfile_High     = 100,
-	eAVEncH264VProfile_422      = 122,
-	eAVEncH264VProfile_High10   = 110,
-	eAVEncH264VProfile_444      = 144,
-	eAVEncH264VProfile_Extended = 88,
-
-	// UVC 1.2 H.264 extension
-	eAVEncH264VProfile_ScalableBase                     = 83,
-	eAVEncH264VProfile_ScalableHigh                     = 86,
-	eAVEncH264VProfile_MultiviewHigh                    = 118,
-	eAVEncH264VProfile_StereoHigh                       = 128,
-	eAVEncH264VProfile_ConstrainedBase                  = 256,
-	eAVEncH264VProfile_UCConstrainedHigh                = 257,
-	eAVEncH264VProfile_UCScalableConstrainedBase        = 258,
-	eAVEncH264VProfile_UCScalableConstrainedHigh        = 259
 };
 
 enum _MFT_ENUM_FLAG
@@ -1156,33 +1134,6 @@ static void MediaFoundation_Capture_Shutdown (void)
 	}
 }
 
-static void MovieEnumMFTs(void)
-{
-	HRESULT hr = 0;
-	IMFActivate** mfts = NULL;
-	UINT32 mftCount;
-
-	if (!MediaFoundation_Capture_InitAVI()) {
-		Com_Printf("Error: Failed to initialise Media Foundation\n");
-		return;
-	}
-
-	HR_CHECK(MFTEnumEx(MFT_CATEGORY_VIDEO_ENCODER, MFT_ENUM_FLAG_TRANSCODE_ONLY, NULL, NULL, &mfts, &mftCount))
-	if (SUCCEEDED(hr) && mfts) {
-		UINT i;
-		GUID friendlyNameGUID = MFT_FRIENDLY_NAME_Attribute;
-		WCHAR value[128];
-
-		for (i = 0; i < mftCount; ++i) {
-			HRESULT hr2 = mfts[i]->lpVtbl->GetString(mfts[i], &friendlyNameGUID, value, sizeof(value) / sizeof(value[0]), NULL);
-			if (SUCCEEDED(hr2)) {
-				Com_Printf("> %S\n", value);
-			}
-		}
-		CoTaskMemFree(mfts);
-	}
-}
-
 #endif // USE_MEDIA_FOUNDATION
 
 void Capture_InitAVI (void)
@@ -1206,10 +1157,6 @@ void Capture_InitAVI (void)
 	Cvar_Register(&movie_iframes_only);
 #endif
 	Cvar_ResetCurrentGroup();
-
-#ifdef USE_MEDIA_FOUNDATION
-	Cmd_AddCommand("movie_enum_mfts", MovieEnumMFTs);
-#endif
 
 	AVIFile_Capture_InitACM ();
 	if (!movie_acm_loaded)
