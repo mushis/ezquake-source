@@ -3316,9 +3316,9 @@ void SCR_UpdateScreenPostPlayerView (void)
 
 	Draw_TextCacheFlush();
 
-	if (!GL_ShadersSupported()) {
-		R_BrightenScreen();
+	R_BrightenScreen();
 
+	if (!GL_ShadersSupported()) {
 		V_UpdatePalette();
 	}
 
