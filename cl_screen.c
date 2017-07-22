@@ -1510,7 +1510,7 @@ void DrawCI (void) {
 	VectorNegate(billboard2[3], billboard2[1]);
 
 	glDepthMask(GL_FALSE);
-	glEnable(GL_BLEND);
+	GL_AlphaBlendFlags(GL_BLEND_ENABLED);
 	GL_TextureEnvMode(GL_MODULATE);
 	glShadeModel(GL_SMOOTH);
 
@@ -1544,7 +1544,7 @@ void DrawCI (void) {
 
 	glEnable(GL_TEXTURE_2D);
 	glDepthMask(GL_TRUE);
-	glDisable(GL_BLEND);
+	GL_AlphaBlendFlags(GL_BLEND_DISABLED);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	GL_TextureEnvMode(GL_REPLACE);
 	glShadeModel(GL_FLAT);
@@ -1880,8 +1880,7 @@ static void SCR_Draw_TeamInfo(void)
 
 	GL_TextureEnvMode(GL_MODULATE);
 	glColor4f(1, 1, 1, 1);
-	glDisable(GL_ALPHA_TEST);
-	glEnable(GL_BLEND);
+	GL_AlphaBlendFlags(GL_ALPHATEST_DISABLED | GL_BLEND_ENABLED);
 
 	if (scale != 1) {
 		glPushMatrix ();
@@ -1917,8 +1916,7 @@ static void SCR_Draw_TeamInfo(void)
 	if (scale != 1)
 		glPopMatrix();
 
-	glEnable(GL_ALPHA_TEST);
-	glDisable(GL_BLEND);
+	GL_AlphaBlendFlags(GL_ALPHATEST_ENABLED | GL_BLEND_DISABLED);
 	GL_TextureEnvMode(GL_REPLACE);
 	glColor4f(1, 1, 1, 1);
 }
@@ -2060,8 +2058,7 @@ static void SCR_Draw_ShowNick(void)
 
 	GL_TextureEnvMode(GL_MODULATE);
 	glColor4f(1, 1, 1, 1);
-	glDisable(GL_ALPHA_TEST);
-	glEnable(GL_BLEND);
+	GL_AlphaBlendFlags(GL_ALPHATEST_DISABLED | GL_BLEND_ENABLED);
 
 	if (scale != 1)
 	{
@@ -2092,8 +2089,7 @@ static void SCR_Draw_ShowNick(void)
 	if (scale != 1)
 		glPopMatrix();
 
-	glEnable(GL_ALPHA_TEST);
-	glDisable(GL_BLEND);
+	GL_AlphaBlendFlags(GL_ALPHATEST_ENABLED | GL_BLEND_DISABLED);
 	GL_TextureEnvMode(GL_REPLACE);
 	glColor4f(1, 1, 1, 1);
 }
