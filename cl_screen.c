@@ -3297,7 +3297,7 @@ void SCR_UpdateScreenPlayerView (int flags)
 			//R_RenderPostProcess();
 		}
 		GL_Set2D();
-		//R_PolyBlend ();
+		R_PolyBlend ();
 
 		// draw any areas not covered by the refresh
 		SCR_TileClear();
