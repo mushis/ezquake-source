@@ -3030,6 +3030,7 @@ static void SCR_DrawElements(void)
 	extern qbool  sb_showscores,  sb_showteamscores;
 	extern cvar_t	scr_menudrawhud;
 
+	GL_EnterRegion(__FUNCTION__);
 	if (scr_drawloading) 
 	{
 		SCR_DrawLoading ();
@@ -3089,6 +3090,7 @@ static void SCR_DrawElements(void)
 					// Do not show if +showscores
 					if (!sb_showscores && !sb_showteamscores)
 					{ 
+						GL_EnterRegion("Classic HUD");
 						SCR_Draw_TeamInfo();
 						//SCR_Draw_WeaponStats();
 
@@ -3101,6 +3103,7 @@ static void SCR_DrawElements(void)
 						SCR_DrawDemoClock ();
 						SCR_DrawQTVBuffer ();
 						SCR_DrawFPS ();
+						GL_LeaveRegion();
 					}
 
 					// QW262
@@ -3118,8 +3121,10 @@ static void SCR_DrawElements(void)
 					if (CL_MultiviewEnabled())
 						SCR_DrawMultiviewOverviewElements ();
 
+					GL_EnterRegion("HUD");
 					Sbar_Draw();
 					HUD_Draw();
+					GL_LeaveRegion();
 					HUD_Editor_Draw();
 
 					Draw_TextCacheFlush();
@@ -3129,14 +3134,18 @@ static void SCR_DrawElements(void)
 		}
 
 		Draw_TextCacheFlush();
+
 		if (!SCR_TakingAutoScreenshot())
 		{
+			GL_EnterRegion("Console");
 			SCR_DrawConsole ();
 			M_Draw ();
+			GL_LeaveRegion();
 		}
 
 		SCR_DrawCursor();
 	}
+	GL_LeaveRegion();
 }
 
 /******************************* UPDATE SCREEN *******************************/
@@ -3220,6 +3229,7 @@ qbool SCR_UpdateScreenPrePlayerView (void)
 
 void SCR_UpdateScreenPlayerView (int flags)
 {
+	GL_EnterRegion(__FUNCTION__);
 	if (flags & UPDATESCREEN_MULTIVIEW) {
 		SCR_CalcRefdef();
 	}
@@ -3247,6 +3257,7 @@ void SCR_UpdateScreenPlayerView (int flags)
 	if (flags & UPDATESCREEN_MULTIVIEW) {
 		SCR_DrawMultiviewIndividualElements ();
 	}
+	GL_LeaveRegion();
 }
 
 void SCR_HUD_WeaponStats(hud_t* hud);
