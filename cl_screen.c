@@ -3121,11 +3121,14 @@ static void SCR_DrawElements(void)
 					Sbar_Draw();
 					HUD_Draw();
 					HUD_Editor_Draw();
+
+					Draw_TextCacheFlush();
 					DemoControls_Draw();
 				}
 			}
 		}
 
+		Draw_TextCacheFlush();
 		if (!SCR_TakingAutoScreenshot())
 		{
 			SCR_DrawConsole ();
@@ -3291,6 +3294,8 @@ void SCR_UpdateScreenPostPlayerView (void)
 	}
 
 	SCR_DrawElements();
+
+	Draw_TextCacheFlush();
 
 	if (!GL_ShadersSupported()) {
 		R_BrightenScreen();
