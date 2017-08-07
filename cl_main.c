@@ -2436,6 +2436,8 @@ void CL_Frame (double time)
 		}
 	}
 
+	R_ParticleFrame();
+
 	CL_MultiviewPreUpdateScreen ();
 
 	// update video
