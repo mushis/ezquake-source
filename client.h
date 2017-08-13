@@ -622,6 +622,7 @@ extern	clientState_t	cl;
 
 typedef struct visentlist_s {
 	entity_t	*list;
+	qbool       *drawn;
 	int			count;
 	int			max;
 	int			alpha;
