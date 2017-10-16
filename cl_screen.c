@@ -2087,13 +2087,10 @@ static void SCR_DrawElements(void)
 					GL_LeaveRegion();
 					HUD_Editor_Draw();
 
-					Draw_TextCacheFlush();
 					DemoControls_Draw();
 				}
 			}
 		}
-
-		Draw_TextCacheFlush();
 
 		if (!SCR_TakingAutoScreenshot()) {
 			GL_EnterRegion("Console");
@@ -2285,8 +2282,11 @@ void SCR_UpdateScreenPostPlayerView (void)
 
 	SCR_DrawElements();
 
-	Draw_TextCacheFlush();
-
+	//Draw_TextCacheFlush();
+	if (GL_ShadersSupported()) {
+		GLM_FlushImageDraw();
+	}
+	
 	R_BrightenScreen();
 
 	if (!GL_ShadersSupported()) {
