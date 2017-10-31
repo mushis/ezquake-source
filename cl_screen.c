@@ -1963,7 +1963,6 @@ static void SCR_DrawElements(void)
 	extern qbool  sb_showscores,  sb_showteamscores;
 	extern cvar_t	scr_menudrawhud;
 
-	GL_EnterRegion(__FUNCTION__);
 	if (scr_drawloading) 
 	{
 		SCR_DrawLoading ();
@@ -2067,7 +2066,6 @@ static void SCR_DrawElements(void)
 
 		SCR_DrawCursor();
 	}
-	GL_LeaveRegion();
 }
 
 /******************************* UPDATE SCREEN *******************************/
