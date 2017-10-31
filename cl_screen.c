@@ -2141,6 +2141,8 @@ qbool SCR_UpdateScreenPrePlayerView (void)
 
 void SCR_UpdateScreenPlayerView(int flags)
 {
+	GL_ResetRegion(true);
+
 	GL_EnterRegion(__FUNCTION__);
 	if (flags & UPDATESCREEN_MULTIVIEW) {
 		SCR_CalcRefdef();
