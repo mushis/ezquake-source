@@ -2174,7 +2174,7 @@ void SCR_UpdateScreenPlayerView(int flags)
 		R_RenderView();
 
 		if (flags & UPDATESCREEN_POSTPROCESS) {
-			R_RenderPostProcess();
+			R_PostProcessScene();
 		}
 	}
 
@@ -2226,7 +2226,7 @@ static void SCR_DrawNewHudElements(void)
 	}
 }
 
-void SCR_UpdateScreenPostPlayerView (void)
+void SCR_UpdateScreenPostPlayerView(void)
 {
 	extern qbool  sb_showscores, sb_showteamscores;
 	extern cvar_t scr_menudrawhud;
@@ -2237,23 +2237,15 @@ void SCR_UpdateScreenPostPlayerView (void)
 
 	SCR_DrawElements();
 
-	if (GL_ShadersSupported()) {
-		GLM_FlushImageDraw();
-	}
-	
-	R_BrightenScreen();
+	R_PostProcessScreen();
 
-	if (!GL_ShadersSupported()) {
-		V_UpdatePalette();
-	}
-
-	if (SCR_TakingAutoScreenshot ()) {
-		SCR_CheckAutoScreenshot ();
+	if (SCR_TakingAutoScreenshot()) {
+		SCR_CheckAutoScreenshot();
 	}
 
 	SCR_RenderFrameEnd();
 
-	GL_EndRendering ();
+	GL_EndRendering();
 }
 
 // This is called every frame, and can also be called explicitly to flush text to the screen.
@@ -2264,6 +2256,8 @@ qbool SCR_UpdateScreen(void)
 		return false;
 	}
 
+	R_ScreenDrawStart();
+
 	SCR_UpdateScreenPlayerView(UPDATESCREEN_POSTPROCESS);
 
 	SCR_UpdateScreenPostPlayerView();
@@ -2271,9 +2265,10 @@ qbool SCR_UpdateScreen(void)
 	return true;
 }
 
-void SCR_UpdateWholeScreen (void) {
+void SCR_UpdateWholeScreen(void)
+{
 	scr_fullupdate = 0;
-	SCR_UpdateScreen ();
+	SCR_UpdateScreen();
 }
 
 /******************************** SCREENSHOTS ********************************/
