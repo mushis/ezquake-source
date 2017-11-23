@@ -2010,7 +2010,6 @@ static void SCR_DrawElements(void)
 					// Do not show if +showscores
 					if (!sb_showscores && !sb_showteamscores)
 					{ 
-						GL_EnterRegion("Classic HUD");
 						SCR_Draw_TeamInfo();
 						//SCR_Draw_WeaponStats();
 
@@ -2023,7 +2022,6 @@ static void SCR_DrawElements(void)
 						SCR_DrawDemoClock ();
 						SCR_DrawQTVBuffer ();
 						SCR_DrawFPS ();
-						GL_LeaveRegion();
 					}
 
 					// QW262
@@ -2041,10 +2039,8 @@ static void SCR_DrawElements(void)
 					if (CL_MultiviewEnabled())
 						SCR_DrawMultiviewOverviewElements ();
 
-					GL_EnterRegion("HUD");
 					Sbar_Draw();
 					HUD_Draw();
-					GL_LeaveRegion();
 					HUD_Editor_Draw();
 
 					DemoControls_Draw();
@@ -2053,13 +2049,9 @@ static void SCR_DrawElements(void)
 		}
 
 		if (!SCR_TakingAutoScreenshot()) {
-			GL_EnterRegion("Console");
 			SCR_DrawConsole();
-			GL_LeaveRegion();
 
-			GL_EnterRegion("Menu");
 			M_Draw();
-			GL_LeaveRegion();
 		}
 
 		SCR_DrawCursor();
