@@ -1828,6 +1828,16 @@ void CL_InitLocal (void)
 	}
 #endif
 
+	if (IsDeveloperMode()) {
+		extern void Dev_GroundNormalSet(void);
+		extern void Dev_GroundNormalDump(void);
+		extern void Dev_GroundNormalShow(void);
+
+		Cmd_AddCommand("dev_groundnormalshow", Dev_GroundNormalShow);
+		Cmd_AddCommand("dev_groundnormalset", Dev_GroundNormalSet);
+		Cmd_AddCommand("dev_groundnormaldump", Dev_GroundNormalDump);
+	}
+
 	{
 		extern void GL_BenchmarkLightmapFormats(void);
 
@@ -2584,4 +2594,116 @@ void OnChangeDemoTeamplay (cvar_t *var, char *value, qbool *cancel)
 
 		OnChangeColorForcing(var, value, cancel);
 	}
+}
+
+
+
+
+void Dev_GroundNormalShow(void)
+{
+	vec3_t point = { cl.simorg[0], cl.simorg[1], cl.simorg[2] - 1 };
+	trace_t trace;
+	mphysicsnormal_t physicsnormal;
+
+	if (cls.demoplayback || cls.state != ca_active || !r_refdef2.allow_cheats) {
+		// it's not actually a cheat, but using these functions would screw with prediction
+		Con_Printf("Not available outwith /devmap\n");
+		return;
+	}
+
+	trace = PM_PlayerTrace(pmove.origin, point);
+	if (trace.fraction == 1 || trace.plane.normal[2] < MIN_STEP_NORMAL) {
+		Con_Printf("Not on ground\n");
+	}
+	else {
+		physicsnormal = CM_PhysicsNormal(trace.physicsnormal);
+
+		Con_Printf("Plane normal: %f %f %f\n", trace.plane.normal[0], trace.plane.normal[1], trace.plane.normal[2]);
+		if (!(physicsnormal.flags & GROUNDNORMAL_SET)) {
+			Con_Printf("No custom physics plane found\n");
+		}
+		else {
+			Con_Printf("Physics normal: %f %f %f\n", physicsnormal.normal[0], physicsnormal.normal[1], physicsnormal.normal[2]);
+			Con_Printf("Flags: %s %s %s\n", physicsnormal.flags & GROUNDNORMAL_FLIPX ? "flip-x" : "std-x", physicsnormal.flags & GROUNDNORMAL_FLIPY ? "flip-y" : "std-y", physicsnormal.flags & GROUNDNORMAL_FLIPZ ? "flip-z" : "std-z");
+		}
+	}
+}
+
+void Dev_GroundNormalSet(void)
+{
+	vec3_t point = { cl.simorg[0], cl.simorg[1], cl.simorg[2] - 1 };
+	trace_t trace;
+	mphysicsnormal_t physicsnormal;
+	vec3_t newnormal;
+	int newflags = GROUNDNORMAL_SET;
+
+	if (cls.demoplayback || cls.state != ca_active || !r_refdef2.allow_cheats) {
+		// it's not actually a cheat, but using these functions would screw with prediction
+		Con_Printf("Not available outwith /devmap\n");
+		return;
+	}
+
+	if (Cmd_Argc() < 5) {
+		Com_Printf("Usage: %s <x> <y> <z> <flags(xyz)>\n", Cmd_Argv(0));
+		return;
+	}
+
+	newnormal[0] = atof(Cmd_Argv(1));
+	newnormal[1] = atof(Cmd_Argv(2));
+	newnormal[2] = atof(Cmd_Argv(3));
+	newflags |= strstr(Cmd_Argv(4), "x") ? GROUNDNORMAL_FLIPX : 0;
+	newflags |= strstr(Cmd_Argv(4), "y") ? GROUNDNORMAL_FLIPY : 0;
+	newflags |= strstr(Cmd_Argv(4), "z") ? GROUNDNORMAL_FLIPZ : 0;
+
+	if (newnormal[0] || newnormal[1] || newnormal[2]) {
+		VectorNormalize(newnormal);
+		if (VectorLength(newnormal) != 1) {
+			Com_Printf("Error: failed to normalize, found %f %f %f\n", newnormal[0], newnormal[1], newnormal[2]);
+			return;
+		}
+	}
+
+	trace = PM_PlayerTrace(pmove.origin, point);
+	if (trace.fraction == 1 || trace.plane.normal[2] < MIN_STEP_NORMAL) {
+		Con_Printf("Not on ground\n");
+	}
+	else {
+		physicsnormal = CM_PhysicsNormal(trace.physicsnormal);
+		if (!(physicsnormal.flags & GROUNDNORMAL_SET)) {
+			Con_Printf("Unable to determine ground normal\n");
+		}
+		else {
+			CM_PhysicsNormalSet(trace.physicsnormal, newnormal[0], newnormal[1], newnormal[2], newflags);
+
+			physicsnormal = CM_PhysicsNormal(trace.physicsnormal);
+			Con_Printf("New physics normal: %d: %f %f %f\n", trace.physicsnormal, physicsnormal.normal[0], physicsnormal.normal[1], physicsnormal.normal[2]);
+			Con_Printf("Flags: %s %s %s\n", physicsnormal.flags & GROUNDNORMAL_FLIPX ? "flip-x" : "std-x", physicsnormal.flags & GROUNDNORMAL_FLIPY ? "flip-y" : "std-y", physicsnormal.flags & GROUNDNORMAL_FLIPZ ? "flip-z" : "std-z");
+		}
+	}
+}
+
+void Dev_GroundNormalDump(void)
+{
+	char filename[MAX_OSPATH];
+	FILE* out;
+	extern cvar_t pm_rampjump, pm_maxgrdspd;
+
+	if (cls.demoplayback || cls.state != ca_active || !r_refdef2.allow_cheats) {
+		// it's not actually a cheat, but using these functions would screw with prediction
+		Con_Printf("Not available outwith /devmap\n");
+		return;
+	}
+
+	snprintf(filename, sizeof(filename), "qw/%s.qpn", host_mapname.string);
+	if (!(out = fopen(filename, "wb"))) {
+		Con_Printf("Failed: unable to open %s\n", filename);
+		return;
+	}
+
+	CM_PhysicsNormalDump(out, pm_rampjump.value, pm_maxgrdspd.value);
+	fclose(out);
+
+	CM_CompareNormalDump(filename);
+
+	Con_Printf("Wrote %s\n", filename);
 }

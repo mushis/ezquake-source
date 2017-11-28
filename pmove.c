@@ -33,13 +33,12 @@ static float    pm_frametime;
 
 static vec3_t   pm_forward, pm_right;
 
-static plane_t groundplane;
+static vec3_t   groundnormal;
 
 vec3_t	player_mins = {-16, -16, -24};
 vec3_t	player_maxs = {16, 16, 32};
 
 #define STEPSIZE        18
-#define MIN_STEP_NORMAL 0.7 // roughly 45 degrees
 
 #define pm_flyfriction  4
 
@@ -573,13 +572,28 @@ void PM_CategorizePosition (void)
 		else {
 			pmove.onground = true;
 			pmove.groundent = trace.e.entnum;
-			groundplane = trace.plane;
+			VectorCopy(trace.plane.normal, groundnormal);
 			pmove.waterjumptime = 0;
 		}
 
 		// standing on an entity other than the world
 		if (trace.e.entnum > 0) {
 			PM_AddTouchedEnt(trace.e.entnum);
+		}
+		else {
+			mphysicsnormal_t ground = CM_PhysicsNormal(trace.physicsnormal);
+			if (ground.flags & GROUNDNORMAL_SET) {
+				VectorCopy(ground.normal, groundnormal);
+				if (pmove.velocity[0] < 0 && (ground.flags & GROUNDNORMAL_FLIPX)) {
+					groundnormal[0] = -groundnormal[0];
+				}
+				if (pmove.velocity[1] < 0 && (ground.flags & GROUNDNORMAL_FLIPY)) {
+					groundnormal[1] = -groundnormal[1];
+				}
+				if (pmove.velocity[2] < 0 && (ground.flags & GROUNDNORMAL_FLIPZ)) {
+					groundnormal[2] = -groundnormal[2];
+				}
+			}
 		}
 	}
 
@@ -659,9 +673,9 @@ static void PM_CheckJump (void)
 	if (!movevars.pground) {
 		// check for jump bug
 		// groundplane normal was set in the call to PM_CategorizePosition
-		if ((movevars.rampjump || pmove.velocity[2] < 0) && DotProduct(pmove.velocity, groundplane.normal) < -0.1) {
+		if ((movevars.rampjump || pmove.velocity[2] < 0) && DotProduct(pmove.velocity, groundnormal) < -0.1) {
 			// pmove.velocity is pointing into the ground, clip it
-			PM_ClipVelocity(pmove.velocity, groundplane.normal, pmove.velocity, 1);
+			PM_ClipVelocity(pmove.velocity, groundnormal, pmove.velocity, 1);
 		}
 	}
 
@@ -892,8 +906,8 @@ int PM_PlayerMove(void)
 		// this is to make sure landing sound is not played twice
 		// and falling damage is calculated correctly
 		if (pmove.onground && pmove.velocity[2] < -300) {
-			if (DotProduct(pmove.velocity, groundplane.normal) < -0.1) {
-				PM_ClipVelocity(pmove.velocity, groundplane.normal, pmove.velocity, 1);
+			if (DotProduct(pmove.velocity, groundnormal) < -0.1) {
+				PM_ClipVelocity(pmove.velocity, groundnormal, pmove.velocity, 1);
 			}
 		}
 	}

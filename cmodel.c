@@ -75,6 +75,8 @@ static char			*map_entitystring;
 
 static qbool		map_halflife;
 
+static mphysicsnormal_t* map_physicsnormals;     // must be same number as clipnodes to save reallocations in worst case scenario
+
 static byte			*cmod_base;					// for CM_Load* functions
 
 
@@ -323,6 +325,7 @@ start:
 
 	trace->fraction = midf;
 	VectorCopy (mid, trace->endpos);
+	trace->physicsnormal = (!nearside ? num : -num);
 
 	return TR_BLOCKED;
 }
@@ -905,6 +908,46 @@ static void CM_LoadClipnodesBSP2(lump_t *l)
 	}
 }
 
+static qbool CM_LoadGroundNormalsData(byte* data, int datalength)
+{
+	extern cvar_t pm_maxgrdspd, pm_rampjump;
+	mphysicsnormal_t* in = (mphysicsnormal_t*)(data + 8);
+	float* cvars = (float*)data;
+	int i;
+
+	if (datalength != 8 + sizeof(map_physicsnormals[0]) * numclipnodes) {
+		return false;
+	}
+
+	Cvar_SetValue(&pm_rampjump, LittleFloat(cvars[0]));
+	Cvar_SetValue(&pm_maxgrdspd, LittleFloat(cvars[1]));
+
+	for (i = 0; i < numclipnodes; ++i) {
+		map_physicsnormals[i].normal[0] = LittleFloat(in[i].normal[0]);
+		map_physicsnormals[i].normal[1] = LittleFloat(in[i].normal[1]);
+		map_physicsnormals[i].normal[2] = LittleFloat(in[i].normal[2]);
+		map_physicsnormals[i].flags = GROUNDNORMAL_SET | (int)LittleLong(in[i].flags);
+	}
+	return true;
+}
+
+static void CM_LoadGroundNormals(lump_t* l)
+{
+	extern cvar_t pm_maxgrdspd, pm_rampjump;
+	int i;
+
+	Cvar_SetValue(&pm_rampjump, 0);
+	Cvar_SetValue(&pm_maxgrdspd, 0);
+	map_physicsnormals = Hunk_AllocName(numclipnodes * sizeof(map_physicsnormals[0]), loadname);
+
+	if (l == NULL || !CM_LoadGroundNormalsData(cmod_base + l->fileofs, l->filelen)) {
+		for (i = 0; i < numclipnodes; ++i) {
+			VectorCopy(map_planes[map_clipnodes[i].planenum].normal, map_physicsnormals[i].normal);
+			map_physicsnormals[i].flags = GROUNDNORMAL_SET;
+		}
+	}
+}
+
 /*
 =================
 CM_MakeHull0
@@ -1169,6 +1212,7 @@ void CM_InvalidateMap (void)
 	map_pvs = NULL;
 	map_phs = NULL;
 	map_entitystring = NULL;
+	map_physicsnormals = NULL;
 }
 
 /*
@@ -1306,6 +1350,41 @@ cmodel_t *CM_LoadMap (char *name, qbool clientload, unsigned *checksum, unsigned
 	CM_LoadEntities (&header->lumps[LUMP_ENTITIES]);
 	CM_LoadSubmodels (&header->lumps[LUMP_MODELS]);
 
+	{
+		bspx_header_t* bspx = Mod_LoadBSPX(filelen, cmod_base);
+
+		if (bspx) {
+			int lumpsize = 0;
+			void* lump = Mod_BSPX_FindLump(bspx, "GROUNDNORMALS", &lumpsize, cmod_base);
+
+			CM_LoadGroundNormals(lump);
+		}
+		else {
+			CM_LoadGroundNormals(NULL);
+		}
+
+		// Now over-ride from external file
+		{
+			char extfile[MAX_OSPATH];
+			int extfilesize = 0;
+			void* data = NULL;
+			int mark;
+
+			mark = Hunk_LowMark();
+			snprintf(extfile, sizeof(extfile), "maps/%s.qpn", loadname);
+			data = FS_LoadHunkFile(extfile, &extfilesize);
+			if (data) {
+				if (CM_LoadGroundNormalsData(data, extfilesize)) {
+					Com_Printf("Loading external physics normals\n");
+				}
+				else {
+					Com_Printf("%s is corrupt or wrong size\n", extfile);
+				}
+				Hunk_FreeToLowMark(mark);
+			}
+		}
+	}
+
 	CM_MakeHull0 ();
 
 	cm_load_pvs_func (&header->lumps[LUMP_VISIBILITY], &header->lumps[LUMP_LEAFS]);
@@ -1339,3 +1418,72 @@ void CM_Init (void)
 	memset (map_novis, 0xff, sizeof(map_novis));
 	CM_InitBoxHull ();
 }
+
+#ifndef SERVER_ONLY
+// Allow in-memory modifications to ground normals...
+void CM_PhysicsNormalSet(int num, float x, float y, float z, int flags)
+{
+	if (num >= 0 && num < numclipnodes) {
+		VectorSet(map_physicsnormals[num].normal, x, y, z);
+		map_physicsnormals[num].flags = flags;
+	}
+}
+
+// Allow map developer to dump normals
+void CM_PhysicsNormalDump(FILE* out, float rampjump, float maxgroundspeed)
+{
+	if (map_physicsnormals) {
+		fwrite(&rampjump, 4, 1, out);
+		fwrite(&maxgroundspeed, 4, 1, out);
+		fwrite(map_physicsnormals, sizeof(*map_physicsnormals) * numclipnodes, 1, out);
+	}
+}
+
+mphysicsnormal_t CM_PhysicsNormal(int num)
+{
+	static mphysicsnormal_t null_physicsnormal = { 0 };
+	mphysicsnormal_t ret = null_physicsnormal;
+	qbool inverse = num < 0;
+
+	num = abs(num);
+
+	if (num < numclipnodes) {
+		ret = map_physicsnormals[num];
+		if (inverse) {
+			VectorNegate(ret.normal, ret.normal);
+		}
+	}
+
+	return ret;
+}
+
+void CM_CompareNormalDump(const char* filename)
+{
+	int mark = Hunk_LowMark();
+	int size;
+	byte* data;
+	byte* raw = (byte*)map_physicsnormals;
+	int rawsize = sizeof(map_physicsnormals[0]) * numclipnodes;
+
+	data = FS_LoadHunkFile(filename, &size);
+	if (data) {
+		if (!memcmp(data + 8, map_physicsnormals, rawsize)) {
+			Com_Printf("Files match\n");
+		}
+		else {
+			int i;
+
+			data += 8;
+			Com_Printf("dump is corrupt! (%d vs %d)\n", size, rawsize);
+			for (i = 0; i < rawsize; ++i) {
+				if (data[i] != raw[i]) {
+					Com_Printf("error @ %d\n", i);
+					break;
+				}
+			}
+		}
+		Hunk_FreeToLowMark(mark);
+	}
+}
+
+#endif
