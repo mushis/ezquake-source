@@ -562,7 +562,7 @@ void PM_CategorizePosition (void)
 	point[0] = pmove.origin[0];
 	point[1] = pmove.origin[1];
 	point[2] = pmove.origin[2] - 1;
-	if (pmove.velocity[2] > 180) {
+	if (movevars.maxgroundspeed >= 0 && pmove.velocity[2] > movevars.maxgroundspeed) {
 		pmove.onground = false;
 	}
 	else if (!movevars.pground || pmove.onground) {
@@ -616,6 +616,9 @@ void PM_CategorizePosition (void)
 
 static void PM_CheckJump (void)
 {
+	vec3_t oldvel;
+
+	VectorCopy(pmove.velocity, oldvel);
 	if (pmove.pm_type == PM_FLY)
 		return;
 
@@ -646,8 +649,9 @@ static void PM_CheckJump (void)
 		return;
 	}
 
-	if (!pmove.onground)
+	if (!pmove.onground) {
 		return; // in air, so no effect
+	}
 
 	if (pmove.jump_held && !pmove.jump_msec)
 		return; // don't pogo stick
@@ -655,16 +659,17 @@ static void PM_CheckJump (void)
 	if (!movevars.pground) {
 		// check for jump bug
 		// groundplane normal was set in the call to PM_CategorizePosition
-		if (pmove.velocity[2] < 0 && DotProduct(pmove.velocity, groundplane.normal) < -0.1) {
+		if ((movevars.rampjump || pmove.velocity[2] < 0) && DotProduct(pmove.velocity, groundplane.normal) < -0.1) {
 			// pmove.velocity is pointing into the ground, clip it
-			PM_ClipVelocity (pmove.velocity, groundplane.normal, pmove.velocity, 1);
+			PM_ClipVelocity(pmove.velocity, groundplane.normal, pmove.velocity, 1);
 		}
 	}
 
 	pmove.onground = false;
-	pmove.velocity[2] += 270;
+	pmove.velocity[2] += 270 - max(0, pmove.velocity[2] - 180);
 
 	if (movevars.ktjump > 0) {
+		// meag: pmove.velocity[2] = max(pmove.velocity[2], 270); (?)
 		if (movevars.ktjump > 1)
 			movevars.ktjump = 1;
 		if (pmove.velocity[2] < 270)
