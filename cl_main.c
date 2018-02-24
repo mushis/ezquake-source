@@ -2442,9 +2442,7 @@ void CL_Frame (double time)
 
 	R_ParticleFrame();
 
-	if (gfx_atlasautoupload.integer) {
-		CachePics_AtlasFrame();
-	}
+	CachePics_AtlasFrame();
 
 	CL_MultiviewPreUpdateScreen ();
 
