@@ -1751,15 +1751,15 @@ void FL_Draw(filelist_t *fl, int x, int y, int w, int h)
 			{
 				dwsize /= 1024;
 				dwsize = min(dwsize, 999);
-				snprintf(size, sizeof(size), "%3dm", dwsize);
+				snprintf(size, sizeof(size), "%3lum", dwsize);
 				if (filenum == fl->current_entry)
-					snprintf(ssize, sizeof(ssize), "%d mb", dwsize);
+					snprintf(ssize, sizeof(ssize), "%lu mb", dwsize);
 			}
 			else
 			{
-				snprintf(size, sizeof(size), "%4d", dwsize);
+				snprintf(size, sizeof(size), "%4lu", dwsize);
 				if (filenum == fl->current_entry)
-					snprintf(ssize, sizeof(ssize), "%d kb", dwsize);
+					snprintf(ssize, sizeof(ssize), "%lu kb", dwsize);
 			}
 		}
 
