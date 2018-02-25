@@ -2221,7 +2221,11 @@ void SCR_UpdateScreenPostPlayerView(void)
 	}
 
 	SCR_DrawElements();
-	GL_FlushImageDraw(true);
+	GL_LeaveRegion();
+
+	// Actual rendering...
+	GL_EnterRegion("GL_DrawHUD");
+	GL_FlushImageDraw();
 	GL_LeaveRegion();
 
 	R_PostProcessScreen();
