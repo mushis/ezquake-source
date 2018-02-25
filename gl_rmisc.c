@@ -104,7 +104,8 @@ void R_InitTextures(void)
 	}
 }
 
-void R_NewMap (qbool vid_restart) {
+void R_NewMap(qbool vid_restart)
+{
 	int	i, waterline;
 
 	extern int R_SetSky(char *skyname);
@@ -115,16 +116,19 @@ void R_NewMap (qbool vid_restart) {
 	lightmode = gl_lightmode.integer ? 2 : 0;
 
 	if (!vid_restart) {
-		for (i = 0; i < 256; i++)
-			d_lightstylevalue[i] = 264;		// normal light value
+		for (i = 0; i < 256; i++) {
+			// normal light value
+			d_lightstylevalue[i] = 264;
+		}
     
 		memset (&r_worldentity, 0, sizeof(r_worldentity));
 		r_worldentity.model = cl.worldmodel;
     
 		// clear out efrags in case the level hasn't been reloaded
 		// FIXME: is this one short?
-		for (i = 0; i < cl.worldmodel->numleafs; i++)
+		for (i = 0; i < cl.worldmodel->numleafs; i++) {
 			cl.worldmodel->leafs[i].efrags = NULL;
+		}
 
 		r_viewleaf = NULL;
 		R_ClearParticles ();
