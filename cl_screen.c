@@ -2154,10 +2154,6 @@ void SCR_UpdateScreenPlayerView(int flags)
 
 		R_RenderView();
 
-		if (GL_ShadersSupported()) {
-			GLM_RenderView();
-		}
-
 		if (flags & UPDATESCREEN_POSTPROCESS) {
 			R_PostProcessScene();
 		}
