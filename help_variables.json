@@ -10876,6 +10876,7 @@
     },
     "r_drawparticles": {
       "group-id": "8",
+      "type": "boolean",
       "desc": "Toggles drawing particle effects.  Intended for helping isolate rendering performance issues.",
       "remarks": "Limited by particle ruleset",
       "values": [
