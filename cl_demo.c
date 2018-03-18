@@ -3149,9 +3149,6 @@ void CL_Demo_DumpBenchmarkResult(int frames, float timet)
 //
 void CL_StopPlayback (void)
 {
-	extern int demo_playlist_started;
-	extern int mvd_demo_track_run;
-
 	// Nothing to stop.
 	if (!cls.demoplayback)
 		return;
@@ -3202,11 +3199,7 @@ void CL_StopPlayback (void)
 	}
 
 	// Go to the next demo in the demo playlist.
-	if (demo_playlist_started)
-	{
-		CL_Demo_Playlist_f();
-		mvd_demo_track_run = 0;
-	}
+	CL_Demo_NextInPlaylist();
 
 	// Reset demoseeking and such.
 	cls.demoseeking = DST_SEEKING_NONE;
