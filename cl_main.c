@@ -68,6 +68,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #endif
 #include "pmove.h"
 #include "vx_tracker.h"
+#include "menu_demo.h"
 
 extern qbool ActiveApp, Minimized;
 
@@ -1244,11 +1245,8 @@ void CL_Disconnect (void)
 
 void CL_Disconnect_f (void) 
 {
-	extern int demo_playlist_started;
-	extern int mvd_demo_track_run ;
 	cl.intermission = 0;
-	demo_playlist_started= 0;
-	mvd_demo_track_run = 0;
+	CL_Demo_Disconnected();
 
 	Host_EndGame();
 }
