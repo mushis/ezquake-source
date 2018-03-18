@@ -2185,8 +2185,6 @@ void CL_Frame (double time)
 	static double	extraphysframetime;	//#fps
 	qbool need_server_frame = false;
 
-	extern double render_frame_start;
-
 	extratime += time;
 	minframetime = CL_MinFrameTime();
 	CL_MultiviewFrameStart ();
@@ -2224,8 +2222,6 @@ void CL_Frame (double time)
 		}
 		return;
 	}
-
-	render_frame_start = Sys_DoubleTime();
 
 	cls.trueframetime = extratime - 0.001;
 	cls.trueframetime = max(cls.trueframetime, minframetime);
@@ -2483,6 +2479,9 @@ void CL_Frame (double time)
 			}
 
 			SCR_UpdateScreenPostPlayerView();
+		}
+		else {
+			VID_RenderFrameEnd();
 		}
 	}
 	else {
