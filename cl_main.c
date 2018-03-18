@@ -2326,8 +2326,7 @@ void CL_Frame (double time)
 			MVD_Interpolate();
 			MVD_Mainhook();
 
-			if (!cl.standby && physframe)
-			{
+			if (!cl.standby && physframe) {
 				StatsGrid_Gather();
 			}
 		}
@@ -2373,8 +2372,7 @@ void CL_Frame (double time)
 				MVD_Interpolate();
 				MVD_Mainhook();
 
-				if (!cl.standby && physframe)
-				{
+				if (!cl.standby && physframe) {
 					StatsGrid_Gather();
 				}
 			}
