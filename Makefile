@@ -252,9 +252,12 @@ OBJS_c := \
     hud.o \
     hud_262.o \
     hud_common.o \
-    hud_weapon_stats.o \
-    hud_radar.o \
     hud_editor.o \
+    hud_framestats.o \
+    hud_radar.o \
+    hud_speed.o \
+    hud_teaminfo.o \
+    hud_weapon_stats.o \
     ignore.o \
     image.o \
     irc_filter.o \
@@ -326,6 +329,7 @@ OBJS_c := \
     vx_stuff.o \
     vx_vertexlights.o \
     vid_common_gl.o \
+    vid_vsync.o \
     cd_null.o \
     vid_sdl2.o \
     sys_sdl2.o \
@@ -365,10 +369,8 @@ OBJS_c := \
     glc_warp.o \
     glm_aliasmodel.o \
     glm_aliasmodel_program.o \
-    glm_billboard.o \
+    gl_sprite3d.o \
     glm_brushmodel.o \
-    glm_draw.o \
-    glm_draw_charset.o \
     glm_md3.o \
     glm_misc.o \
     glm_program.o \
@@ -377,7 +379,15 @@ OBJS_c := \
     glm_sky.o \
     glm_sprite.o \
     glm_texture_arrays.o \
-    glm_turb_surface.o
+    glm_turb_surface.o \
+    glm_draw.o \
+    glm_draw_charset.o \
+    glm_draw_circle.o \
+    glm_draw_image.o \
+    glm_draw_line.o \
+    glm_draw_polygon.o \
+    glm_rmain.o \
+    r_performance.o
 
 ### Configuration Options ###
 
