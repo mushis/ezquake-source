@@ -189,6 +189,7 @@ cvar_t r_instagibtrail				= {"r_instagibTrail", "1"};
 cvar_t r_explosiontype			= {"r_explosionType", "1"}; // 7
 cvar_t r_telesplash				= {"r_telesplash", "1"}; // disconnect
 cvar_t r_shaftalpha				= {"r_shaftalpha", "1"};
+cvar_t r_lightdecayrate         = {"r_lightdecayrate", "2"}; // default 2, as CL_DecayLights() used to get called twice per frame
 
 // info mirrors
 cvar_t  password                = {"password", "", CVAR_USERINFO};
@@ -1718,6 +1719,7 @@ void CL_InitLocal (void)
 	Cmd_AddLegacyCommand ("cl_truelightning", "cl_fakeshaft");
 	Cvar_Register (&r_telesplash);
 	Cvar_Register (&r_shaftalpha);
+	Cvar_Register (&r_lightdecayrate);
 
 	Skin_RegisterCvars();
 
@@ -2144,7 +2146,8 @@ void CL_SoundFrame (void)
 	{
 		if (!ISPAUSED) {
 			S_Update (r_origin, vpn, vright, vup);
-		} else {
+		}
+		else {
 			// do not play loop sounds (lifts etc.) when paused
 #ifndef INFINITY
 			float temp = 1.0;
@@ -2155,7 +2158,6 @@ void CL_SoundFrame (void)
 #endif
 			S_Update(hax, vec3_origin, vec3_origin, vec3_origin);
 		}
-		CL_DecayLights ();
 	}
 	else
 	{

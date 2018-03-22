@@ -15664,6 +15664,12 @@
       "group-id": "8",
       "type": "float"
     },
+    "r_lightdecayrate": {
+      "default": "2",
+      "desc": "Determines how fast lights decay (radius decreases).  Minimum value 1 (QWCL)",
+      "group-id": "8",
+      "type": "float"
+    },
     "r_lightflicker": {
       "default": "1",
       "group-id": "8",
