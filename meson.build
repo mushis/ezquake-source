@@ -175,6 +175,7 @@ sources = [
 	'keys.c',
 	'logging.c',
 	'match_tools.c',
+	'match_tools_challenge.o',
 	'mathlib.c',
 	'md4.c',
 	'menu.c',
