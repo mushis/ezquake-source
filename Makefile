@@ -399,7 +399,8 @@ OBJS_c := \
     cl_screenshot.o \
     gl_rpart_spawn.o \
     hud_clock.o \
-    hud_ammo.o
+    hud_ammo.o \
+    hud_items.o
 
 ### Configuration Options ###
 
