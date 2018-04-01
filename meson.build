@@ -348,7 +348,8 @@ sources += [
 	'hud_armor.o',
 	'hud_health.o',
 	'hud_gamesummary.o',
-	'hud_face.o'
+	'hud_face.o',
+	'hud_frags.o'
 ]
 
 awk = find_program('awk')
