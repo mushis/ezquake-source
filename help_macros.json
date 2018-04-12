@@ -1,0 +1,141 @@
+{
+  "ammo": {
+    "description": "returns amount of ammo held for currently selected weapon",
+    "type": "integer"
+  },
+  "armor": {
+    "description": "returns current armor value",
+    "type": "integer"
+  },
+  "armortype": {
+    "description": "returns current armor type",
+    "type": "string",
+    "related-cvars": [ "tp_name_armortype_ga", "tp_name_armortype_ya", "tp_name_armortype_ra", "tp_name_armortype_none" ]
+  },
+  "bestammo": {
+    "description": "returns ammo held for the 'best' weapon",
+    "type": "integer",
+    "related-cvars": [ "tp_weapon_order" ]
+  },
+  "bestweapon": {
+    "description": "returns name of best weapon in inventory",
+    "type": "string",
+    "related-cvars": [ "tp_weapon_order", "tp_name_sg", "tp_name_ssg", "tp_name_ng", "tp_name_sng", "tp_name_gl", "tp_name_rl", "tp_name_lg" ]
+  },
+  "cam_angles": {
+    "description": "returns current camera angles, in format that can be passed to /cam_angles command.",
+    "type": "string",
+    "flags": [ "spectator-only" ]
+  },
+  "cam_angles_pitch": {
+    "description": "returns current camera pitch (vertical angle).",
+    "type": "float",
+    "flags": [ "spectator-only" ]
+  },
+  "cam_angles_roll": {
+    "description": "returns current camera roll (not used).",
+    "type": "float",
+    "flags": [ "spectator-only" ]
+  },
+  "cam_angles_yaw": {
+    "description": "returns current camera yaw (horizontal angle).",
+    "type": "float",
+    "flags": [ "spectator-only" ]
+  },
+  "cam_pos": {
+    "description": "returns current camera position, in format that can be passed to /cam_pos command.",
+    "type": "string",
+    "flags": [ "spectator-only" ]
+  },
+  "cam_pos_x": {
+    "description": "returns one component of current camera position.",
+    "type": "float",
+    "flags": [ "spectator-only" ]
+  },
+  "cam_pos_y": {
+    "description": "returns one component of current camera position.",
+    "type": "float",
+    "flags": [ "spectator-only" ]
+  },
+  "cam_pos_z": {
+    "description": "returns one component of current camera position.",
+    "type": "float",
+    "flags": [ "spectator-only" ]
+  },
+  "cells": {
+    "description": "returns number of cells held, regardless of weapon selected",
+    "type": "integer"
+  },
+  "colored_armor": {
+    "description": "returns $armor, surrounded by color codes so it is displayed in &c0b0red&r, &cff0yellow&r, &e00green&r or &cfffwhite&r",
+    "type": "string"
+  },
+  "colored_powerups": { "flags": [ "incomplete" ] },
+  "colored_short_powerups": { "flags": [ "incomplete" ] },
+  "conheight": { "flags": [ "incomplete" ] },
+  "connectiontype": {
+    "description": "returns the current type of the connection",
+    "type": "string",
+    "enum": [
+      { "value": "disconnected", "description": "client is disconnected from the server" },
+      { "value": "spectator", "description": "client is connected as a spectator" },
+      { "value": "player", "description": "client is connected as a player" }
+    ]
+  },
+  "conwidth": { "flags": [ "incomplete" ] },
+  "date": { "description": "returns the current date in the format <day>.<month>.<year>", "type": "string" },
+  "deathloc": { "flags": [ "incomplete" ] },
+  "demolength": { "description": "returns the expected length of the current demo, in seconds", "type": "integer" },
+  "demoname": { "description": "returns the name of the current demo, minus extension", "type": "string" },
+  "demoplayback": {
+    "description": "returns whether or not the client is current watching a demo",
+    "type": "boolean"
+  },
+  "demotime": { "flags": [ "incomplete" ] },
+  "droploc": { "description": "returns the name of the location where the last backpack was dropped by the current player.", "type": "string" },
+  "droptime": { "description": "returns the number of seconds since the last backpack was dropped by the current player.", "type": "integer" },
+  "gamedir": { "description": "returns the current gamedir, which is often set when a server is running a mod.\ne.g: 'fortress' for Team Fortress mods", "type": "string" },
+  "health": { "description": "the current player's health (0 - 250)" },
+  "lastip": { "flags": [ "incomplete" ] },
+  "lastloc": { "flags": [ "incomplete" ] },
+  "lastpowerup": { "flags": [ "incomplete" ] },
+  "latency": { "flags": [ "incomplete" ] },
+  "ledpoint": { "flags": [ "incomplete" ] },
+  "ledstatus": { "flags": [ "incomplete" ] },
+  "location": { "flags": [ "incomplete" ] },
+  "matchname": { "flags": [ "incomplete" ] },
+  "matchstatus": { "flags": [ "incomplete" ] },
+  "matchtype": { "flags": [ "incomplete" ] },
+  "mp3_volume": { "flags": [ "incomplete" ] },
+  "mp3info": { "flags": [ "incomplete" ] },
+  "nails": {
+    "description": "returns number of nails held, regardless of weapon selected",
+    "type": "integer"
+  },
+  "need": { "flags": [ "incomplete" ] },
+  "ping": { "flags": [ "incomplete" ] },
+  "point": { "flags": [ "incomplete" ] },
+  "pointatloc": { "flags": [ "incomplete" ] },
+  "pointloc": { "flags": [ "incomplete" ] },
+  "powerups": { "flags": [ "incomplete" ] },
+  "qt": { "description": "returns \" - useful to clear cvars in scripts" },
+  "rand": { "flags": [ "incomplete" ] },
+  "rockets": {
+    "description": "returns number of rockets held, regardless of weapon selected",
+    "type": "integer"
+  },
+  "serverip": { "flags": [ "incomplete" ] },
+  "shells": {
+    "description": "returns number of shells held, regardless of weapon selected",
+    "type": "integer"
+  },
+  "tf_skin": { "flags": [ "incomplete" ] },
+  "time": { "description": "returns the local time in the format <hours>:<minutes>", "type": "string" },
+  "took": { "flags": [ "incomplete" ] },
+  "tookatloc": { "flags": [ "incomplete" ] },
+  "tookloc": { "flags": [ "incomplete" ] },
+  "triggermatch": { "flags": [ "incomplete" ] },
+  "weapon": { "flags": [ "incomplete" ] },
+  "weaponnum": { "flags": [ "incomplete" ] },
+  "weapons": { "flags": [ "incomplete" ] }
+}

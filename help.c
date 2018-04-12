@@ -28,15 +28,23 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "expat.h"
 #include "xsd.h"
 
+enum {
+	helpdoc_variables,
+	helpdoc_commands,
+	helpdoc_cmdlineparams,
+	helpdoc_macros,
+
+	helpdoc_count
+};
+
 #define CONSOLE_HELP_MARGIN 2
-static json_t *variables_root;
-static json_t *command_root;
+static json_t* document_root[helpdoc_count];
 
 typedef struct json_variable_s
 {
 	const char *name;
 	const char *description;
-	cvartype_t value_type;
+	int value_type;
 	const json_t* values;
 	const char *remarks;
 } json_variable_t;
@@ -49,6 +57,131 @@ typedef struct json_command_s
 	const json_t* arguments;
 	const char *remarks;
 } json_command_t;
+
+typedef struct json_mapping_s {
+	const char* name;
+	int value;
+} json_mapping_t;
+
+static json_mapping_t variabletype_mappings[] = {
+	{ "string", t_string },
+	{ "integer", t_integer },
+	{ "float", t_float },
+	{ "boolean", t_boolean },
+	{ "bool", t_boolean },
+	{ "enum", t_enum }
+};
+
+#define CMDLINEPARAM_FLAGS_NONE       0
+#define CMDLINEPARAM_FLAGS_INCOMPLETE 1
+
+static json_mapping_t cmdlineparam_flags_mappings[] = {
+	{ "incomplete", CMDLINEPARAM_FLAGS_INCOMPLETE }
+};
+
+#define CMDLINEPARAM_BUILDS_DEBUG     1
+#define CMDLINEPARAM_BUILDS_RELEASE   2
+#define CMDLINEPARAM_BUILDS_ALL       (CMDLINEPARAM_BUILDS_DEBUG | CMDLINEPARAM_BUILDS_RELEASE)
+
+static json_mapping_t cmdlineparam_build_mappings[] = {
+	{ "debug", CMDLINEPARAM_BUILDS_DEBUG },
+	{ "release", CMDLINEPARAM_BUILDS_RELEASE }
+};
+
+#define CMDLINEPARAM_SYSTEMS_WINDOWS  1
+#define CMDLINEPARAM_SYSTEMS_LINUX    2
+#define CMDLINEPARAM_SYSTEMS_OSX      4
+#define CMDLINEPARAM_SYSTEMS_ALL      (CMDLINEPARAM_SYSTEMS_WINDOWS | CMDLINEPARAM_SYSTEMS_LINUX | CMDLINEPARAM_SYSTEMS_OSX)
+
+static json_mapping_t cmdlineparam_systems_mappings[] = {
+	{ "windows", CMDLINEPARAM_SYSTEMS_WINDOWS },
+	{ "linux", CMDLINEPARAM_SYSTEMS_LINUX },
+	{ "osx", CMDLINEPARAM_SYSTEMS_OSX }
+};
+
+typedef struct json_cmdlineparam_s {
+	const char* name;
+	const char* description;
+	const char* remarks;
+	int systems;
+	int builds;
+	int flags;
+	const char* arguments;
+} json_cmdlineparam_t;
+
+#define MACROS_FLAGS_NONE             0
+#define MACROS_FLAGS_SPECTATORONLY    1
+
+static json_mapping_t macros_flags_mappings[] = {
+	{ "spectator-only", MACROS_FLAGS_SPECTATORONLY }
+};
+
+typedef struct json_macro_s {
+	const char* name;
+	const char* description;
+	const char* remarks;
+	const char* type;
+	const json_t* related_cvars;
+	int flags;
+} json_macro_t;
+
+#define HelpReadBitField(json, array_name, default_value, mappings) (JSON_ReadBitField(json_object_get(json, array_name), default_value, mappings, sizeof(mappings) / sizeof(mappings[0])))
+
+static qbool JSON_MapValue(const char* string, json_mapping_t* mappings, int mapping_count, int* value)
+{
+	int i;
+
+	for (i = 0; i < mapping_count; ++i) {
+		if (!strcmp(string, mappings[i].name)) {
+			*value = mappings[i].value;
+			return true;
+		}
+	}
+
+	return false;
+}
+
+static int JSON_ReadBitField(const json_t* arr, int empty_value, json_mapping_t* mappings, int mapping_count)
+{
+	if (!json_is_array(arr)) {
+		if (json_is_string(arr)) {
+			int result = 0;
+
+			if (JSON_MapValue(json_string_value(arr), mappings, mapping_count, &result)) {
+				return result;
+			}
+
+			// error: name not valid
+			return empty_value;
+		}
+		// else error: specified but not string|array
+		return empty_value;
+	}
+	else if (json_array_size(arr) == 0) {
+		return empty_value;
+	}
+	else {
+		size_t index;
+		const json_t* value;
+		int result = 0;
+
+		json_array_foreach(arr, index, value)
+		{
+			if (json_is_string(value)) {
+				const char* stringvalue = json_string_value(value);
+				int flagvalue = 0;
+
+				if (JSON_MapValue(stringvalue, mappings, mapping_count, &flagvalue)) {
+					result |= flagvalue;
+				}
+				// else error: string not valid
+			}
+			// else error: expected string
+		}
+
+		return result;
+	}
+}
 
 static void Help_DescribeCmd(const json_command_t *cmd)
 {
@@ -183,12 +316,119 @@ static void Help_DescribeVar(const json_variable_t *var)
     }
 }
 
+static void Help_DescribeMacro(const json_macro_t* macro)
+{
+	if (!macro) {
+		return;
+	}
+
+	// description
+	if (macro->description && strlen(macro->description)) {
+		con_margin = CONSOLE_HELP_MARGIN;
+		Com_Printf("%s\n", macro->description);
+		con_margin = 0;
+	}
+
+	// value
+	if (macro->type && strlen(macro->type)) {
+		con_ormask = 128;
+		Com_Printf("Type: ");
+		con_ormask = 0;
+
+		Com_Printf("%s\n", macro->type);
+	}
+
+	// remarks
+	if ((macro->remarks && macro->remarks[0]) || macro->flags) {
+		Com_Printf("\n");
+		con_ormask = 128;
+		Com_Printf("remarks\n");
+		con_ormask = 0;
+		con_margin = CONSOLE_HELP_MARGIN;
+		if (macro->flags & MACROS_FLAGS_SPECTATORONLY) {
+			Com_Printf("Limited to spectator mode only\n");
+		}
+		if (macro->remarks && macro->remarks[0]) {
+			Com_Printf("%s\n", macro->remarks);
+		}
+		con_margin = 0;
+	}
+
+	if (macro->related_cvars) {
+		int i;
+		const json_t* cvar;
+
+		Com_Printf("\n");
+		con_ormask = 128;
+		Com_Printf("related cvars:\n");
+		con_ormask = 0;
+		con_margin = CONSOLE_HELP_MARGIN;
+		json_array_foreach(macro->related_cvars, i, cvar) {
+			if (json_is_string(cvar)) {
+				Com_Printf("%s\n", cvar);
+			}
+		}
+		con_margin = 0;
+	}
+}
+
+static void Help_DescribeCommandLineParam(const json_cmdlineparam_t* param)
+{
+	qbool system_comment = false;
+
+	if (!param) {
+		return;
+	}
+
+#if defined(_WIN32)
+	system_comment = !(param->systems & CMDLINEPARAM_SYSTEMS_WINDOWS);
+#elif defined(__APPLE__)
+	system_comment = !(param->systems & CMDLINEPARAM_SYSTEMS_OSX);
+#else
+	system_comment = !(param->systems & CMDLINEPARAM_SYSTEMS_LINUX);
+#endif
+
+	// description
+	if (param->description && strlen(param->description)) {
+		con_margin = CONSOLE_HELP_MARGIN;
+		Com_Printf("%s\n", param->description);
+		con_margin = 0;
+	}
+
+	if (param->arguments && param->arguments[0]) {
+		Com_Printf("\n");
+		con_ormask = 128;
+		Com_Printf("arguments: ");
+		con_ormask = 0;
+		Com_Printf("%s\n", param->arguments);
+	}
+
+	// remarks
+	if ((param->remarks && param->remarks[0]) || param->flags || system_comment) {
+		Com_Printf("\n");
+		con_ormask = 128;
+		Com_Printf("remarks\n");
+		con_ormask = 0;
+		con_margin = CONSOLE_HELP_MARGIN;
+		if (system_comment) {
+			Com_Printf("(not supported on this operating system)\n");
+		}
+		if (param->flags & CMDLINEPARAM_FLAGS_INCOMPLETE) {
+			Com_Printf("(this documentation is flagged as incomplete)\n");
+		}
+		if (param->remarks && param->remarks[0]) {
+			Com_Printf("%s\n", param->remarks);
+		}
+		con_margin = 0;
+	}
+}
+
 static const json_command_t* JSON_Command_Load(const char* name)
 {
 	static json_command_t result;
 	const json_t* command = NULL;
 
-	command = json_object_get(command_root, name);
+	command = json_object_get(document_root[helpdoc_commands], name);
 	if (command == NULL)
 		return NULL;
 
@@ -211,7 +451,7 @@ static const json_variable_t* JSON_Variable_Load(const char* name)
 	const json_t* variable = NULL;
 	const char* variableType = NULL;
 
-	varsObj = json_object_get(variables_root, "vars");
+	varsObj = json_object_get(document_root[helpdoc_variables], "vars");
 	if (varsObj == NULL) {
 		return NULL;
 	}
@@ -221,37 +461,63 @@ static const json_variable_t* JSON_Variable_Load(const char* name)
 		return NULL;
 	}
 
-	variableType = json_string_value(json_object_get(variable, "type"));
-
 	memset(&result, 0, sizeof(result));
 	result.description = json_string_value(json_object_get(variable, "desc"));
 	result.name = name;
 	result.remarks = json_string_value(json_object_get(variable, "remarks"));
-	if (variableType) {
-		if (!strcmp(variableType, "string")) {
-			result.value_type = t_string;
-		}
-		else if (!strcmp(variableType, "integer")) {
-			result.value_type = t_integer;
-		}
-		else if (!strcmp(variableType, "float")) {
-			result.value_type = t_float;
-		}
-		else if (!strcmp(variableType, "boolean") || !strcmp(variableType, "bool")) {
-			result.value_type = t_boolean;
-		}
-		else if (!strcmp(variableType, "enum")) {
-			result.value_type = t_enum;
-		}
-		else
-			result.value_type = t_unknown;
-	}
-	else {
+	if (!JSON_MapValue(json_string_value(json_object_get(variable, "type")), variabletype_mappings, sizeof(variabletype_mappings) / sizeof(variabletype_mappings[0]), &result.value_type)) {
 		result.value_type = t_unknown;
 	}
 	result.values = json_object_get(variable, "values");
 	if (!json_is_array(result.values)) {
 		result.values = NULL;
+	}
+
+	return &result;
+}
+
+const json_cmdlineparam_t* JSON_CommandLineParam_Load(const char* name)
+{
+	static json_cmdlineparam_t result;
+	const json_t* json = NULL;
+	const json_t* arr = NULL;
+
+	json = json_object_get(document_root[helpdoc_cmdlineparams], name);
+	if (json == NULL) {
+		return NULL;
+	}
+
+	memset(&result, 0, sizeof(result));
+	result.name = name;
+	result.description = json_string_value(json_object_get(json, "description"));
+	result.remarks = json_string_value(json_object_get(json, "remarks"));
+	result.builds = HelpReadBitField(json, "builds", CMDLINEPARAM_BUILDS_ALL, cmdlineparam_build_mappings);
+	result.systems = HelpReadBitField(json, "systems", CMDLINEPARAM_SYSTEMS_ALL, cmdlineparam_systems_mappings);
+	result.flags = HelpReadBitField(json, "flags", CMDLINEPARAM_FLAGS_NONE, cmdlineparam_flags_mappings);
+	result.arguments = json_string_value(json_object_get(json, "arguments"));
+
+	return &result;
+}
+
+const json_macro_t* JSON_Macro_Load(const char* name)
+{
+	static json_macro_t result;
+	const json_t* json = NULL;
+	const json_t* arr = NULL;
+
+	json = json_object_get(document_root[helpdoc_macros], name);
+	if (json == NULL) {
+		return NULL;
+	}
+
+	memset(&result, 0, sizeof(result));
+	result.name = name;
+	result.description = json_string_value(json_object_get(json, "description"));
+	result.remarks = json_string_value(json_object_get(json, "remarks"));
+	result.flags = HelpReadBitField(json, "flags", 0, macros_flags_mappings);
+	result.related_cvars = json_object_get(json, "related-cvars");
+	if (!json_is_array(result.related_cvars) || json_array_size(result.related_cvars) == 0) {
+		result.related_cvars = NULL;
 	}
 
 	return &result;
@@ -330,89 +596,64 @@ void Help_VarDescription (const char *varname, char* buf, size_t bufsize)
 	}
 }
 
-static void Help_UnloadVariablesDoc(void)
+static void Help_UnloadDocument(json_t** root)
 {
-	if (variables_root != NULL) {
-		json_decref(variables_root);
-		variables_root = NULL;
+	if (*root != NULL) {
+		json_decref(*root);
+		*root = NULL;
 	}
 }
 
-static void Help_UnloadCommandDoc(void)
+static void Help_UnloadDocuments(void)
 {
-	if (command_root != NULL) {
-		json_decref(command_root);
-		command_root = NULL;
+	int i;
+
+	for (i = 0; i < helpdoc_count; ++i) {
+		Help_UnloadDocument(&document_root[i]);
 	}
 }
 
-static void Help_UnloadDocs(void)
-{
-	Help_UnloadVariablesDoc();
-	Help_UnloadCommandDoc();
+#define DeclareHelpDocument(id, docname) \
+{ \
+	extern unsigned char docname ## _json[]; \
+	extern unsigned int docname ## _json_len; \
+\
+	document_names[helpdoc_ ## id] = #docname; \
+	document_content[helpdoc_ ## id] = docname ## _json; \
+	document_length[helpdoc_ ## id] = docname ## _json_len; \
 }
 
-extern unsigned char help_variables_json[];
-extern unsigned int help_variables_json_len;
-extern unsigned char help_commands_json[];
-extern unsigned int help_commands_json_len;
-
-static void Help_LoadVariablesDoc(void)
+static void Help_LoadDocuments(void)
 {
 	json_error_t error;
+	const char* document_names[helpdoc_count] = { 0 };
+	unsigned char* document_content[helpdoc_count] = { 0 };
+	unsigned int document_length[helpdoc_count] = { 0 };
+	int i;
 
-	Help_UnloadVariablesDoc();
+	DeclareHelpDocument(macros, help_macros)
+	DeclareHelpDocument(commands, help_commands)
+	DeclareHelpDocument(variables, help_variables)
+	DeclareHelpDocument(cmdlineparams, help_cmdline_params)
 
-	variables_root = json_loadb((char*)help_variables_json, help_variables_json_len, 0, &error);
+	for (i = 0; i < helpdoc_count; ++i) {
+		Help_UnloadDocument(&document_root[i]);
 
-	if (variables_root == NULL) {
-		Com_Printf("error: JSON error on line %d: %s\n", error.line, error.text);
+		document_root[i] = json_loadb((char*)document_content[i], document_length[i], 0, &error);
+		if (document_root[i] == NULL) {
+			Com_Printf("\020%s\021: JSON error on line %d: %s\n", document_names[i], error.line, error.text);
+		}
+		else if (!json_is_object(document_root[i])) {
+			Com_Printf("\020%s\021: invalid JSON, root is not an object\n", document_names[i]);
+			Help_UnloadDocument(&document_root[i]);
+		}
 	}
-	else if (!json_is_object(variables_root)) {
-		Com_Printf("error: invalid JSON, root is not an object\n");
-	}
-	else {
-		Com_DPrintf("help_loadDocs: variables okay\n");
-		return;
-	}
-
-	Help_UnloadVariablesDoc();
-}
-
-static void Help_LoadCommandDoc(void)
-{
-	json_error_t error;
-	
-	Help_UnloadCommandDoc();
-
-	command_root = json_loadb((char*)help_commands_json, help_commands_json_len, 0, &error);
-
-	if (command_root == NULL) {
-		Com_Printf("error: JSON error on line %d: %s\n", error.line, error.text);
-	}
-	else if (!json_is_object(variables_root)) {
-		Com_Printf("error: invalid JSON, root is not an object\n");
-	}
-	else {
-		Com_DPrintf("help_loadDocs: commands okay\n");
-		return;
-	}
-
-	Help_UnloadCommandDoc();
-}
-
-static void Help_LoadDocs(void)
-{
-	Help_LoadVariablesDoc();
-	Help_LoadCommandDoc();
 }
 
 void Help_Describe_f(void)
 {
     qbool found = false;
     char *name;
-    const json_command_t *cmd;
-    const json_variable_t *var;
 
     if (Cmd_Argc() != 2)
     {
@@ -423,39 +664,78 @@ void Help_Describe_f(void)
     name = Cmd_Argv(1);
     
     // check for command
-	cmd = JSON_Command_Load(name);
-    if (cmd)
-    {
-        found = true;
-        
-        // name
-        con_ormask = 128;
-        Com_Printf("%s is a command\n", cmd->name);
-        con_ormask = 0;
+	{
+		const json_command_t* cmd = JSON_Command_Load(name);
+		if (cmd) {
+			found = true;
 
-		Help_DescribeCmd(cmd);
-    }
+			// name
+			con_ormask = 128;
+			Com_Printf("%s is a command\n", cmd->name);
+			con_ormask = 0;
+
+			Help_DescribeCmd(cmd);
+		}
+	}
 
     // check for variable
-	var = JSON_Variable_Load(name);
-    if (var)
-    {
-        if (found)
-            Com_Printf("\n\n\n");
+	{
+		const json_variable_t* var = JSON_Variable_Load(name);
+		if (var) {
+			if (found) {
+				Com_Printf("\n\n\n");
+			}
+			found = true;
 
-        found = true;
-        
-        // name
-        con_ormask = 128;
-        Com_Printf("%s is a variable\n", var->name);
-        con_ormask = 0;
+			// name
+			con_ormask = 128;
+			Com_Printf("%s is a variable\n", var->name);
+			con_ormask = 0;
 
-		Help_DescribeVar(var);
-    }
+			Help_DescribeVar(var);
+		}
+	}
 
-    // if no found
-    if (!found)
-        Com_Printf("Nothing found.\n");
+	// check for macro
+	{
+		const json_macro_t* macro = JSON_Macro_Load(name);
+		if (macro) {
+			if (found) {
+				Com_Printf("\n\n\n");
+			}
+			found = true;
+
+			// name
+			con_ormask = 128;
+			Com_Printf("%s is a macro\n", macro->name);
+			con_ormask = 0;
+
+			Help_DescribeMacro(macro);
+		}
+	}
+
+	// check for commandline arg
+	{
+		const json_cmdlineparam_t* param = JSON_CommandLineParam_Load(name);
+		if (param) {
+			if (found) {
+				Com_Printf("\n\n\n");
+			}
+			found = true;
+
+			// name
+			con_ormask = 128;
+			Com_Printf("%s is a command-line parameter\n", param->name);
+			con_ormask = 0;
+
+			Help_DescribeCommandLineParam(param);
+		}
+	}
+
+    // if not found
+	if (!found) {
+		Com_Printf("Nothing found.\n");
+	}
 }
 
 void Help_Missing_Commands(void)
@@ -512,11 +792,13 @@ void Help_Missing_Variables(void)
 	for (cvar = cvar_vars; cvar && cvar_count < sizeof(sorted_cvars) / sizeof(sorted_cvars[0]); cvar = cvar->next) {
 		const json_variable_t* help_cvar = JSON_Variable_Load(cvar->name);
 
-		if (Cvar_GetFlags(cvar) & CVAR_USER_CREATED)
+		if (Cvar_GetFlags(cvar) & CVAR_USER_CREATED) {
 			continue;
+		}
 
-		if (! help_cvar)
+		if (!help_cvar) {
 			sorted_cvars[cvar_count++] = cvar;
+		}
 	}
 
 	if (cvar_count) {
@@ -564,16 +846,16 @@ void Help_Issues_Variables(void)
 	const char* name = NULL;
 	json_t* variable = NULL;
 
-	if (!variables_root) {
+	if (!document_root[helpdoc_variables]) {
 		return;
 	}
 
-	varsObj = json_object_get(variables_root, "vars");
+	varsObj = json_object_get(document_root[helpdoc_variables], "vars");
 	if (!varsObj) {
 		return;
 	}
 
-	groupsObj = json_object_get(variables_root, "groups");
+	groupsObj = json_object_get(document_root[helpdoc_variables], "groups");
 	if (!groupsObj)
 		return;
 
@@ -678,11 +960,11 @@ static void Help_VerifyConfig_f(void)
 	const char* name = NULL;
 	json_t* variable = NULL;
 
-	if (!variables_root) {
+	if (!document_root[helpdoc_variables]) {
 		return;
 	}
 
-	varsObj = json_object_get(variables_root, "vars");
+	varsObj = json_object_get(document_root[helpdoc_variables], "vars");
 	if (!varsObj) {
 		return;
 	}
@@ -729,6 +1011,11 @@ static void Help_VerifyConfig_f(void)
 	Con_Printf("%d variables with values that don't match documentation.\n", num_errors);
 }
 
+static void Help_Generate_f(void)
+{
+
+}
+
 static void Help_Issues_f(void)
 {
 	Help_Issues_Commands();
@@ -742,12 +1029,13 @@ void Help_Init(void)
 		Cmd_AddCommand("dev_help_missing", Help_Missing_f);
 		Cmd_AddCommand("dev_help_issues", Help_Issues_f);
 		Cmd_AddCommand("dev_help_verify_config", Help_VerifyConfig_f);
+		Cmd_AddCommand("dev_help_generate", Help_Generate_f);
 	}
 
-	Help_LoadDocs();
+	Help_LoadDocuments();
 }
 
 void Help_Shutdown(void)
 {
-	Help_UnloadDocs();
+	Help_UnloadDocuments();
 }
