@@ -220,3 +220,5 @@ void DeleteServerAliases (void);
 void Cmd_AddMacro(macro_id id, char *(*f)(void));
 void Cmd_AddMacroEx(macro_id id, char *(*f)(void), int teamplay);
 char* Cmd_MacroString(const char *s, int *macro_length);
+const char* Cmd_MacroName(macro_id id);
+qbool Cmd_MacroTeamplayRestricted(macro_id id);

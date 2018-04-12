@@ -55,6 +55,11 @@ static commandline_option_t commandline_parameters[num_cmdline_params] = {
 
 #undef CMDLINE_DEF
 
+const char* Cmd_CommandLineParamName(cmdline_param_id id)
+{
+	return commandline_parameters[id].name;
+}
+
 void Draw_BeginDisc (void);
 void Draw_EndDisc (void);
 

@@ -192,6 +192,7 @@ int COM_Argc (void);
 int COM_CheckParm(cmdline_param_id parm_id);
 int COM_CheckParmOffset(cmdline_param_id parm_id, int offset);
 int COM_FindParm(const char* parm);
+const char* Cmd_CommandLineParamName(cmdline_param_id id);
 
 #define IsDeveloperMode() (COM_CheckParm(cmdline_param_developer_mode))
 

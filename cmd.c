@@ -1483,10 +1483,20 @@ static int Cmd_MacroCompare (const void *p1, const void *p2)
 	return strcmp ((*((macro_command_t **) p1))->name, (*((macro_command_t **) p2))->name);
 }
 
+const char* Cmd_MacroName(macro_id id)
+{
+	return macro_commands[id].name;
+}
+
+qbool Cmd_MacroTeamplayRestricted(macro_id id)
+{
+	return macro_commands[id].teamplay;
+}
+
 void Cmd_MacroList_f (void)
 {
 	int i, c, m = 0;
-	static macro_command_t *sorted_macros[num_macros];
+	static macro_command_t* sorted_macros[num_macros];
 
 	for (i = 0; i < num_macros; i++) {
 		sorted_macros[i] = &macro_commands[i];

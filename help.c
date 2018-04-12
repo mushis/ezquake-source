@@ -47,6 +47,8 @@ typedef struct json_variable_s
 	int value_type;
 	const json_t* values;
 	const char *remarks;
+	const char* group_id;
+	json_t* json;
 } json_variable_t;
 
 typedef struct json_command_s
@@ -123,6 +125,8 @@ typedef struct json_macro_s {
 	const char* type;
 	const json_t* related_cvars;
 	int flags;
+
+	json_t* json;
 } json_macro_t;
 
 #define HelpReadBitField(json, array_name, default_value, mappings) (JSON_ReadBitField(json_object_get(json, array_name), default_value, mappings, sizeof(mappings) / sizeof(mappings[0])))
@@ -131,10 +135,12 @@ static qbool JSON_MapValue(const char* string, json_mapping_t* mappings, int map
 {
 	int i;
 
-	for (i = 0; i < mapping_count; ++i) {
-		if (!strcmp(string, mappings[i].name)) {
-			*value = mappings[i].value;
-			return true;
+	if (string && string[0]) {
+		for (i = 0; i < mapping_count; ++i) {
+			if (!strcmp(string, mappings[i].name)) {
+				*value = mappings[i].value;
+				return true;
+			}
 		}
 	}
 
@@ -448,7 +454,7 @@ static const json_variable_t* JSON_Variable_Load(const char* name)
 {
 	static json_variable_t result;
 	const json_t* varsObj = NULL;
-	const json_t* variable = NULL;
+	json_t* variable = NULL;
 	const char* variableType = NULL;
 
 	varsObj = json_object_get(document_root[helpdoc_variables], "vars");
@@ -460,18 +466,21 @@ static const json_variable_t* JSON_Variable_Load(const char* name)
 	if (variable == NULL) {
 		return NULL;
 	}
+	variableType = json_string_value(json_object_get(variable, "type"));
 
 	memset(&result, 0, sizeof(result));
 	result.description = json_string_value(json_object_get(variable, "desc"));
 	result.name = name;
 	result.remarks = json_string_value(json_object_get(variable, "remarks"));
-	if (!JSON_MapValue(json_string_value(json_object_get(variable, "type")), variabletype_mappings, sizeof(variabletype_mappings) / sizeof(variabletype_mappings[0]), &result.value_type)) {
+	if (!JSON_MapValue(variableType, variabletype_mappings, sizeof(variabletype_mappings) / sizeof(variabletype_mappings[0]), &result.value_type)) {
 		result.value_type = t_unknown;
 	}
 	result.values = json_object_get(variable, "values");
 	if (!json_is_array(result.values)) {
 		result.values = NULL;
 	}
+	result.group_id = json_string_value(json_object_get(variable, "group_id"));
+	result.json = variable;
 
 	return &result;
 }
@@ -502,8 +511,8 @@ const json_cmdlineparam_t* JSON_CommandLineParam_Load(const char* name)
 const json_macro_t* JSON_Macro_Load(const char* name)
 {
 	static json_macro_t result;
-	const json_t* json = NULL;
 	const json_t* arr = NULL;
+	json_t* json = NULL;
 
 	json = json_object_get(document_root[helpdoc_macros], name);
 	if (json == NULL) {
@@ -519,6 +528,7 @@ const json_macro_t* JSON_Macro_Load(const char* name)
 	if (!json_is_array(result.related_cvars) || json_array_size(result.related_cvars) == 0) {
 		result.related_cvars = NULL;
 	}
+	result.json = json;
 
 	return &result;
 }
@@ -738,216 +748,40 @@ void Help_Describe_f(void)
 	}
 }
 
-void Help_Missing_Commands(void)
+static qbool Help_VariableIgnoreByCvar(cvar_t* cvar)
 {
-	extern int Cmd_CommandCompare(const void *, const void *);
-	extern void HUD_Plus_f(void);
-	extern void HUD_Minus_f(void);
-	extern void HUD_Func_f(void);
-
-	extern cmd_function_t *cmd_functions;
-
-	cmd_function_t *sorted_commands[4096];
-	cmd_function_t *cmd_func = 0;
-	int cmd_count = 0;
-
-	for (cmd_func = cmd_functions; cmd_func && cmd_count < sizeof(sorted_commands) / sizeof(sorted_commands[0]); cmd_func = cmd_func->next) {
-		const json_command_t* help_cmd = JSON_Command_Load(cmd_func->name);
-		if (!help_cmd) {
-			if (cmd_func->function == HUD_Plus_f || cmd_func->function == HUD_Minus_f || cmd_func->function == HUD_Func_f) {
-				// not interested in hud's system-generated commands for the moment
-				continue;
-			}
-
-			sorted_commands[cmd_count++] = cmd_func;
-		}
+	if (Cvar_GetFlags(cvar) & CVAR_USER_CREATED) {
+		return true;
 	}
 
-	if (cmd_count) {
-		int i = 0;
-
-		qsort(sorted_commands, cmd_count, sizeof(cmd_function_t *), Cmd_CommandCompare);
-
-		Com_Printf("Commands missing documentation entries:\n");
-		con_margin = CONSOLE_HELP_MARGIN;
-		for (i = 0; i < cmd_count; ++i) {
-			Com_Printf("%s\n", sorted_commands[i]->name);
-		}
-		con_margin = 0;
-	}
-	else {
-		Com_Printf("All commands have entries in documentation.\n");
-	}
+	// don't expect complete documentation right now (tighten this in future)
+	return (!strncmp(cvar->name, "hud_", 4) || !strncmp(cvar->name, "sv_", 3));
 }
 
-void Help_Missing_Variables(void)
+static qbool Help_VariableIgnoreByGroup(const json_variable_t* var, const json_t* groupsObj)
 {
-	extern int Cvar_CvarCompare(const void*, const void*);
 	extern cvar_t *cvar_vars;
-
-	cvar_t *sorted_cvars[4096];
-	cvar_t *cvar = 0;
-	int cvar_count = 0;
-
-	for (cvar = cvar_vars; cvar && cvar_count < sizeof(sorted_cvars) / sizeof(sorted_cvars[0]); cvar = cvar->next) {
-		const json_variable_t* help_cvar = JSON_Variable_Load(cvar->name);
-
-		if (Cvar_GetFlags(cvar) & CVAR_USER_CREATED) {
-			continue;
-		}
-
-		if (!help_cvar) {
-			sorted_cvars[cvar_count++] = cvar;
-		}
-	}
-
-	if (cvar_count) {
-		int i = 0;
-
-		qsort(sorted_cvars, cvar_count, sizeof(cvar_t *), Cvar_CvarCompare);
-
-		Com_Printf("Variables missing documentation entries:\n");
-		con_margin = CONSOLE_HELP_MARGIN;
-		for (i = 0; i < cvar_count; ++i) {
-			Com_Printf("%s\n", sorted_cvars[i]->name);
-		}
-		con_margin = 0;
-	}
-	else {
-		Com_Printf("All variables have entries in documentation.\n");
-	}
-}
-
-// Returns list of commands and variables that are missing from documentation
-void Help_Missing_f(void)
-{
-	Help_Missing_Commands();
-	Help_Missing_Variables();
-}
-
-void Help_Issues_Commands(void)
-{
-	// TODO: documentation for commands generally comes from .c functions, not really
-	//       enough information to validate against documentation
-}
-
-void Help_Issues_Variables(void)
-{
-	static const char* validTypes[] = {
-		"string", "integer", "float", "boolean", "enum"
-	};
-	extern cvar_t *cvar_vars;
-
-	json_t* varsObj = NULL;
-	json_t* groupsObj = NULL;
 	cvar_t *cvar = NULL;
-	int i = 0;
-	int num_errors = 0;
-	const char* name = NULL;
-	json_t* variable = NULL;
+	qbool in_client = false;
 
-	if (!document_root[helpdoc_variables]) {
-		return;
-	}
+	// ignore documentation for server variables (tighten this in future)
+	{
+		const char* group_id = var->group_id;
+		int i;
 
-	varsObj = json_object_get(document_root[helpdoc_variables], "vars");
-	if (!varsObj) {
-		return;
-	}
+		for (i = 0; i < json_array_size(groupsObj); ++i) {
+			const char* id = json_string_value(json_object_get(json_array_get(groupsObj, i), "id"));
+			const char* major_group = json_string_value(json_object_get(json_array_get(groupsObj, i), "major-group"));
 
-	groupsObj = json_object_get(document_root[helpdoc_variables], "groups");
-	if (!groupsObj)
-		return;
-
-	json_object_foreach(varsObj, name, variable) {
-		const char* group_id = json_string_value(json_object_get(variable, "group-id"));
-		const char* type     = json_string_value(json_object_get(variable, "type"));
-		const char* desc     = json_string_value(json_object_get(variable, "desc"));
-		json_t* examples     = json_object_get(variable, "values");
-		qbool valid_type     = (type && strlen(type));
-		qbool valid_desc     = (desc && strlen(desc));
-		qbool num_examples   = examples && json_is_array(examples) ? json_array_size(examples) : 0;
-
-		qbool enum_without_examples = type && !strcmp(type, "enum") && num_examples == 0;
-
-		// old variables might still be in documentation, allows "/describe <var>" to explain why it is removed
-		{
-			qbool in_client = false;
-
-			for (cvar = cvar_vars; cvar && !in_client; cvar = cvar->next) {
-				in_client = !strcasecmp(cvar->name, name);
-			}
-			if (!in_client) {
-				continue;
-			}
-		}
-
-		// ignore documentation for server variables (tighten this in future)
-		{
-			qbool obselete_or_server_only = false;
-
-			for (i = 0; i < json_array_size(groupsObj); ++i) {
-				const char* id = json_string_value(json_object_get(json_array_get(groupsObj, i), "id"));
-				const char* major_group = json_string_value(json_object_get(json_array_get(groupsObj, i), "major-group"));
-
-				if (id && group_id && !strcmp(id, group_id)) {
-					if (major_group && (!strcmp(major_group, "Server") || !strcmp(major_group, "Obselete"))) {
-						obselete_or_server_only = true;
-					}
+			if (id && group_id && !strcmp(id, group_id) && major_group) {
+				if (!strcmp(major_group, "Server") || !strcmp(major_group, "Obselete")) {
+					return true;
 				}
 			}
-
-			if (obselete_or_server_only) {
-				continue;
-			}
-		}
-
-		// don't expect complete documentation right now (tighten this in future)
-		if (!strncmp(name, "hud_", 4) || !strncmp(name, "sv_", 3)) {
-			continue;
-		}
-
-		if (valid_type) {
-			valid_type = false;
-			for (i = 0; i < sizeof(validTypes) / sizeof(validTypes[0]); ++i) {
-				valid_type |= !strcmp(validTypes[i], type);
-			}
-		}
-
-		if (!valid_type  || !(valid_desc || num_examples) || enum_without_examples) {
-			if (num_errors == 0) {
-				Con_Printf("Variables with issues:\n");
-				con_margin = CONSOLE_HELP_MARGIN;
-			}
-
-			con_ormask = 128;
-			Con_Printf("%s", name);
-			con_ormask = 0;
-			Con_Printf(": ");
-			con_margin = CONSOLE_HELP_MARGIN * 2;
-			if (!valid_type) {
-				Con_Printf("invalid type (\"%s\")", type ? type : "");
-			}
-			else if (enum_without_examples) {
-				Con_Printf("invalid examples for type \"%s\" (%d)", type, num_examples);
-			}
-			else if (!valid_desc && num_examples == 0) {
-				Con_Printf("invalid description/examples", name);
-			}
-			else if (!valid_desc) {
-				Con_Printf("invalid description", name);
-			}
-			else {
-				Con_Printf("invalid examples", name);
-			}
-			con_margin = CONSOLE_HELP_MARGIN;
-			Con_Printf("\n");
-			++num_errors;
 		}
 	}
 
-	con_margin = 0;
-	Con_Printf("%d variables with issues.\n", num_errors);
+	return false;
 }
 
 // Check all variable values against help files
@@ -1011,25 +845,243 @@ static void Help_VerifyConfig_f(void)
 	Con_Printf("%d variables with values that don't match documentation.\n", num_errors);
 }
 
-static void Help_Generate_f(void)
+static void Help_FindConsoleVariableIssues(qbool generate)
 {
+	extern cvar_t* cvar_vars;
+	cvar_t* cvar;
 
+	int num_errors = 0;
+	const json_variable_t* jsonVar;
+	const json_t* groupsJsonObj = json_object_get(document_root[helpdoc_variables], "groups");
+	json_t* variableJsonObj = json_object_get(document_root[helpdoc_variables], "vars");
+
+	if (!variableJsonObj) {
+		Con_Printf("'vars' missing from help_variables.json\n");
+		return;
+	}
+
+	if (!groupsJsonObj) {
+		Con_Printf("'Groups' missing from help_variables.json\n");
+		return;
+	}
+
+	if (!generate) {
+		Con_Printf("Variables with issues:\n");
+		con_margin = CONSOLE_HELP_MARGIN;
+	}
+
+	for (cvar = cvar_vars; cvar; cvar = cvar->next) {
+		if (Help_VariableIgnoreByCvar(cvar)) {
+			continue;
+		}
+
+		jsonVar = JSON_Variable_Load(cvar->name);
+		if (!jsonVar) {
+			if (generate) {
+				json_t* obj = json_object();
+				json_object_set(obj, "group-id", json_string("0"));
+				json_object_set(obj, "system-generated", json_boolean(1));
+				json_object_set_new(obj, "default", json_string(cvar->defaultvalue));
+				json_object_set_new(variableJsonObj, cvar->name, obj);
+				++num_errors;
+			}
+			else {
+				con_ormask = 128;
+				Con_Printf("%s", cvar->name);
+				con_ormask = 0;
+				Con_Printf(": missing from help\n", cvar->name);
+				++num_errors;
+			}
+			continue;
+		}
+
+		if (generate) {
+			json_object_set_new(jsonVar->json, "default", json_string(cvar->defaultvalue));
+			continue;
+		}
+
+		if (Help_VariableIgnoreByGroup(jsonVar, groupsJsonObj)) {
+			continue;
+		}
+
+		{
+			const char* desc = jsonVar->description;
+			qbool valid_desc = (desc && desc[0]);
+			qbool valid_type, enum_without_examples;
+			int num_examples;
+
+			valid_type = (jsonVar->value_type != t_unknown);
+			num_examples = jsonVar->values ? json_array_size(jsonVar->values) : 0;
+			enum_without_examples = (jsonVar->value_type == t_enum && num_examples == 0);
+			if (!valid_type || !(valid_desc || num_examples) || enum_without_examples) {
+				con_ormask = 128;
+				Con_Printf("%s", cvar->name);
+				con_ormask = 0;
+				Con_Printf(":");
+				if (!valid_type) {
+					Con_Printf("invalid type");
+				}
+				else if (enum_without_examples) {
+					Con_Printf("invalid examples for enum");
+				}
+				else if (!valid_desc && num_examples == 0) {
+					Con_Printf("invalid description/examples");
+				}
+				else if (!valid_desc) {
+					Con_Printf("invalid description");
+				}
+				else {
+					Con_Printf("invalid examples");
+				}
+				Con_Printf("\n");
+				++num_errors;
+			}
+		}
+	}
+	con_margin = 0;
+	Con_Printf("Number of variables with issues: %d\n", num_errors);
+}
+
+static void Help_FindCommandIssues(qbool generate)
+{
+	extern cmd_function_t *cmd_functions;
+	cmd_function_t *cmd_func = 0;
+	int num_errors = 0;
+
+	for (cmd_func = cmd_functions; cmd_func; (cmd_func = cmd_func->next)) {
+		const json_command_t* help_cmd = JSON_Command_Load(cmd_func->name);
+		extern void HUD_Plus_f(void);
+		extern void HUD_Minus_f(void);
+		extern void HUD_Func_f(void);
+
+		if (cmd_func->function == HUD_Plus_f || cmd_func->function == HUD_Minus_f || cmd_func->function == HUD_Func_f) {
+			// not interested in hud's system-generated commands for the moment
+			continue;
+		}
+
+		if (!help_cmd) {
+			// missing
+			if (generate) {
+				json_t* obj = json_object();
+				json_object_set(obj, "system-generated", json_boolean(1));
+				json_object_set_new(document_root[helpdoc_commands], cmd_func->name, obj);
+			}
+			else {
+				if (num_errors == 0) {
+					Con_Printf("Commands with issues:\n");
+					con_margin = CONSOLE_HELP_MARGIN;
+				}
+
+				con_ormask = 128;
+				Con_Printf("%s", cmd_func->name);
+				con_ormask = 0;
+				Con_Printf(": missing from documentation\n");
+			}
+			++num_errors;
+		}
+	}
+
+	con_margin = 0;
+	Con_Printf("Number of commands with issues: %d\n", num_errors);
+}
+
+static void Help_FindMacroIssues(qbool generate)
+{
+	int i;
+	int issues = 0;
+
+	for (i = 0; i < num_macros; i++) {
+		const char* name = Cmd_MacroName(i);
+		const json_macro_t* help_macro = JSON_Macro_Load(name);
+		qbool teamplay = Cmd_MacroTeamplayRestricted(i);
+
+		if (help_macro && generate) {
+			json_object_set_new(help_macro->json, "teamplay-restricted", json_boolean(teamplay ? 1 : 0));
+		}
+		else if (generate) {
+			json_t* obj = json_object();
+			json_object_set(obj, "system-generated", json_boolean(1));
+			json_object_set(obj, "teamplay-restricted", json_boolean(teamplay ? 1 : 0));
+			json_object_set_new(document_root[helpdoc_macros], name, obj);
+			++issues;
+		}
+		else if (!help_macro) {
+			if (issues == 0) {
+				Con_Printf("Macros with issues:\n");
+				con_margin = CONSOLE_HELP_MARGIN;
+			}
+
+			con_ormask = 128;
+			Con_Printf("%s", name);
+			con_ormask = 0;
+			Con_Printf(": missing from documentation\n");
+			++issues;
+		}
+	}
+
+	con_margin = 0;
+	Con_Printf("Number of macros with issues: %d\n", issues);
+}
+
+static void Help_FindCommandLineParamIssues(qbool generate)
+{
+	int i;
+	int issues = 0;
+
+	for (i = 0; i < num_cmdline_params; i++) {
+		const char* name = Cmd_CommandLineParamName(i);
+		const json_cmdlineparam_t* help_param = JSON_CommandLineParam_Load(name);
+
+		if (help_param) {
+			continue;
+		}
+
+		if (generate) {
+			json_t* obj = json_object();
+			json_object_set(obj, "system-generated", json_boolean(1));
+			json_object_set_new(document_root[helpdoc_cmdlineparams], name, obj);
+			++issues;
+		}
+		else {
+			if (issues == 0) {
+				Con_Printf("Macros with issues:\n");
+				con_margin = CONSOLE_HELP_MARGIN;
+			}
+			con_ormask = 128;
+			Con_Printf("%s", name);
+			con_ormask = 0;
+			Con_Printf(": missing from documentation\n");
+			++issues;
+		}
+	}
+
+	con_margin = 0;
+	Con_Printf("Number of cmdline params with issues: %d\n", issues);
 }
 
 static void Help_Issues_f(void)
 {
-	Help_Issues_Commands();
-	Help_Issues_Variables();
+	qbool generate = Cmd_Argc() >= 1 && !strcmp(Cmd_Argv(1), "generate");
+
+	Help_FindConsoleVariableIssues(generate);
+	Help_FindCommandIssues(generate);
+	Help_FindMacroIssues(generate);
+	Help_FindCommandLineParamIssues(generate);
+
+	if (generate) {
+		json_dump_file(document_root[helpdoc_variables], "qw/help_variables.json", JSON_ENSURE_ASCII | JSON_SORT_KEYS | JSON_INDENT(2));
+		json_dump_file(document_root[helpdoc_commands], "qw/help_commands.json", JSON_ENSURE_ASCII | JSON_SORT_KEYS | JSON_INDENT(2));
+		json_dump_file(document_root[helpdoc_macros], "qw/help_macros.json", JSON_ENSURE_ASCII | JSON_SORT_KEYS | JSON_INDENT(2));
+		json_dump_file(document_root[helpdoc_cmdlineparams], "qw/help_cmdline_params.json", JSON_ENSURE_ASCII | JSON_SORT_KEYS | JSON_INDENT(2));
+	}
 }
 
 void Help_Init(void)
 {
 	Cmd_AddCommand("describe", Help_Describe_f);
 	if (IsDeveloperMode()) {
-		Cmd_AddCommand("dev_help_missing", Help_Missing_f);
-		Cmd_AddCommand("dev_help_issues", Help_Issues_f);
 		Cmd_AddCommand("dev_help_verify_config", Help_VerifyConfig_f);
-		Cmd_AddCommand("dev_help_generate", Help_Generate_f);
+		Cmd_AddCommand("dev_help_issues", Help_Issues_f);
 	}
 
 	Help_LoadDocuments();
