@@ -3271,3 +3271,9 @@ qbool FS_UnsafeFilename(const char* fileName)
 		*fileName == '/' ||	// absolute path was given - reject.
 		strstr(fileName, "..");
 }
+
+void FS_Shutdown(void)
+{
+	Hash_ShutdownTable(filesystemhash);
+	filesystemhash = NULL;
+}
