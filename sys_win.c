@@ -473,6 +473,16 @@ void Sys_Printf (char *fmt, ...)
 	vsnprintf (text, sizeof(text), fmt, argptr);
 	va_end (argptr);
 
+	if (houtput == NULL) {
+		houtput = GetStdHandle(STD_OUTPUT_HANDLE);
+
+		if (houtput == NULL) {
+			/*if (AllocConsole()) {
+				houtput = GetStdHandle(STD_OUTPUT_HANDLE);
+			}*/
+			houtput = CreateFile("SysPrintf.log", GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+		}
+	}
 	WriteFile (houtput, text, strlen(text), &dummy, NULL);
 }
 
@@ -488,6 +498,13 @@ void Sys_Quit (void)
 	if (WinKeyHook_isActive)
 		UnhookWindowsHookEx(WinKeyHook);
 #endif
+
+	if (houtput) {
+		if (houtput != GetStdHandle(STD_OUTPUT_HANDLE)) {
+			CloseHandle(houtput);
+			houtput = NULL;
+		}
+	}
 
 	Sys_RestoreScreenSaving();
  
