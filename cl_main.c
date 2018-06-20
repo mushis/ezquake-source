@@ -2542,6 +2542,7 @@ void CL_Shutdown (void)
 	SB_Shutdown();
 	MT_Shutdown();
 	Help_Shutdown();
+	HUD_Shutdown();
 	Cmd_Shutdown();
 	Key_Shutdown();
 	TP_ShutdownTriggers();
