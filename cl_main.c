@@ -2541,6 +2541,7 @@ void CL_Shutdown (void)
 	Sys_CloseIPC();
 	SB_Shutdown();
 	Help_Shutdown();
+	Cmd_Shutdown();
 }
 
 void CL_UpdateCaption(qbool force)
