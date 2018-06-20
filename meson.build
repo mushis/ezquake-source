@@ -243,6 +243,7 @@ sources = [
 	'sv_world.c',
 	'sys_sdl2.c',
 	'teamplay.c',
+	'teamplay_locfiles.c',
 	'textencoding.c',
 	'tp_msgs.c',
 	'tp_triggers.c',
