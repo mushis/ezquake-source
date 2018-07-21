@@ -216,6 +216,7 @@ GLSL_OBJS := \
     $(patsubst glsl/%.glsl,glsl_%.glsl.o,$(wildcard glsl/*.glsl))
 
 MODERN_OPENGL_OBJS := \
+    $(GLSL_OBJS) \
     glm_aliasmodel.o \
     glm_brushmodel.o \
     glm_draw.o \
@@ -355,7 +356,6 @@ HUD_OBJS := \
 OBJS_c := \
     $(COMMON_OBJS) \
     $(HELP_OBJS) \
-    $(GLSL_OBJS) \
     $(HUD_OBJS) \
     $(COMMON_RENDERER_OBJS) \
     ioapi.o \
@@ -464,11 +464,27 @@ OBJS_c := \
     fonts.o
 
 ### Configuration Options ###
-OBJS_c += $(COMMON_OPENGL_OBJS)
-OBJS_c += $(MODERN_OPENGL_OBJS)
-OBJS_c += $(CLASSIC_OPENGL_OBJS)
-CFLAGS += -DRENDERER_OPTION_CLASSIC_OPENGL
-CFLAGS += -DRENDERER_OPTION_MODERN_OPENGL
+
+ifdef MODERN_OPENGL_ONLY
+    OBJS_c += $(COMMON_OPENGL_OBJS)
+    OBJS_c += $(MODERN_OPENGL_OBJS)
+    CFLAGS += -DRENDERER_OPTION_MODERN_OPENGL
+    EZ_POSTFIX := "-glsl"
+else
+    ifdef CLASSIC_OPENGL_ONLY
+        OBJS_c += $(COMMON_OPENGL_OBJS)
+        OBJS_c += $(CLASSIC_OPENGL_OBJS)
+        CFLAGS += -DRENDERER_OPTION_CLASSIC_OPENGL
+        EZ_POSTFIX := "-std"
+    else
+        OBJS_c += $(COMMON_OPENGL_OBJS)
+        OBJS_c += $(MODERN_OPENGL_OBJS)
+        OBJS_c += $(CLASSIC_OPENGL_OBJS)
+        CFLAGS += -DRENDERER_OPTION_CLASSIC_OPENGL
+        CFLAGS += -DRENDERER_OPTION_MODERN_OPENGL
+        EZ_POSTFIX := ""
+    endif
+endif
 
 ifndef CLIENT_ONLY
     OBJS_c += $(SERVER_OBJS)
@@ -519,9 +535,9 @@ endif
 ### Targets ###
 
 ifdef CONFIG_WINDOWS
-    TARG_c := ezquake.exe
+    TARG_c := ezquake$(EZ_POSTFIX).exe
 else
-    TARG_c := ezquake-$(LSYS)-$(CPU)
+    TARG_c := ezquake-$(LSYS)-$(CPU)$(EZ_POSTFIX)
 endif
 
 all: $(TARG_c)
