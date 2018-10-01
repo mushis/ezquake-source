@@ -908,7 +908,7 @@ static void CM_LoadClipnodesBSP2(lump_t *l)
 	}
 }
 
-static qbool CM_LoadGroundNormalsData(byte* data, int datalength)
+static qbool CM_LoadPhysicsNormalsData(byte* data, int datalength)
 {
 	extern cvar_t pm_rampjump;
 	mphysicsnormal_t* in = (mphysicsnormal_t*)(data + 8);
@@ -926,12 +926,12 @@ static qbool CM_LoadGroundNormalsData(byte* data, int datalength)
 		map_physicsnormals[i].normal[0] = LittleFloat(in[i].normal[0]);
 		map_physicsnormals[i].normal[1] = LittleFloat(in[i].normal[1]);
 		map_physicsnormals[i].normal[2] = LittleFloat(in[i].normal[2]);
-		map_physicsnormals[i].flags = GROUNDNORMAL_SET | (int)LittleLong(in[i].flags);
+		map_physicsnormals[i].flags = PHYSICSNORMAL_SET | (int)LittleLong(in[i].flags);
 	}
 	return true;
 }
 
-static void CM_LoadGroundNormals(lump_t* l)
+static void CM_LoadPhysicsNormals(lump_t* l)
 {
 	extern cvar_t pm_rampjump;
 	int i;
@@ -939,10 +939,10 @@ static void CM_LoadGroundNormals(lump_t* l)
 	Cvar_SetValue(&pm_rampjump, 0);
 	map_physicsnormals = Hunk_AllocName(numclipnodes * sizeof(map_physicsnormals[0]), loadname);
 
-	if (l == NULL || !CM_LoadGroundNormalsData(cmod_base + l->fileofs, l->filelen)) {
+	if (l == NULL || !CM_LoadPhysicsNormalsData(cmod_base + l->fileofs, l->filelen)) {
 		for (i = 0; i < numclipnodes; ++i) {
 			VectorCopy(map_planes[map_clipnodes[i].planenum].normal, map_physicsnormals[i].normal);
-			map_physicsnormals[i].flags = GROUNDNORMAL_SET;
+			map_physicsnormals[i].flags = PHYSICSNORMAL_SET;
 		}
 	}
 }
@@ -1354,12 +1354,12 @@ cmodel_t *CM_LoadMap (char *name, qbool clientload, unsigned *checksum, unsigned
 
 		if (bspx) {
 			int lumpsize = 0;
-			void* lump = Mod_BSPX_FindLump(bspx, "GROUNDNORMALS", &lumpsize, cmod_base);
+			void* lump = Mod_BSPX_FindLump(bspx, "PHYSICSNORMALS", &lumpsize, cmod_base);
 
-			CM_LoadGroundNormals(lump);
+			CM_LoadPhysicsNormals(lump);
 		}
 		else {
-			CM_LoadGroundNormals(NULL);
+			CM_LoadPhysicsNormals(NULL);
 		}
 
 		// Now over-ride from external file
@@ -1373,7 +1373,7 @@ cmodel_t *CM_LoadMap (char *name, qbool clientload, unsigned *checksum, unsigned
 			snprintf(extfile, sizeof(extfile), "maps/%s.qpn", loadname);
 			data = FS_LoadHunkFile(extfile, &extfilesize);
 			if (data) {
-				if (CM_LoadGroundNormalsData(data, extfilesize)) {
+				if (CM_LoadPhysicsNormalsData(data, extfilesize)) {
 					Com_Printf("Loading external physics normals\n");
 				}
 				else {

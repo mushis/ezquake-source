@@ -552,6 +552,22 @@ static int PM_AirMove(void)
 #define MAXGROUNDSPEED_DEFAULT 180
 #define MAXGROUNDSPEED_MAXIMUM 240
 
+static void PM_RampEdgeAdjustNormal(vec3_t normal, int flags)
+{
+	int i;
+
+	for (i = 0; i < 3; ++i) {
+		if (flags & (PHYSICSNORMAL_FLIPX << i)) {
+			if (pmove.velocity[i] < 0) {
+				normal[i] = -normal[i];
+			}
+			else if (pmove.velocity[0] == 0) {
+				normal[i] = 0;
+			}
+		}
+	}
+}
+
 void PM_CategorizePosition (void)
 {
 	trace_t trace = { 0 };
@@ -573,17 +589,10 @@ void PM_CategorizePosition (void)
 	ground = CM_PhysicsNormal(trace.physicsnormal);
 
 	far_from_ground = (trace.fraction == 1 || trace.plane.normal[2] < MIN_STEP_NORMAL);
-	if (ground.flags & GROUNDNORMAL_SET) {
+	if (ground.flags & PHYSICSNORMAL_SET) {
 		VectorCopy(ground.normal, groundnormal);
-		if (pmove.velocity[0] < 0 && (ground.flags & GROUNDNORMAL_FLIPX)) {
-			groundnormal[0] = -groundnormal[0];
-		}
-		if (pmove.velocity[1] < 0 && (ground.flags & GROUNDNORMAL_FLIPY)) {
-			groundnormal[1] = -groundnormal[1];
-		}
-		if (pmove.velocity[2] < 0 && (ground.flags & GROUNDNORMAL_FLIPZ)) {
-			groundnormal[2] = -groundnormal[2];
-		}
+		PM_RampEdgeAdjustNormal(groundnormal, ground.flags);
+		VectorNormalize(groundnormal);
 
 		if (movevars.rampjump && !far_from_ground && trace.e.entnum == 0 && groundnormal[2] > 0 && groundnormal[2] < 1) {
 			// They have a ramp beneath them, increase maxspeed to check if we keep them on it

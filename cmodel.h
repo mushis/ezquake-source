@@ -61,10 +61,10 @@ typedef struct mphysicsnormal_s {
 	int                flags;
 } mphysicsnormal_t;
 
-#define GROUNDNORMAL_SET      1
-#define GROUNDNORMAL_FLIPX    2
-#define GROUNDNORMAL_FLIPY    4
-#define GROUNDNORMAL_FLIPZ    8
+#define PHYSICSNORMAL_SET      1
+#define PHYSICSNORMAL_FLIPX    2
+#define PHYSICSNORMAL_FLIPY    4
+#define PHYSICSNORMAL_FLIPZ    8
 
 mphysicsnormal_t CM_PhysicsNormal(int num);
 #ifndef SERVER_ONLY

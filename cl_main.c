@@ -73,6 +73,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 extern qbool ActiveApp, Minimized;
 
+static void Dev_PhysicsNormalSet(void);
+static void Dev_PhysicsNormalSave(void);
+static void Dev_PhysicsNormalShow(void);
+
 static void Cl_Reset_Min_fps_f(void);
 void CL_QWURL_ProcessChallenge(const char *parameters);
 
@@ -1829,13 +1833,9 @@ void CL_InitLocal (void)
 #endif
 
 	if (IsDeveloperMode()) {
-		extern void Dev_GroundNormalSet(void);
-		extern void Dev_GroundNormalSave(void);
-		extern void Dev_GroundNormalShow(void);
-
-		Cmd_AddCommand("dev_groundnormalset", Dev_GroundNormalSet);
-		Cmd_AddCommand("dev_groundnormalshow", Dev_GroundNormalShow);
-		Cmd_AddCommand("dev_groundnormalsave", Dev_GroundNormalSave);
+		Cmd_AddCommand("dev_physicsnormalset", Dev_PhysicsNormalSet);
+		Cmd_AddCommand("dev_physicsnormalshow", Dev_PhysicsNormalShow);
+		Cmd_AddCommand("dev_physicsnormalsave", Dev_PhysicsNormalSave);
 	}
 
 	{
@@ -2599,7 +2599,7 @@ void OnChangeDemoTeamplay (cvar_t *var, char *value, qbool *cancel)
 
 
 
-void Dev_GroundNormalShow(void)
+void Dev_PhysicsNormalShow(void)
 {
 	vec3_t point = { cl.simorg[0], cl.simorg[1], cl.simorg[2] - 1 };
 	trace_t trace;
@@ -2619,26 +2619,26 @@ void Dev_GroundNormalShow(void)
 		physicsnormal = CM_PhysicsNormal(trace.physicsnormal);
 
 		Con_Printf("Plane normal  : %+f %+f %+f\n", trace.plane.normal[0], trace.plane.normal[1], trace.plane.normal[2]);
-		if (!(physicsnormal.flags & GROUNDNORMAL_SET)) {
+		if (!(physicsnormal.flags & PHYSICSNORMAL_SET)) {
 			Con_Printf("No custom physics plane found\n");
 		}
 		else {
-			const char* flipx = physicsnormal.flags & GROUNDNORMAL_FLIPX ? "&cff0" : "&r";
-			const char* flipy = physicsnormal.flags & GROUNDNORMAL_FLIPY ? "&cff0" : "&r";
-			const char* flipz = physicsnormal.flags & GROUNDNORMAL_FLIPZ ? "&cff0" : "&r";
+			const char* flipx = physicsnormal.flags & PHYSICSNORMAL_FLIPX ? "&cff0" : "&r";
+			const char* flipy = physicsnormal.flags & PHYSICSNORMAL_FLIPY ? "&cff0" : "&r";
+			const char* flipz = physicsnormal.flags & PHYSICSNORMAL_FLIPZ ? "&cff0" : "&r";
 
 			Con_Printf("Physics normal: %s%+f %s%+f %s%+f&r\n", flipx, physicsnormal.normal[0], flipy, physicsnormal.normal[1], flipz, physicsnormal.normal[2]);
 		}
 	}
 }
 
-void Dev_GroundNormalSet(void)
+void Dev_PhysicsNormalSet(void)
 {
 	vec3_t point = { cl.simorg[0], cl.simorg[1], cl.simorg[2] - 1 };
 	trace_t trace;
 	mphysicsnormal_t physicsnormal;
 	vec3_t newnormal;
-	int newflags = GROUNDNORMAL_SET;
+	int newflags = PHYSICSNORMAL_SET;
 
 	if (cls.demoplayback || cls.state != ca_active || !r_refdef2.allow_cheats) {
 		// it's not actually a cheat, but using these functions would screw with prediction
@@ -2660,13 +2660,13 @@ void Dev_GroundNormalSet(void)
 		newnormal[2] = atof(Cmd_Argv(3));
 		for (i = 0; i < strlen(flags); ++i) {
 			if (flags[i] == 'x') {
-				newflags |= GROUNDNORMAL_FLIPX;
+				newflags |= PHYSICSNORMAL_FLIPX;
 			}
 			else if (flags[i] == 'y') {
-				newflags |= GROUNDNORMAL_FLIPY;
+				newflags |= PHYSICSNORMAL_FLIPY;
 			}
 			else if (flags[i] == 'z') {
-				newflags |= GROUNDNORMAL_FLIPZ;
+				newflags |= PHYSICSNORMAL_FLIPZ;
 			}
 			else if (flags[i] != 'n') {
 				Com_Printf("Unknown flag %c\n", flags[i]);
@@ -2688,17 +2688,17 @@ void Dev_GroundNormalSet(void)
 	}
 	else {
 		physicsnormal = CM_PhysicsNormal(trace.physicsnormal);
-		if (!(physicsnormal.flags & GROUNDNORMAL_SET)) {
+		if (!(physicsnormal.flags & PHYSICSNORMAL_SET)) {
 			Con_Printf("Unable to determine ground normal\n");
 		}
 		else {
 			CM_PhysicsNormalSet(trace.physicsnormal, newnormal[0], newnormal[1], newnormal[2], newflags);
-			Dev_GroundNormalShow();
+			Dev_PhysicsNormalShow();
 		}
 	}
 }
 
-void Dev_GroundNormalSave(void)
+void Dev_PhysicsNormalSave(void)
 {
 	char filename[MAX_OSPATH];
 	FILE* out;
