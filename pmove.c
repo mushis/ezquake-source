@@ -574,7 +574,6 @@ void PM_CategorizePosition (void)
 	vec3_t point;
 	int cont;
 	mphysicsnormal_t ground;
-	qbool onramp = false;
 	qbool far_from_ground = false;
 
 	pmove.maxgroundspeed = MAXGROUNDSPEED_DEFAULT;
@@ -659,9 +658,6 @@ void PM_CategorizePosition (void)
 
 static void PM_CheckJump (void)
 {
-	vec3_t oldvel;
-
-	VectorCopy(pmove.velocity, oldvel);
 	if (pmove.pm_type == PM_FLY)
 		return;
 
@@ -701,7 +697,7 @@ static void PM_CheckJump (void)
 
 	if (!movevars.pground) {
 		// check for jump bug
-		// onramp/groundplane normal was set in the call to PM_CategorizePosition
+		// groundplane normal was set in the call to PM_CategorizePosition
 		if ((movevars.rampjump || pmove.velocity[2] < 0) && DotProduct(pmove.velocity, groundnormal) < -0.1) {
 			// pmove.velocity is pointing into the ground, clip it
 			PM_ClipVelocity(pmove.velocity, groundnormal, pmove.velocity, 1);
