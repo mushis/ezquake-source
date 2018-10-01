@@ -3286,7 +3286,6 @@ void SV_InitLocal (void)
 
 	extern	cvar_t	pm_airstep;
 	extern	cvar_t	pm_pground;
-	extern  cvar_t  pm_maxgrdspd;
 	extern  cvar_t  pm_rampjump;
 	//extern	cvar_t	pm_slidefix;
 	extern	cvar_t	pm_ktjump;
@@ -3382,7 +3381,6 @@ void SV_InitLocal (void)
 	//Cvar_Register (&pm_slidefix);
 	Cvar_Register (&pm_pground);
 	Cvar_Register (&pm_airstep);
-	Cvar_Register (&pm_maxgrdspd);
 	Cvar_Register (&pm_rampjump);
 
 	Cvar_Register (&filterban);

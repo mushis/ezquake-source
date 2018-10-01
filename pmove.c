@@ -549,11 +549,19 @@ static int PM_AirMove(void)
 	}
 }
 
+#define MAXGROUNDSPEED_DEFAULT 180
+#define MAXGROUNDSPEED_MAXIMUM 240
+
 void PM_CategorizePosition (void)
 {
 	trace_t trace = { 0 };
 	vec3_t point;
 	int cont;
+	mphysicsnormal_t ground;
+	qbool onramp = false;
+	qbool far_from_ground = false;
+
+	pmove.maxgroundspeed = MAXGROUNDSPEED_DEFAULT;
 
 	// if the player hull point one unit down is solid, the player is on ground
 
@@ -561,39 +569,51 @@ void PM_CategorizePosition (void)
 	point[0] = pmove.origin[0];
 	point[1] = pmove.origin[1];
 	point[2] = pmove.origin[2] - 1;
-	if (movevars.maxgroundspeed >= 0 && pmove.velocity[2] > movevars.maxgroundspeed) {
+	trace = PM_PlayerTrace(pmove.origin, point);
+	ground = CM_PhysicsNormal(trace.physicsnormal);
+
+	far_from_ground = (trace.fraction == 1 || trace.plane.normal[2] < MIN_STEP_NORMAL);
+	if (ground.flags & GROUNDNORMAL_SET) {
+		VectorCopy(ground.normal, groundnormal);
+		if (pmove.velocity[0] < 0 && (ground.flags & GROUNDNORMAL_FLIPX)) {
+			groundnormal[0] = -groundnormal[0];
+		}
+		if (pmove.velocity[1] < 0 && (ground.flags & GROUNDNORMAL_FLIPY)) {
+			groundnormal[1] = -groundnormal[1];
+		}
+		if (pmove.velocity[2] < 0 && (ground.flags & GROUNDNORMAL_FLIPZ)) {
+			groundnormal[2] = -groundnormal[2];
+		}
+
+		if (movevars.rampjump && !far_from_ground && trace.e.entnum == 0 && groundnormal[2] > 0 && groundnormal[2] < 1) {
+			// They have a ramp beneath them, increase maxspeed to check if we keep them on it
+			float range = 1.0 - asin(groundnormal[2]) * 2 / M_PI; // asin() returns 0...PI/2, so range is [1...0]
+
+			range = min(range, 0.5f) * 2;
+
+			pmove.maxgroundspeed += (MAXGROUNDSPEED_MAXIMUM - MAXGROUNDSPEED_DEFAULT) * range;
+		}
+	}
+	else {
+		VectorCopy(trace.plane.normal, groundnormal);
+	}
+
+	if (pmove.velocity[2] > pmove.maxgroundspeed) {
 		pmove.onground = false;
 	}
 	else if (!movevars.pground || pmove.onground) {
-		trace = PM_PlayerTrace (pmove.origin, point);
-		if (trace.fraction == 1 || trace.plane.normal[2] < MIN_STEP_NORMAL) {
+		if (far_from_ground) {
 			pmove.onground = false;
 		}
 		else {
 			pmove.onground = true;
 			pmove.groundent = trace.e.entnum;
-			VectorCopy(trace.plane.normal, groundnormal);
 			pmove.waterjumptime = 0;
 		}
 
 		// standing on an entity other than the world
 		if (trace.e.entnum > 0) {
 			PM_AddTouchedEnt(trace.e.entnum);
-		}
-		else {
-			mphysicsnormal_t ground = CM_PhysicsNormal(trace.physicsnormal);
-			if (ground.flags & GROUNDNORMAL_SET) {
-				VectorCopy(ground.normal, groundnormal);
-				if (pmove.velocity[0] < 0 && (ground.flags & GROUNDNORMAL_FLIPX)) {
-					groundnormal[0] = -groundnormal[0];
-				}
-				if (pmove.velocity[1] < 0 && (ground.flags & GROUNDNORMAL_FLIPY)) {
-					groundnormal[1] = -groundnormal[1];
-				}
-				if (pmove.velocity[2] < 0 && (ground.flags & GROUNDNORMAL_FLIPZ)) {
-					groundnormal[2] = -groundnormal[2];
-				}
-			}
 		}
 	}
 
@@ -672,7 +692,7 @@ static void PM_CheckJump (void)
 
 	if (!movevars.pground) {
 		// check for jump bug
-		// groundplane normal was set in the call to PM_CategorizePosition
+		// onramp/groundplane normal was set in the call to PM_CategorizePosition
 		if ((movevars.rampjump || pmove.velocity[2] < 0) && DotProduct(pmove.velocity, groundnormal) < -0.1) {
 			// pmove.velocity is pointing into the ground, clip it
 			PM_ClipVelocity(pmove.velocity, groundnormal, pmove.velocity, 1);
@@ -680,7 +700,11 @@ static void PM_CheckJump (void)
 	}
 
 	pmove.onground = false;
-	pmove.velocity[2] += 270 - max(0, pmove.velocity[2] - 180);
+	if (pmove.maxgroundspeed > MAXGROUNDSPEED_DEFAULT && pmove.velocity[2] > MAXGROUNDSPEED_DEFAULT) {
+		// we adjusted maxspeed to keep them on ground, need to reduce velocity here so they can't jump too high
+		pmove.velocity[2] = MAXGROUNDSPEED_DEFAULT;
+	}
+	pmove.velocity[2] += 270;
 
 	if (movevars.ktjump > 0) {
 		// meag: pmove.velocity[2] = max(pmove.velocity[2], 270); (?)

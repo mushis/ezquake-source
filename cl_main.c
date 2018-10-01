@@ -1830,12 +1830,12 @@ void CL_InitLocal (void)
 
 	if (IsDeveloperMode()) {
 		extern void Dev_GroundNormalSet(void);
-		extern void Dev_GroundNormalDump(void);
+		extern void Dev_GroundNormalSave(void);
 		extern void Dev_GroundNormalShow(void);
 
-		Cmd_AddCommand("dev_groundnormalshow", Dev_GroundNormalShow);
 		Cmd_AddCommand("dev_groundnormalset", Dev_GroundNormalSet);
-		Cmd_AddCommand("dev_groundnormaldump", Dev_GroundNormalDump);
+		Cmd_AddCommand("dev_groundnormalshow", Dev_GroundNormalShow);
+		Cmd_AddCommand("dev_groundnormalsave", Dev_GroundNormalSave);
 	}
 
 	{
@@ -2618,13 +2618,16 @@ void Dev_GroundNormalShow(void)
 	else {
 		physicsnormal = CM_PhysicsNormal(trace.physicsnormal);
 
-		Con_Printf("Plane normal: %f %f %f\n", trace.plane.normal[0], trace.plane.normal[1], trace.plane.normal[2]);
+		Con_Printf("Plane normal  : %+f %+f %+f\n", trace.plane.normal[0], trace.plane.normal[1], trace.plane.normal[2]);
 		if (!(physicsnormal.flags & GROUNDNORMAL_SET)) {
 			Con_Printf("No custom physics plane found\n");
 		}
 		else {
-			Con_Printf("Physics normal: %f %f %f\n", physicsnormal.normal[0], physicsnormal.normal[1], physicsnormal.normal[2]);
-			Con_Printf("Flags: %s %s %s\n", physicsnormal.flags & GROUNDNORMAL_FLIPX ? "flip-x" : "std-x", physicsnormal.flags & GROUNDNORMAL_FLIPY ? "flip-y" : "std-y", physicsnormal.flags & GROUNDNORMAL_FLIPZ ? "flip-z" : "std-z");
+			const char* flipx = physicsnormal.flags & GROUNDNORMAL_FLIPX ? "&cff0" : "&r";
+			const char* flipy = physicsnormal.flags & GROUNDNORMAL_FLIPY ? "&cff0" : "&r";
+			const char* flipz = physicsnormal.flags & GROUNDNORMAL_FLIPZ ? "&cff0" : "&r";
+
+			Con_Printf("Physics normal: %s%+f %s%+f %s%+f&r\n", flipx, physicsnormal.normal[0], flipy, physicsnormal.normal[1], flipz, physicsnormal.normal[2]);
 		}
 	}
 }
@@ -2644,16 +2647,32 @@ void Dev_GroundNormalSet(void)
 	}
 
 	if (Cmd_Argc() < 5) {
-		Com_Printf("Usage: %s <x> <y> <z> <flags(xyz)>\n", Cmd_Argv(0));
+		Com_Printf("Usage: %s <x> <y> <z> <flags(xyzn)>\n", Cmd_Argv(0));
 		return;
 	}
 
-	newnormal[0] = atof(Cmd_Argv(1));
-	newnormal[1] = atof(Cmd_Argv(2));
-	newnormal[2] = atof(Cmd_Argv(3));
-	newflags |= strstr(Cmd_Argv(4), "x") ? GROUNDNORMAL_FLIPX : 0;
-	newflags |= strstr(Cmd_Argv(4), "y") ? GROUNDNORMAL_FLIPY : 0;
-	newflags |= strstr(Cmd_Argv(4), "z") ? GROUNDNORMAL_FLIPZ : 0;
+	{
+		int i;
+		const char* flags = Cmd_Argv(4);
+
+		newnormal[0] = atof(Cmd_Argv(1));
+		newnormal[1] = atof(Cmd_Argv(2));
+		newnormal[2] = atof(Cmd_Argv(3));
+		for (i = 0; i < strlen(flags); ++i) {
+			if (flags[i] == 'x') {
+				newflags |= GROUNDNORMAL_FLIPX;
+			}
+			else if (flags[i] == 'y') {
+				newflags |= GROUNDNORMAL_FLIPY;
+			}
+			else if (flags[i] == 'z') {
+				newflags |= GROUNDNORMAL_FLIPZ;
+			}
+			else if (flags[i] != 'n') {
+				Com_Printf("Unknown flag %c\n", flags[i]);
+			}
+		}
+	}
 
 	if (newnormal[0] || newnormal[1] || newnormal[2]) {
 		VectorNormalize(newnormal);
@@ -2674,19 +2693,16 @@ void Dev_GroundNormalSet(void)
 		}
 		else {
 			CM_PhysicsNormalSet(trace.physicsnormal, newnormal[0], newnormal[1], newnormal[2], newflags);
-
-			physicsnormal = CM_PhysicsNormal(trace.physicsnormal);
-			Con_Printf("New physics normal: %d: %f %f %f\n", trace.physicsnormal, physicsnormal.normal[0], physicsnormal.normal[1], physicsnormal.normal[2]);
-			Con_Printf("Flags: %s %s %s\n", physicsnormal.flags & GROUNDNORMAL_FLIPX ? "flip-x" : "std-x", physicsnormal.flags & GROUNDNORMAL_FLIPY ? "flip-y" : "std-y", physicsnormal.flags & GROUNDNORMAL_FLIPZ ? "flip-z" : "std-z");
+			Dev_GroundNormalShow();
 		}
 	}
 }
 
-void Dev_GroundNormalDump(void)
+void Dev_GroundNormalSave(void)
 {
 	char filename[MAX_OSPATH];
 	FILE* out;
-	extern cvar_t pm_rampjump, pm_maxgrdspd;
+	extern cvar_t pm_rampjump;
 
 	if (cls.demoplayback || cls.state != ca_active || !r_refdef2.allow_cheats) {
 		// it's not actually a cheat, but using these functions would screw with prediction
@@ -2700,10 +2716,8 @@ void Dev_GroundNormalDump(void)
 		return;
 	}
 
-	CM_PhysicsNormalDump(out, pm_rampjump.value, pm_maxgrdspd.value);
+	CM_PhysicsNormalDump(out, pm_rampjump.value, 0);
 	fclose(out);
-
-	CM_CompareNormalDump(filename);
 
 	Con_Printf("Wrote %s\n", filename);
 }

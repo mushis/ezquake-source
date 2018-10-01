@@ -2271,7 +2271,6 @@ void CL_ProcessServerInfo (void)
 	movevars.pground = (Q_atof(Info_ValueForKey(cl.serverinfo, "pm_pground")) != 0)
 		&& (cl.z_ext & Z_EXT_PF_ONGROUND) /* pground doesn't make sense without this */;
 	movevars.ktjump = *(p = Info_ValueForKey(cl.serverinfo, "pm_ktjump")) ? Q_atof(p) : cl.teamfortress ? 0 : 1;
-	movevars.maxgroundspeed = *(p = Info_ValueForKey(cl.serverinfo, "pm_maxgrdspd")) ? Q_atof(p) : 180; // 180 has been hard-coded value since beginning
 	movevars.rampjump = (Q_atof(Info_ValueForKey(cl.serverinfo, "pm_rampjump")) != 0);
 
 	// Deathmatch and teamplay.

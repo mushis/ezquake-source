@@ -65,6 +65,8 @@ typedef struct {
 	int			groundent; // index in physents array, only valid when onground is true
 	int			waterlevel;
 	int			watertype;
+
+	int         maxgroundspeed;
 } playermove_t;
 
 typedef struct {
@@ -83,7 +85,6 @@ typedef struct {
 	qbool	slidefix; // NQ-style movement down ramps
 	qbool	airstep;
 	qbool	pground; // NQ-style "onground" flag handling.
-	float   maxgroundspeed; // maximum velocity.z before the player is deemed air borne (defaults to 180)
 	int     rampjump; // if set, all vertical velocity clipped by groundplane during jump frame.  If 0, only when falling (standard jumpfix)
 } movevars_t;
 

@@ -325,7 +325,7 @@ start:
 
 	trace->fraction = midf;
 	VectorCopy (mid, trace->endpos);
-	trace->physicsnormal = (!nearside ? num : -num);
+	trace->physicsnormal = (!nearside ? num + 1 : -(num + 1));
 
 	return TR_BLOCKED;
 }
@@ -910,7 +910,7 @@ static void CM_LoadClipnodesBSP2(lump_t *l)
 
 static qbool CM_LoadGroundNormalsData(byte* data, int datalength)
 {
-	extern cvar_t pm_maxgrdspd, pm_rampjump;
+	extern cvar_t pm_rampjump;
 	mphysicsnormal_t* in = (mphysicsnormal_t*)(data + 8);
 	float* cvars = (float*)data;
 	int i;
@@ -920,7 +920,7 @@ static qbool CM_LoadGroundNormalsData(byte* data, int datalength)
 	}
 
 	Cvar_SetValue(&pm_rampjump, LittleFloat(cvars[0]));
-	Cvar_SetValue(&pm_maxgrdspd, LittleFloat(cvars[1]));
+	// Meag: previously the maximum speed was set here but I don't think it should be map-specific (?)
 
 	for (i = 0; i < numclipnodes; ++i) {
 		map_physicsnormals[i].normal[0] = LittleFloat(in[i].normal[0]);
@@ -933,11 +933,10 @@ static qbool CM_LoadGroundNormalsData(byte* data, int datalength)
 
 static void CM_LoadGroundNormals(lump_t* l)
 {
-	extern cvar_t pm_maxgrdspd, pm_rampjump;
+	extern cvar_t pm_rampjump;
 	int i;
 
 	Cvar_SetValue(&pm_rampjump, 0);
-	Cvar_SetValue(&pm_maxgrdspd, 0);
 	map_physicsnormals = Hunk_AllocName(numclipnodes * sizeof(map_physicsnormals[0]), loadname);
 
 	if (l == NULL || !CM_LoadGroundNormalsData(cmod_base + l->fileofs, l->filelen)) {
@@ -1423,9 +1422,9 @@ void CM_Init (void)
 // Allow in-memory modifications to ground normals...
 void CM_PhysicsNormalSet(int num, float x, float y, float z, int flags)
 {
-	if (num >= 0 && num < numclipnodes) {
-		VectorSet(map_physicsnormals[num].normal, x, y, z);
-		map_physicsnormals[num].flags = flags;
+	if (num > 0 && num <= numclipnodes) {
+		VectorSet(map_physicsnormals[num - 1].normal, x, y, z);
+		map_physicsnormals[num - 1].flags = flags;
 	}
 }
 
@@ -1438,6 +1437,7 @@ void CM_PhysicsNormalDump(FILE* out, float rampjump, float maxgroundspeed)
 		fwrite(map_physicsnormals, sizeof(*map_physicsnormals) * numclipnodes, 1, out);
 	}
 }
+#endif
 
 mphysicsnormal_t CM_PhysicsNormal(int num)
 {
@@ -1447,8 +1447,8 @@ mphysicsnormal_t CM_PhysicsNormal(int num)
 
 	num = abs(num);
 
-	if (num < numclipnodes) {
-		ret = map_physicsnormals[num];
+	if (num > 0 && num <= numclipnodes) {
+		ret = map_physicsnormals[num - 1];
 		if (inverse) {
 			VectorNegate(ret.normal, ret.normal);
 		}
@@ -1456,34 +1456,3 @@ mphysicsnormal_t CM_PhysicsNormal(int num)
 
 	return ret;
 }
-
-void CM_CompareNormalDump(const char* filename)
-{
-	int mark = Hunk_LowMark();
-	int size;
-	byte* data;
-	byte* raw = (byte*)map_physicsnormals;
-	int rawsize = sizeof(map_physicsnormals[0]) * numclipnodes;
-
-	data = FS_LoadHunkFile(filename, &size);
-	if (data) {
-		if (!memcmp(data + 8, map_physicsnormals, rawsize)) {
-			Com_Printf("Files match\n");
-		}
-		else {
-			int i;
-
-			data += 8;
-			Com_Printf("dump is corrupt! (%d vs %d)\n", size, rawsize);
-			for (i = 0; i < rawsize; ++i) {
-				if (data[i] != raw[i]) {
-					Com_Printf("error @ %d\n", i);
-					break;
-				}
-			}
-		}
-		Hunk_FreeToLowMark(mark);
-	}
-}
-
-#endif
