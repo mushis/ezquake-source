@@ -504,11 +504,21 @@ void Image_MipReduce (const byte *in, byte *out, int *width, int *height, int bp
 /************************************ PNG ************************************/
 #ifdef WITH_PNG
 
+#ifdef WITH_APNG
+#undef WITH_APNG
+#endif
+
+#ifdef PNG_IO_STATE_SUPPORTED
+#define WITH_APNG
+#endif
+
+#ifdef WITH_APNG
 static vfsfile_t* apng_fp;
 static png_structp apng_ptr;
 static png_infop apng_info_ptr;
 static int apng_framenumber;
 static int apng_compression;
+#endif
 
 static void PNG_IO_user_read_data(png_structp png_ptr, png_bytep data, png_size_t length) {
 	vfsfile_t *v = (vfsfile_t *) png_get_io_ptr(png_ptr);
@@ -522,6 +532,7 @@ static void PNG_IO_user_write_data(png_structp png_ptr, png_bytep data, png_size
 	VFS_WRITE(v, data, length);
 }
 
+#ifdef WITH_APNG
 static byte* apng_data = NULL;
 static unsigned int apng_data_limit = 0;
 static unsigned int apng_data_length = 0;
@@ -561,6 +572,7 @@ static void PNG_IO_user_write_data_apng(png_structp png_ptr, png_bytep data, png
 		apng_data_length += length;
 	}
 }
+#endif
 
 static void PNG_IO_user_flush_data(png_structp png_ptr)
 {
@@ -931,6 +943,7 @@ int Image_WritePNG (char *filename, int compression, byte *pixels, int width, in
 	return true;
 }
 
+#ifdef WITH_APNG
 qbool Image_OpenAPNG(char* filename, int compression, int width, int height, int frames)
 {
 	char name[MAX_PATH];
@@ -1077,6 +1090,22 @@ qbool Image_CloseAPNG(void)
 
 	return true;
 }
+#else // WITH_APNG
+qbool Image_OpenAPNG(char* filename, int compression, int width, int height, int frames)
+{
+	return false;
+}
+
+qbool Image_WriteAPNGFrame(byte* pixels, int width, int height, int fps)
+{
+	return false;
+}
+
+qbool Image_CloseAPNG(void)
+{
+	return false;
+}
+#endif
 
 #endif // WITH_PNG
 
