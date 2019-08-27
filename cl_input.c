@@ -31,6 +31,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 cvar_t cl_anglespeedkey     = {"cl_anglespeedkey","1.5"};
 cvar_t cl_backspeed         = {"cl_backspeed","400"};
 cvar_t cl_c2spps            = {"cl_c2spps","0"};
+cvar_t cl_c2sdupe           = {"cl_c2sdupe","0"};
 cvar_t cl_c2sImpulseBackup  = {"cl_c2sImpulseBackup","3"};
 cvar_t cl_forwardspeed      = {"cl_forwardspeed","400"};
 cvar_t cl_smartjump         = {"cl_smartjump", "1"};
@@ -1173,6 +1174,7 @@ void CL_InitInput(void)
 	Cvar_Register(&cl_nodelta);
 	Cvar_Register(&cl_c2sImpulseBackup);
 	Cvar_Register(&cl_c2spps);
+        Cvar_Register(&cl_c2sdupe);
 
 	Cvar_ResetCurrentGroup();
 

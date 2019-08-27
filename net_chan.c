@@ -344,13 +344,13 @@ void Netchan_Transmit (netchan_t *chan, int length, byte *data)
 	chan->outgoing_size[i] = send.cursize;
 	chan->outgoing_time[i] = curtime;
 
-dupi= 1;
+int dupi= 1;
 #ifndef SERVERONLY
 	//zoid, no input in demo playback mode
 	if (!cls.demoplayback)
 #endif
 	{
-	for (dupi = 0; i <= chan->dupe; dupi++)
+	for (dupi = 0; dupi <= chan->dupe; dupi++)
 		NET_SendPacket (chan->sock, send.cursize, send.data, chan->remote_address);
 	}
 
