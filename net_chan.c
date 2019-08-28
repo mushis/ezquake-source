@@ -284,7 +284,6 @@ void Netchan_Transmit (netchan_t *chan, int length, byte *data)
 	unsigned w1, w2;
 	int i;
 	static double last_error_time = 0;
-	int dupes = chan->dupe;
 
 	// check for message overflow
 	if (chan->message.overflowed) {
