@@ -996,7 +996,8 @@ void CL_SendCmd(void)
 	MSG_WriteByte (&buf, (byte)lost);
 
 	//send duplicated packets, if set
-	cls.netchan.dupe = cl_c2sdupe.value;
+	// OLD cls.netchan.dupe = cl_c2sdupe.value;
+	cls.netchan.dupe = bound(0, cl_c2sdupe.value, 5);
 	
 	// send this and the previous two cmds in the message, so if the last packet was dropped, it can be recovered
 	dontdrop = false;

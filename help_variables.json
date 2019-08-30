@@ -545,6 +545,11 @@
       "desc": "Packet filtering (a la Qizmo's .c2spps command). Use this to reduce network traffic if you're playing on a 28800 (or worse) connection and can't set cl_maxfps 72 because it causes lag.  Also consider use of FPS independent physics in conjunction with cl_physfps.",
       "type": "integer"
     },
+    "cl_c2sdupe": {
+      "group-id": "21",
+      "desc": "Packet Duplication (a la Qizmo .c2s command). Use this when experiencing packet loss. A value of 0 means no packet duplication between client and server (default). Values higher than 0 enable client-to-server Packet duplication (a value of 1 sends 1 duplicated packet to the server). The correspondent command for server-to-client packet duplication is /setinfo dupe (in compatible servers). The possible values for both commands are 0-5. Both values are rate-dependent, be conservative, or else rate cut will happen.",
+      "type": "integer"
+    },
     "cl_camera_death": {
       "group-id": "46",
       "desc": "Camera view above your body after death.",
