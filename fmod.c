@@ -243,6 +243,14 @@ static check_models_hashes_entry_t mdlhash_player_mdl_CapNBubs_FMOD_DM = { {0xC0
 // gpl_maps.pk3 include a small wav file to allow map to load
 static check_models_hashes_entry_t sound_gpl_maps_silence_wav = { {0xc99871d4, 0xc60e0fef, 0x14e64bf9, 0xbaf43934, 0x5376df18}, NULL };
 
+// Sams Sound package 2020
+static check_models_hashes_entry_t sound_misc_sam_menu1 = { {0xf53f6373, 0xd635613c, 0x9f6741d4, 0x9d5cc205, 0x9615c425}, NULL };
+static check_models_hashes_entry_t sound_misc_sam_menu2 = { {0xca5631eb, 0x7b577189, 0x58fdb14e, 0xc4565190, 0x6fc936c4}, NULL };
+static check_models_hashes_entry_t sound_misc_sam_menu3 = { {0xe60ca5fe, 0x300cf949, 0xb72f5c09, 0x2b6d1c70, 0xd92fff1f}, NULL };
+static check_models_hashes_entry_t sound_misc_sam_talk = { {0xab596066, 0xc7e1d49d, 0xdf9aab, 0xbd14fc07, 0x4ab2aeee}, NULL };
+static check_models_hashes_entry_t sound_misc_sam_runeuse = { {0xc576b900, 0x8f8988b3, 0x85a10d72, 0x4f3142ec, 0xac91e3ba}, NULL };
+
+
 #define MAX_CHECK_MODELS 256
 #define	FMOD_DM 1
 #define FMOD_TF 2
@@ -533,6 +541,17 @@ void FMod_Init (void)
 		FMod_AddModelAlt(lastid, &sound_misc_mindgrid_water1);
 	lastid = FMod_AddModel ("sound/misc/water2.wav",		FMOD_DM | FMOD_TF,	sound_misc_water2_wav_FMOD_DM_FMOD_TF);
 		FMod_AddModelAlt(lastid, &sound_misc_mindgrid_water2);
+	
+	lastid = FMod_AddModel ("sound/misc/menu1.wav",		FMOD_DM | FMOD_TF,	sound_misc_water2_wav_FMOD_DM_FMOD_TF);
+		FMod_AddModelAlt(lastid, &sound_misc_sam_menu1);
+	lastid = FMod_AddModel ("sound/misc/menu2.wav",		FMOD_DM | FMOD_TF,	sound_misc_water2_wav_FMOD_DM_FMOD_TF);
+		FMod_AddModelAlt(lastid, &sound_misc_sam_menu2);
+	lastid = FMod_AddModel ("sound/misc/menu3.wav",		FMOD_DM | FMOD_TF,	sound_misc_water2_wav_FMOD_DM_FMOD_TF);
+		FMod_AddModelAlt(lastid, &sound_misc_sam_menu3);
+        lastid = FMod_AddModel ("sound/misc/talk.wav",		FMOD_DM | FMOD_TF,	sound_misc_water2_wav_FMOD_DM_FMOD_TF);
+		FMod_AddModelAlt(lastid, &sound_misc_sam_talk);
+	lastid = FMod_AddModel ("sound/misc/runeuse.wav",		FMOD_DM | FMOD_TF,	sound_misc_water2_wav_FMOD_DM_FMOD_TF);
+		FMod_AddModelAlt(lastid, &sound_misc_sam_runeuse);
 
 	FMod_AddModel("sound/misc/menu1.wav", FMOD_DM | FMOD_TF, sound_misc_menu1_wav_FMOD_DM_FMOD_TF);
 	FMod_AddModel("sound/misc/menu2.wav", FMOD_DM | FMOD_TF, sound_misc_menu2_wav_FMOD_DM_FMOD_TF);
